@@ -1,0 +1,2 @@
+class MgExpenseAccess < ApplicationRecord
+end

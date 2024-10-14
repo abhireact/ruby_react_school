@@ -1,0 +1,28 @@
+<%= form_for :contents, url: share_to_bach_save_path, method: :patch, :html => {
+                            :id => 'shareContentForBatchFormID' } do |f| %>
+<label class="mg-label  mg-label-width ">Select Class<span class="required-field"> *</span></label>
+<%#=f.collection_select(:mg_course_id, @batchList , :id, :course_name, {:include_blank => 'Select'} ,:class=>"mg-select-btn")%>
+<%=select_tag :mg_course, options_for_select(@course_list),:prompt=>"Select",:class=>"mg-select-btn"%>
+
+  <%= f.submit t('submit') ,:class=>"mg-small-form-btn"%>
+    <%= link_to t('cancel'), :back, {:class=>"btn btn-default cancel-form-dialog"} %>
+<%end%>
+
+<div id="bachtSelectListDIVID">
+</div>
+<br>
+<%=f.hidden_field :mg_my_question_id,  :value=>@my_questions_id%>
+<%= f.hidden_field :updated_by, :value=>session[:user_id]%>
+<%= f.hidden_field :created_by, :value=>session[:user_id]%>
+<%= f.hidden_field :mg_school_id, :value=>session[:current_user_school_id]%>
+<%= f.hidden_field :is_deleted, :value=>0%>
+<%#= f.hidden_field :mg_employee_id, :value=>@mg_employee_id.id%>
+ <input type="submit" id='submitContentShareID' value="" name="commit" class="mg-small-form-btn mg-custom-labels" style="display:none" > 
+<%#=f.submit t('save'), :class=>"mg-small-form-btn", :id=>"submitContentShareID", :style="display:none" %>  <%#= link_to t('cancel'), :back, {:class=>"btn btn-default cancel-form-dialog"} %>
+<%end%>
+<button id="submitContentShareBTNID" class="mg-small-form-btn"><%=t('save')%></button>&nbsp;<button class="mg-small-form-btn cancel-form-dialog" ><%=t('cancel')%></button>
+<script>
+
+
+
+</script>

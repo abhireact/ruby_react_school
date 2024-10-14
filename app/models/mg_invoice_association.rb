@@ -1,0 +1,2 @@
+class MgInvoiceAssociation < ApplicationRecord
+end

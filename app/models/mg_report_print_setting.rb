@@ -1,0 +1,2 @@
+class MgReportPrintSetting < ApplicationRecord
+end

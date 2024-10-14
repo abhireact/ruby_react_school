@@ -1,0 +1,2 @@
+class MgFeeOtpSetting < ApplicationRecord
+end

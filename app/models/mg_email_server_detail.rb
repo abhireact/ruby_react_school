@@ -1,0 +1,2 @@
+class MgEmailServerDetail < ApplicationRecord
+end

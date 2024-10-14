@@ -1,0 +1,2 @@
+class MgState < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgFcmToken < ApplicationRecord
+end

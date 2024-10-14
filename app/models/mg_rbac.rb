@@ -1,0 +1,2 @@
+class MgRbac < ApplicationRecord
+end

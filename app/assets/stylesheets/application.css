@@ -1,0 +1,6 @@
+@import "scss/material-dashboard.scss";
+@import "./material-dashboard.css";
+@import "./material-dashboard.css.map";
+@import "./material-dashboard.min.css";
+@import "./nucleo-icons.css";
+@import "./nucleo-svg.css";

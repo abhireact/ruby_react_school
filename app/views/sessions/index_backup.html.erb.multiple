@@ -1,0 +1,150 @@
+<!-- Sec --> 
+<%@school=MgSchool.find(1)%>
+	<header id="header">
+		<nav class="top">
+			<div class="heading">School Management System </div>
+		</nav>
+	</header>
+
+	<div id="content"> 
+		<!-- <div class="body-line">
+
+			<%#= image_tag("body-line.png", :alt => "Body-Background") %>
+			
+		</div> -->
+	</div> 	
+
+	<div id="container">
+		<div class="LoginScreen">
+			<div class="inner-heading-box">
+			<%= image_tag("title-image.png" , class: "title-part", :alt => "Title-Part") %>
+				
+				<div class="inner-logo">
+				<%#= image_tag("open-school-logo.png" , class: "Logo" , :alt => "School-System-Management") %>
+				<%= image_tag  MgSchool.find(@school.id).logo.url(:medium, timestamp: false),:class => 'shr-logo-styling-login'  %><br>
+				<label style=" color: #4C4C4C; position: relative; top: 0.5em;"><%=MgSchool.find(@school.id).school_name%></label> 	
+				</div>
+			</div>
+            <div class="School-tag">
+				<%= image_tag("open-school-logo.png" , class: "mg-sms-logo" , :alt => "School-System-Management") %>&nbsp;
+				School Management System
+			</div>
+			<div class="sms-logo">
+				
+			</div>
+			<div class="Login-content">
+				<!--<div class="content1">
+					Login
+				</div>-->
+				<div class="content-box">
+							<div class="content-tab">
+                            	<ul style="display:none ;">
+                                	<li class="mg-tab" style="display:none; list-style:none ;"><a href="#tab1">Login</a></li>
+                                	<!-- <li class="mg-tab"><a href="#tab3">Forgot Password</a></li> -->
+                                	<!-- <li class="mg-tab"><a href="#tab2">Forgot Password</a></li> -->
+                                 
+                                </ul>
+                                <div class="tab-details">
+                                	<div id="tab1" class="tab">
+
+                                        	<%= form_tag sessions_path, class: "formStyling", id:"abc", :html => {:id=>"sessionLoginValidationID"} do %>
+
+											<table cellspacing="0" cellpadding="0" style="border-collapse: separate; border-spacing: 12px;">
+												 <tr>
+				                                     	<td></td>
+				                                    	<td><% if flash[:notice] %>
+			    												 <span style="color:red;font-weight: normal;  position: relative; top: -12px;">	<%= flash[:notice] %>
+			  													<% end %>
+			  											</td>
+				                                    	
+				                                    </tr></br>	
+												<tr class="userName">
+													<td class="user-content">User Name</td>
+													<td><%= text_field_tag :user_name, params[:user_name], class: "user-content1" %></td>
+												</tr>
+												<tr class="Password">
+													<td class="password-content">Password</td>
+													<td><%= password_field_tag :password, params[:password], class: "password-content1" %></td>
+												</tr>
+
+												    <!-- <tr class="checkRemember">
+				                                        <td class="checkRemeberMeBox"><input type="checkbox" class="Remember-Me-checkbox" name="checkbox"/>&nbsp;<span class="Remember-Me-text">Remember Me<br/></span></td>
+				                                    </tr> -->
+				                                    
+				                                    <tr>
+				                                    	<td></td>
+				                                    	<td><%= submit_tag "Login", class: "style-login" %></td>
+				                                    </tr>
+											</table>
+											 
+											<% end %>
+                                     </div>
+                                <div id="tab3" class="tab">
+                                	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                                </div>
+                                <div id="tab2" class="tab">
+<%= form_for :sessions , url: sessions_forgot_password_path , :htmloptions => {:class => "formStyling "} , remote: true do  |s| %>
+
+									       <table>
+                                               
+                                                <tr>
+                                                    <td>Email Address</td>
+                                                    <td><%= s.text_field :email %></td>
+                                                </tr>
+                                              
+                                                <td><%= s.submit "Submit", class: "registration-button-style style-login" %></td>
+                                             </table>
+                                          <% end %>
+                                     </div>
+               
+                                </div>  
+                                <div class="powered-by-content">
+									<span class="mg-powered-by-text">Powered By - &copy; &nbsp;</span>
+									<span><a href="http://www.mindcomgroup.com"><img src="/assets/mindcom-logo.png" style="height: 25px;
+    padding: 2px; position: relative; top: -31px; width: 60px;"></a></span>
+                                </div>
+                            </div>
+
+
+
+				</div>
+			</div>	
+		</div>
+	</div> 	
+    
+  <script>
+ 	 $(function () {  
+ 	 	$(".content-tab").tabs();
+
+ 	  });
+
+ 	  $(document).ready(function () {
+
+ 	 
+
+
+		$("#abc").validate({
+
+
+		rules: {
+		"user_name": {required: true},
+		"password": {required: true}
+
+		},
+
+		messages: {
+        "user_name": {required: "Please Enter The User Name"},
+        "password": {required: "Please Enter The Password"}
+    			}
+    	
+		});
+	});
+
+
+  </script>

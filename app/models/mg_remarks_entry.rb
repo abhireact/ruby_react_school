@@ -1,0 +1,2 @@
+class MgRemarksEntry < ApplicationRecord
+end

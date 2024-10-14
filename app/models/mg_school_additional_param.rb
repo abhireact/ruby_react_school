@@ -1,0 +1,2 @@
+class MgSchoolAdditionalParam < ApplicationRecord
+end

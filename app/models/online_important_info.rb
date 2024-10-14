@@ -1,0 +1,2 @@
+class OnlineImportantInfo < ApplicationRecord
+end

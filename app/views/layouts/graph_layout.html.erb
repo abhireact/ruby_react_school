@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SMS</title>
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+	<header class="sms-w100">
+		<div class="sms-display-in-block sms-w100 sms-header-style">
+			<div class="sms-float-left">
+				<!-- <a href=""><img class="sms-header-logo" src="/assets/images/logo.png" /></a> -->
+				
+			</div>
+			<div class="sms-float-right sms-logout"><a href="/log_out"><i class="fa fa-power-off"></i></a></div>
+		</div>
+		<nav class="sms-display-in-block sms-w100">
+			<ul class="sms-list-inline sms-nav-bar">
+				<!-- <li><a href="">Home</a></li> -->
+				<!-- <li><a href="">News</a></li> -->
+				<div class="dropdown">	
+						<li>Fees</li>
+						<div class="dropdown-content">
+							<li><a href="/graph/fee_graph">Fees</a></li>
+							<li><a href="/graph/fee_collection_by_program">Fees Collection By Wings</a></li>
+							<li><a href="/graph/fee_collected_list">Fee Collected List</a></li>
+							<li><a href="/graph/fee_collection_by_program_break_by_sem_monthly">Fees Collection By Wing and Classes Monthly</a></li>			
+							<li><a href="/graph/fee_collection_by_program_break_by_sem_quarterly">Fees Collection By Wing and Classes Quarterly</a></li>			
+							<!-- <li><a href="/graph/fee_collection_by_program_for_session">Fees Collection Whole Session</a></li> -->			
+							<!-- <li><a href="/graph/fee_defaulters">Fees Defaulters</a></li> -->
+							<li><a href="/graph/fee_deafaulter_by_program_break_by_sem_monthly">Fees Deafulter By Wing and Classes Monthly</a></li>			
+							<li><a href="/graph/fee_deafaulter_by_program_break_by_sem_quarterly">Fees Deafulter By Wing and Classes Quarterly</a></li>			
+							<!-- <li><a href="/graph/fee_deafaulter_by_program_for_session">Fees Deafulter Whole Session</a></li> -->				
+					  </div>
+				</div>
+
+				<div class="dropdown">
+				<li>Student</li>
+				<div class="dropdown-content">	
+				<li><a href="/graph/student_graph">Student</a></li>	
+				<li><a href="/graph/rte_students_details">RTE Student</a></li>	
+
+
+					</div>
+				</div>
+
+				<div class="dropdown">
+			   		<li id="student-dropdown">Employee</li>
+			  			<div class="dropdown-content">
+  							<!-- <li id="student-dropdown"><a href="/graph/employee_graph">Employee</a></li> -->
+							<li><a href="/graph/employee_non_teaching_staff">Employee Non Teaching Staff</a></li>
+							<li><a href="/graph/employee_teaching_staff">Employee Teaching Staff</a></li>
+							<li><a href="/graph/employee_total_number">Total Number Of Employee</a></li>
+							<li><a href="/graph/employee_dept_wise">Number of Employee in Dept Wise</a></li>
+									
+				  		</div>
+				</div>
+
+				<div class="dropdown">
+					<li><a href="/graph/hostel_graph">Hostel</a></li>
+						<div class="dropdown-content">
+
+
+						</div>
+				</div>	
+
+				<div class="dropdown">
+					<li id="student-dropdown">Admission</li>
+						<div class="dropdown-content">
+							<li id="student-dropdown"><a href="/graph/admission_graph">Admission Centers </a></li>
+							<li><a href="/graph/admission_year_by_year">Admissions Year By Year</a></li>
+						    <!-- <li><a href="/graph/admission_centers">Admission Centers</a></li> -->
+
+						</div>
+				</div>
+				<div class="dropdown">
+					<li>Attendance</li>
+						<div class="dropdown-content">
+							<li><a href="/graph/attendance_for_students">Student Attendance</a></li>
+							<li><a href="/graph/uninformed_leaves">Uninformed Leaves</a></li>
+							<li><a href="/graph/student_absent_class">Student Absent For Class</a></li>
+							<li><a href="/graph/employee_deptWise_leaves">Employee Dept. Wise Leaves</a></li>
+
+						</div>
+				</div>
+
+				<div class="dropdown">
+					<li>Payroll</li>
+						<div class="dropdown-content">
+						<li><a href="/graph/payroll_month_year">Payroll For Year</a></li>
+							<li><a href="/graph/payroll_department_by_department">Payroll By Department</a></li>
+							<li><a href="/graph/payroll_total">Total Payroll</a></li>
+							<li><a href="/graph/payroll_employee_type">Payroll Employee Type</a></li>
+							<li><a href="/graph/payroll_deduction_report_by_month_year">Payroll Deduction For Year</a>
+							<li><a href="/graph/payroll_deduction_report_by_department">Payroll Deduction By Department</a></li>
+							<li><a href="/graph/payroll_deduction_report_for_total">Total Payroll Deduction</a></li>
+							<li><a href="/graph/payroll_deduction_by_employee_type">Payroll Deduction Employee Type</a></li>
+							</li>
+							
+
+						</div>
+				</div>
+
+				<div class="dropdown">
+					<li>Library</li>
+						<div class="dropdown-content">
+							<li><a href="/graph/library_graph">Resource Details</a></li>
+							<li><a href="/graph/library_book_purchase">Library Books Purchase</a></li>
+							<li><a href="/graph/library_book_lost">Resource Lost</a></li>
+							<li><a href="/graph/library_damaged_books">Damaged Resources</a></li>
+						</div>
+				</div>
+
+				<!-- <div class="dropdown">
+					<li>Placement</li>
+						<div class="dropdown-content">
+							<li><a href="/graph/placement_by_program">Placement by Program</a></li>
+							<li><a href="/graph/placement_by_company_per_year">Placement by Company per Year</a></li>
+						</div>
+				</div> -->
+
+				<div class="dropdown">
+					<li>Alumni</li>
+					<div class="dropdown-content">
+						<li><a href="/graph/alumni_graph">Alumni</a></li>
+						<li><a href="/graph/alumni_graph_for_new_registration">Alumni New Registration</a></li>
+						<li><a href="/graph/alumni_graph_total_amount">Alumni Amount Collected</a></li>
+						<li><a href="/graph/alumni_location">Alumni Current Location</a></li>
+
+					</div>
+				</div>
+
+				<div class="dropdown">
+					<li><a href="/graph/faq_graph">FOM</a></li>
+						<div class="dropdown-content">
+
+
+						</div>
+				</div>
+				<div class="dropdown">
+					<li><a href="/graph/stationary_stock_register">Stationery Stock register</a></li>
+						<div class="dropdown-content">
+
+
+						</div>
+				</div>
+
+				<!-- 	<div class="dropdown">
+				<li id="student-dropdown"><a href="/graph/finance_graph">Finance</a></li>	<div class="dropdown-content">
+
+					</div> -->
+
+					<div class="dropdown">
+					<li>Finance</li>
+					<div class="dropdown-content">
+						<li><a href="/graph/finance_graph">Finance Analysis</a></li>
+						<li><a href="/graph/cash_book">Cash Book</a></li>
+						<li><a href="/graph/account_transaction">Account Details</a></li>
+					</div>
+				</div>
+
+				<!-- <div class="dropdown">
+					<li>Acount</li>
+					<div class="dropdown-content">
+						<li><a href="/graph/account_transaction_in_month">Account Transfer</a></li>
+					</div>
+				</div> -->
+
+				</div>
+				<!-- Khem
+					remove placement link
+				 -->
+				 <!-- Placement -->
+				
+				<!-- Attendance -->				
+				
+				<!-- Payroll -->
+				
+				<!-- added by deepak starts -->
+
+				
+
+				<!-- added by deepak ends -->
+
+					
+			</ul>
+		</nav>
+	</header>
+	<section>
+		<div class="sms-center-align">
+			<%= yield %>	
+		</div>
+	</section>
+	
+	<footer class="sms-display-in-block sms-w100">
+		<div class="sms-float-left">
+		<div class="sms-footer-align">
+			<a href="">Terms &amp; Condition</a>|
+			<a href="">Privacy Policy</a>|
+			<a href="">About Us</a>|
+			<a href="">Contact Us</a>
+		</div>
+		</div>
+		<div class="sms-float-right">
+			<span class="sms-footer-powered-content">Powered By - &copy; </span><a href="http://www.mindcomgroup.com"><img src='<%=image_url("mindcom-logo.png") %>' style=" height: 30px; position: relative; top: -9px; width: 80px;"></a>
+		</div>
+	</footer>
+
+</body>
+
+<style type="text/css">
+	
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: sans-serif;
+	}
+
+	a:hover {
+		text-decoration: none;
+	}
+
+	.sms-float-left {
+		float: left;
+	}
+
+	.sms-float-right {
+		float: right;
+	}
+
+	.sms-display-in-block {
+		display: inline-block;
+	}
+
+	.sms-w100 {
+		width: 100%;
+	}
+
+	.sms-font-white {
+		color: #ffffff;
+	}
+
+	.sms-center-align {
+		text-align: center;
+	}
+
+	.sms-list-inline {
+		display: inline;
+	}
+
+	.sms-list-inline li{
+		list-style: none;
+		display: inline-block;
+	}
+
+
+	header {
+		
+	}
+
+	.sms-header-style {
+		padding: 10px;
+		background: #383838;
+		margin-bottom: -1px;
+	}
+
+	.sms-logout {
+		color: #ffffff;
+    	font-size: 22px;
+    	margin-top: 0px;
+	}
+
+	.sms-header-logo {
+		width: 122px;
+	}
+
+	nav {
+		background: #56afd8;
+		margin: -5px 0 0;
+		color: #ffffff;
+		height:32px;
+	}
+	
+	.sms-nav-bar li{
+		padding: 6px;
+		  
+    color: black;
+    
+
+	}
+
+	.sms-nav-bar li a{
+		color: #333333;
+	}
+
+	
+	footer {
+		padding: 10px;
+		background: #383838;
+		margin-bottom: -10px;
+	}
+
+	.sms-footer-align {
+		color: #ffffff;
+		text-align: center;
+	}
+
+	.sms-footer-align a {
+		color: #ffffff;
+		margin: 10px;
+	}
+
+	.sms-footer-powered-content {
+		color: #ffffff;
+	}
+	
+	.sms-mindcom-footer-logo {
+		margin-top: -13px;
+		width: 90px;
+	}
+	#dropdown {
+   /* padding: 10px;*/
+    display: none;
+}
+
+.sub-menu{
+	background: white;
+    color: black;
+    margin: 20px 0px;
+    position: absolute;
+    width: 200px;
+    border: 1px solid #56afd8;
+    width: 200px !important;
+}
+
+.sub-menu li{
+	float: left;
+    display: inline-block;
+
+}
+
+.sub-menu li a{
+    color: #333333;
+    width: 100%;
+}
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 145px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 1px 1px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}

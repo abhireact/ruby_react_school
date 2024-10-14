@@ -1,0 +1,2 @@
+class MgPayuBizzAuditDetail < ApplicationRecord
+end

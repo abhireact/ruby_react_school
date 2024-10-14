@@ -1,0 +1,2 @@
+class MgSmsCountSettings < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgEmployeeOtherSubject < ApplicationRecord
+end

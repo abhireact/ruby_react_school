@@ -1,0 +1,2 @@
+class MgAdmissionSettingDetail < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgEmployeePayDeduction < ApplicationRecord
+end

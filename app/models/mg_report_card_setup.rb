@@ -1,0 +1,2 @@
+class MgReportCardSetup < ApplicationRecord
+end

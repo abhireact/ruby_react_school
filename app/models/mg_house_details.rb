@@ -1,0 +1,2 @@
+class MgHouseDetails < ApplicationRecord
+end

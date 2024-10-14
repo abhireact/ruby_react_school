@@ -1,0 +1,2 @@
+class MgClassOnlineAssessmentUser < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgRegularFeeCollectionDetail < ApplicationRecord
+end

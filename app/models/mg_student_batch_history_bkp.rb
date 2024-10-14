@@ -1,0 +1,2 @@
+class MgStudentBatchHistoryBkp < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgCharacterCertficate < ApplicationRecord
+end

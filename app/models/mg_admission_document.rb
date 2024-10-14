@@ -1,0 +1,18 @@
+class MgAdmissionDocument < ApplicationRecord
+  belongs_to(:mg_student_admission)
+  belongs_to(:mg_school)
+  has_attached_file(:p_student)
+  validates_attachment_content_type(:p_student, { content_type: [] })
+  has_attached_file(:p_father)
+  validates_attachment_content_type(:p_father, { content_type: [] })
+  has_attached_file(:p_mother)
+  validates_attachment_content_type(:p_mother, { content_type: [] })
+  has_attached_file(:f_aadhar)
+  validates_attachment_content_type(:f_aadhar, { content_type: [] })
+  has_attached_file(:m_aadhar)
+  validates_attachment_content_type(:m_aadhar, { content_type: [] })
+  has_attached_file(:s_aadhar)
+  validates_attachment_content_type(:s_aadhar, { content_type: [] })
+  has_attached_file(:dob_certi)
+  validates_attachment_content_type(:dob_certi, { content_type: [] })
+end

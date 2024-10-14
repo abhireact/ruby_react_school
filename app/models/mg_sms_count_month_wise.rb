@@ -1,0 +1,2 @@
+class MgSmsCountMonthWise < ApplicationRecord
+end

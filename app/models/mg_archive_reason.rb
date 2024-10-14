@@ -1,0 +1,2 @@
+class MgArchiveReason < ApplicationRecord
+end

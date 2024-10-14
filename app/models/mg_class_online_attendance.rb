@@ -1,0 +1,2 @@
+class MgClassOnlineAttendance < ApplicationRecord
+end

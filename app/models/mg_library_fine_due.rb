@@ -1,0 +1,2 @@
+class MgLibraryFineDue < ApplicationRecord
+end

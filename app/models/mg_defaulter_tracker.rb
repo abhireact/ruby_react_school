@@ -1,0 +1,2 @@
+class MgDefaulterTracker < ApplicationRecord
+end

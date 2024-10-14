@@ -1,0 +1,19 @@
+\default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 20
+  username: root
+  password: Mindcom321
+  # host: localhost
+  host: "10.0.20.133"
+  port: 3306
+  socket: /var/lib/mysql/mysql.sock #for rhel
+
+
+development:
+  <<: *default
+  database: ruby_new
+
+production:
+  <<: *default
+  database: ruby_new

@@ -1,0 +1,2 @@
+class MgEmployeeExperienceCertificate < ApplicationRecord
+end

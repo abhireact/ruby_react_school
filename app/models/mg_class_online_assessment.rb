@@ -1,0 +1,2 @@
+class MgClassOnlineAssessment < ApplicationRecord
+end

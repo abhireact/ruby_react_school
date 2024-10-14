@@ -1,0 +1,2 @@
+class MgScholasticRank < ApplicationRecord
+end

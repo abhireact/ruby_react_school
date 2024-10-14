@@ -1,0 +1,2 @@
+class MgStudentIdCard < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgUserQuestion < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgLibraryAccessPermission < ApplicationRecord
+end

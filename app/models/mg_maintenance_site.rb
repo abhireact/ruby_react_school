@@ -1,0 +1,2 @@
+class MgMaintenanceSite < ApplicationRecord
+end

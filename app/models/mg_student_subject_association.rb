@@ -1,0 +1,2 @@
+class MgStudentSubjectAssociation < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgNotificationDetail < ApplicationRecord
+end

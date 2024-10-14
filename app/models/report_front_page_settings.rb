@@ -1,0 +1,2 @@
+class ReportFrontPageSettings < ApplicationRecord
+end

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>M-CMS</title>
+  <meta name="csrf-param" content="authenticity_token" />
+  <meta name="csrf-token" content="<%= form_authenticity_token %>" />
+  <!-- Fonts -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+
+  <!-- Nucleo Icons -->
+  <link href="<%= asset_path('nucleo-icons.css') %>" rel="stylesheet" />
+  <link href="<%= asset_path('nucleo-svg.css') %>" rel="stylesheet" />
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+
+  <!-- Material Dashboard CSS -->
+  <%= stylesheet_link_tag 'material-dashboard', 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+  <!-- Inline JavaScript for active menu and collapse -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var currentPath = "<%= request.path %>"; // Rails helper to get current path
+
+      document.querySelectorAll('.nav-link').forEach(function(link) {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active');
+          var collapseElement = link.getAttribute('data-bs-toggle') === 'collapse' ? document.querySelector(link.getAttribute('href')) : null;
+          if (collapseElement) {
+            collapseElement.classList.add('show');
+          }
+        }
+      });
+    });
+  </script>
+</head>
+<body class="g-sidenav-show bg-gray-300">
+  <!-- Sidebar -->
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main" style="
+  background-image: linear-gradient(195deg, #234c71 0%, #1556ad 100%)
+  ">
+
+  <div class="sidenav-header text-center">
+    <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+    <a class="navbar-brand m-0 p-3" href="/wings">
+      <span class="ms-1 fs-3 fw-bold text-white">M-CMS</span>
+    </a>
+  </div>
+
+  <hr class="horizontal light mt-0 mb-2">
+  <div class="collapse navbar-collapse w-auto h-auto" id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+      <% modules = [{name: "Wings",icon: "image",link: "/wings",
+        submodules: [{name: "Manage Wings",
+          submodules: [
+            { name: "Wings", link: "/wings" },
+            { name: "Dummy", link: "/dummy" }
+          ]
+        }]},
+        {name: "Examination",icon: "image",link: "/examination",
+          submodules: [{name: "Manage Examination",
+            submodules: [
+              { name: "Exam 1", link: "/exam1" },
+              { name: "Exam 2", link: "/exam2" }
+            ]
+          }]},
+          {name: "School",icon: "image",link: "/schools",
+            submodules: [{name: "School Information",
+              submodules: [
+                { name: "School Information", link: "/schools" },
+              ]
+            }]}] %>
+            <% modules.each do |module_item| %>
+            <li class="nav-item">
+              <% is_active_module = request.path == module_item[:link] || 
+              module_item[:submodules].any? { |submodule| submodule[:submodules].any? { |s| s[:link] == request.path } } %>
+              <a data-bs-toggle="collapse" href="#<%= module_item[:name].parameterize %>" class="nav-link text-white <%= 'active' if is_active_module %>" aria-controls="<%= module_item[:name].parameterize %>" role="button" aria-expanded="<%= is_active_module ? 'true' : 'false' %>">
+                <i class="material-icons-round ms-1"><%= module_item[:icon] %></i>
+                <span class="nav-link-text ms-2 ps-1"><%= module_item[:name] %></span>
+              </a>
+              <div class="collapse <%= 'show' if is_active_module %>" id="<%= module_item[:name].parameterize %>">
+                <ul class="nav">
+                  <% module_item[:submodules].each do |submodule| %>
+                  <% # Check if the current path is within the submodule or its subsubmodules %>
+                  <% is_active_submodule = request.path == submodule[:link] || 
+                  submodule[:submodules].any? { |s| s[:link] == request.path } %>
+                  <li class="nav-item">
+                    <a class="nav-link text-white <%= 'active' if is_active_submodule %>" data-bs-toggle="collapse" aria-expanded="<%= is_active_submodule ? 'true' : 'false' %>" href="#<%= submodule[:name].parameterize %>">
+                      <span class="sidenav-mini-icon"> S </span>
+                      <span class="sidenav-normal ms-2 ps-1"><%= submodule[:name] %> <b class="caret"></b></span>
+                    </a>
+                    <div class="collapse <%= 'show' if is_active_submodule %>" id="<%= submodule[:name].parameterize %>">
+                      <ul class="nav nav-sm flex-column">
+                        <% submodule[:submodules].each do |subsubmodule| %>
+                        <li class="nav-item">
+                          <a class="nav-link text-white<%= 'active' if subsubmodule[:link] == request.path %> <%= 'active' if subsubmodule[:link] == request.path %>" href="<%= subsubmodule[:link] %>">
+                            <span class="sidenav-mini-icon <%= 'text-dark' if subsubmodule[:link] == request.path %>"> <%= subsubmodule[:name][0] %> </span>
+                            <span class="sidenav-normal ms-2 ps-1 <%= 'text-dark' if subsubmodule[:link] == request.path %>"><%= subsubmodule[:name] %></span>
+                          </a>
+                        </li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </li>
+                  <% end %>
+                </ul>
+              </div>
+            </li>
+            <% end %>
+          </ul>
+        </div>
+      </aside>
+      <main class="main-content border-radius-lg">
+        <!-- Navbar -->
+        <nav class="navbar navbar-main navbar-expand-lg position-sticky mt-4 top-1 px-0 mx-4 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
+          <div class="container-fluid py-1 px-3">
+            <div class="sidenav-toggler sidenav-toggler-inner d-xl-block d-none">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+              <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                <div class="input-group input-group-outline"></div>
+              </div>
+              <ul class="navbar-nav justify-content-end">
+                <li class="nav-item">
+                  <a href="./pages/authentication/signin/illustration.html" class="nav-link text-body p-0 position-relative" target="_blank">
+                    <i class="material-icons me-sm-1">account_circle</i>
+                  </a>
+                </li>
+                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                  <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                    <div class="sidenav-toggler-inner">
+                      <i class="sidenav-toggler-line"></i>
+                      <i class="sidenav-toggler-line"></i>
+                      <i class="sidenav-toggler-line"></i>
+                    </div>
+                  </a>
+                </li>
+                <li class="nav-item px-3">
+                  <a href="javascript:;" class="nav-link text-body p-0">
+                    <i class="material-icons fixed-plugin-button-nav cursor-pointer">dashboard</i>
+                  </a>
+                </li>
+                <li class="nav-item dropdown pe-2">
+                  <a href="javascript:;" class="nav-link text-body p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="material-icons cursor-pointer">notifications</i>
+                    <span class="position-absolute top-5 start-100 translate-middle badge rounded-pill bg-danger border border-white small py-1 px-2">
+                      <span class="small">11</span>
+                      <span class="visually-hidden">unread notifications</span>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end p-2 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                    <li class="mb-2">
+                      <a class="dropdown-item border-radius-md" href="javascript:;">
+                        <div class="d-flex align-items-center py-1">
+                          <span class="material-icons">email</span>
+                          <div class="ms-2">
+                            <h6 class="text-sm font-weight-normal my-auto">Check new messages</h6>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item border-radius-md" href="javascript:;">
+                        <div class="d-flex align-items-center py-1">
+                          <span class="material-icons">notification_important</span>
+                          <div class="ms-2">
+                            <h6 class="text-sm font-weight-normal my-auto">Check new notifications</h6>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </li>&nbsp;&nbsp;&nbsp;
+                <li class="nav-item">
+                  <%= button_to logout_path, method: :delete, class: 'btn btn-link text-body p-0 position-relative' do %><i class="material-icons me-sm-1" title="Logout">logout</i>
+                  <% end %>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="container-fluid py-4">
+          <%= yield %>
+        </div>
+      </main>
+      <script src="<%= asset_path('core/popper.min.js') %>"></script>
+      <script src="<%= asset_path('core/bootstrap.min.js') %>"></script>
+      <script src="<%= asset_path('plugins/perfect-scrollbar.min.js') %>"></script>
+      <script src="<%= asset_path('plugins/smooth-scrollbar.min.js') %>"></script>
+      <script src="<%= asset_path('plugins/chartjs.min.js') %>"></script>
+      <script src="<%= asset_path('material-dashboard.js') %>"></script>
+    </body>
+    </html>

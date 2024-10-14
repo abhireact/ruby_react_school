@@ -1,0 +1,2 @@
+class MgFomRoomCreation < ApplicationRecord
+end

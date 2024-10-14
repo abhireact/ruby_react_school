@@ -1,0 +1,2 @@
+class MgEmployeeExcel < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class MgPasswordTracker < ApplicationRecord
+end

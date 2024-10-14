@@ -1,0 +1,2 @@
+class MgArchiveDetail < ApplicationRecord
+end

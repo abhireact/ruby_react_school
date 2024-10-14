@@ -1,0 +1,2 @@
+class MgSchoolProgramme < ApplicationRecord
+end

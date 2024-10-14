@@ -1,0 +1,2 @@
+class MgBonafiedCertificate < ApplicationRecord
+end
