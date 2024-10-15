@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   end
   draw :sessions
   draw :wings
+  draw:schools
 
 
 

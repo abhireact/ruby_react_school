@@ -6,11 +6,16 @@ import store from "./store";
 // Import components
 import Home from "./components/Home";
 import Wing from "./components/WingsIndex";
+import SchoolInfo from "./components/school/schoolinfo";
+import AcademicYearManagement from "./components/school/academic";
 
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
   WingIndex: Wing,
+  SchoolIndex:SchoolInfo,
+ AcademicIndex:AcademicYearManagement,
+
 };
 
 // Function to render a component
