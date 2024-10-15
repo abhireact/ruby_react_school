@@ -4,9 +4,10 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
-// Import components
 import Home from "./components/Home";
-import Wing from "./components/WingsIndex";
+import SchoolInfo from "./components/school/schoolinfo";
+import AcademicYearManagement from "./components/school/academic";
+import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
 
 import StudentDetails from "./components/Students/About_Student/Student_Details";
@@ -16,15 +17,10 @@ import CreateCaste from "./components/Students/About_Student/create_caste";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
-  WingIndex: Wing,
-<<<<<<< HEAD
-  StudentDetails: StudentDetails,
-  CreateStudent: CreateStudent,
-  CasteDetails: CasteDetails,
-  CreateCaste: CreateCaste,
-=======
+  WingsIndexg: WingManagement,
+  SchoolIndex:SchoolInfo,
+ AcademicIndex:AcademicYearManagement,
   EmployeesIndex: Employees,
->>>>>>> 9e8fe308f183679aadf9027721734cdbecbf418a
 };
 
 // Function to render a component
@@ -62,5 +58,3 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// If you need to export the components for use elsewhere
-// export { Home, Wing };
