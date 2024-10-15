@@ -71,11 +71,17 @@
             ]
           }]},
           {name: "School",icon: "image",link: "/schools",
-            submodules: [{name: "School Information",
-              submodules: [
-                { name: "School Information", link: "/schools" },
-              ]
-            }]}] %>
+          submodules: [{name: "School Information",
+            submodules: [
+              { name: "School Information", link: "/schools" },
+              { name: "Account", link: "/account" },
+              { name: "Academic", link: "/schools/academic" },
+              # { name: "Wings", link: "/wings" },
+              { name: "Class", link: "/class" },
+
+
+            ]
+          }]}] %>
             <% modules.each do |module_item| %>
             <li class="nav-item">
               <% is_active_module = request.path == module_item[:link] || 
