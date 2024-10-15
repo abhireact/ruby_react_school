@@ -157,7 +157,9 @@ const Wing = ({ userData }) => {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent page refresh
 
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    const token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute("content");
     console.log(token, "tokenaaa");
     const data = {
       academic_year: selectedAcademicYear, // Get the selected academic year from state
@@ -226,19 +228,31 @@ const Wing = ({ userData }) => {
             <div className="col-6">
               <div className="input-group input-group-static">
                 <label>First Name</label>
-                <input type="text" className="form-control" placeholder="Alec" />
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Alec"
+                />
               </div>
             </div>
             <div className="col-6">
               <div className="input-group input-group-static">
                 <label>Last Name</label>
-                <input type="text" className="form-control" placeholder="Thompson" />
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Thompson"
+                />
               </div>
             </div>
           </div>
           <div className="row">
             <div className="col-6 col-sm-4 mt-3 mt-sm-0">
-              <select className="form-control" name="choices-state" id="choices-state">
+              <select
+                className="form-control"
+                name="choices-state"
+                id="choices-state"
+              >
                 <option value="Asia" selected="">
                   Asia
                 </option>
@@ -251,13 +265,21 @@ const Wing = ({ userData }) => {
             <div className="col-6">
               <div className="input-group input-group-static">
                 <label>Email</label>
-                <input type="email" className="form-control" placeholder="example@email.com" />
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="example@email.com"
+                />
               </div>
             </div>
             <div className="col-6">
               <div className="input-group input-group-static">
                 <label>Confirm Email</label>
-                <input type="email" className="form-control" placeholder="example@email.com" />
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="example@email.com"
+                />
               </div>
             </div>
           </div>
@@ -265,20 +287,32 @@ const Wing = ({ userData }) => {
             <div className="col-6">
               <div className="input-group input-group-static">
                 <label>Your location</label>
-                <input type="text" className="form-control" placeholder="Sydney, A" />
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Sydney, A"
+                />
               </div>
             </div>
             <div className="col-6">
               <div className="input-group input-group-static">
                 <label>Phone Number</label>
-                <input type="number" className="form-control" placeholder="+40 735 631 620" />
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="+40 735 631 620"
+                />
               </div>
             </div>
           </div>
           <div className="row">
             <div className="col-md-6 align-self-center">
               <label className="form-label mt-4 ms-0">Language</label>
-              <select className="form-control" name="choices-language" id="choices-language">
+              <select
+                className="form-control"
+                name="choices-language"
+                id="choices-language"
+              >
                 <option value="English">English</option>
                 <option value="French">French</option>
                 <option value="Spanish">Spanish</option>

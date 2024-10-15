@@ -7,10 +7,18 @@ import store from "./store";
 import Home from "./components/Home";
 import Wing from "./components/WingsIndex";
 
+import StudentDetails from "./components/Students/About_Student/Student_Details";
+import CreateStudent from "./components/Students/About_Student/create_student";
+import CasteDetails from "./components/Students/About_Student/caste";
+import CreateCaste from "./components/Students/About_Student/create_caste";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
   WingIndex: Wing,
+  StudentDetails: StudentDetails,
+  CreateStudent: CreateStudent,
+  CasteDetails: CasteDetails,
+  CreateCaste: CreateCaste,
 };
 
 // Function to render a component

@@ -26,7 +26,8 @@ Rails.application.routes.draw do
   end
   draw :sessions
   draw :wings
-
+  draw :students
+  draw :category
 
 
 
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
 
  resources :demos
  resources :dummy
+ resources :students
 
  root to: 'sessions#index'
   # match ':controller(/:action(/:id))', :via => [:get, :post]
