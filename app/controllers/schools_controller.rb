@@ -61,6 +61,7 @@ end
 
     # get /wings
 
+  
   private
   def academic_params
     params.require(:academic_years).permit! #(:name, :start_date, :end_date, :is_deleted)
@@ -75,6 +76,10 @@ end
       :state, :pin_code, :landmark, :country
     )
   end
-  
+  private
+  def wing_params
+    params.require(:wings).permit(:wing_name, :status, :created_by, :updated_by, :is_deleted, :mg_school_id)
+  end
 
 end
+ 

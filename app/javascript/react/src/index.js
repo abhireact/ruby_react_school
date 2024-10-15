@@ -5,14 +5,15 @@ import store from "./store";
 
 // Import components
 import Home from "./components/Home";
-import Wing from "./components/WingsIndex";
 import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
+import WingManagement from "./components/school/wings";
+
 
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
-  WingIndex: Wing,
+  WingsIndexg: WingManagement,
   SchoolIndex:SchoolInfo,
  AcademicIndex:AcademicYearManagement,
 
@@ -51,5 +52,3 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// If you need to export the components for use elsewhere
-// export { Home, Wing };

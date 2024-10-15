@@ -545,7 +545,7 @@ import React from "react";
 import GenericCRUD from "../../genericCrud";
 import * as Yup from "yup";
 const AcademicYearManagement = ({ userData }) => {
-  console.log(userData,"userrdata in AcM");
+  console.log(typeof userData,"userrdata in AcM");
   const columns = [
     { key: "name", label: "Name" },
     { key: "start_date", label: "Start Date" },

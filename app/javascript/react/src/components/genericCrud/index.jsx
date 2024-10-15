@@ -81,8 +81,16 @@ const GenericCRUD = ({
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [errorMessage, setErrorMessage] = useState("");
 
-
-  console.log(title,description,initialData,columns,apiEndpoint,validationSchema,formFields,"data from components");
+  console.log(
+    title,
+    description,
+    initialData,
+    columns,
+    apiEndpoint,
+    validationSchema,
+    formFields,
+    "data from components"
+  );
 
   useEffect(() => {
     setItems(initialData);
@@ -131,7 +139,7 @@ const GenericCRUD = ({
           response = await axios.post(`/${apiEndpoint}`, payload, { headers });
         }
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           const updatedItem = response.data;
           setItems((prevItems) => {
             if (editData) {
@@ -144,6 +152,7 @@ const GenericCRUD = ({
           });
           handleCloseDrawer();
           setErrorMessage("");
+          window.reload();
         }
       } catch (error) {
         console.error("There was an error submitting the form!", error);
@@ -271,10 +280,10 @@ const GenericCRUD = ({
                         setEntriesPerPage(Number(e.target.value))
                       }
                     >
+                      <option value={5}>5</option>
                       <option value={10}>10</option>
-                      <option value={25}>25</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
+                      <option value={25}>15</option>
+                      <option value={50}>20</option>
                     </BootstrapForm.Select>
                     <span>entries</span>
                   </div>
