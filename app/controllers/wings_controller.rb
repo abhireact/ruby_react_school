@@ -14,13 +14,7 @@ class WingsController < ApplicationController
 
     # Check if academic_year is present
     if academic_year.blank?
-      render json: { error: "Academic year cannot be blank" }, status: :unprocessable_entity
-      return
-    end
-
-    # Print the received academic_year to the server logs
-    Rails.logger.info("Received academic year: #{academic_year}")
-
+      render json: { error: "Academic year cannot be blank" }, status: status
     # Optionally, send a JSON response back to the React component
     render json: { message: "Academic year received", academic_year: academic_year }, status: :created
   end

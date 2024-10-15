@@ -2,10 +2,12 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import store from "./store";
-
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n";
 // Import components
 import Home from "./components/Home";
 import Wing from "./components/WingsIndex";
+import Employees from "./components/Employee/EmployeesIndex";
 
 import StudentDetails from "./components/Students/About_Student/Student_Details";
 import CreateStudent from "./components/Students/About_Student/create_student";
@@ -15,10 +17,14 @@ import CreateCaste from "./components/Students/About_Student/create_caste";
 const componentMapping = {
   reactRender: Home,
   WingIndex: Wing,
+<<<<<<< HEAD
   StudentDetails: StudentDetails,
   CreateStudent: CreateStudent,
   CasteDetails: CasteDetails,
   CreateCaste: CreateCaste,
+=======
+  EmployeesIndex: Employees,
+>>>>>>> 9e8fe308f183679aadf9027721734cdbecbf418a
 };
 
 // Function to render a component
@@ -39,7 +45,9 @@ const renderComponent = (elementId, Component) => {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
       <Provider store={store}>
-        <Component {...(userData ? { userData } : {})} />
+        <I18nextProvider i18n={i18n}>
+          <Component {...(userData ? { userData } : {})} />
+        </I18nextProvider>
       </Provider>
     );
   }

@@ -1,4 +1,4 @@
-# Rails.application.routes.draw do
+
 
 #   resources :wings
 #   # root "home#index"
@@ -21,13 +21,19 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
   end
   draw :sessions
   draw :wings
+<<<<<<< HEAD
   draw :students
   draw :category
+=======
+  draw :employees
+
+>>>>>>> 9e8fe308f183679aadf9027721734cdbecbf418a
 
 
 

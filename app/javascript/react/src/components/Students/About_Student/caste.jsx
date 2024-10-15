@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -75,7 +79,7 @@ const CasteDetails = ({ userData }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const parsedYears =git 
+    const parsedYears =
       typeof userData === "string" ? JSON.parse(userData) : userData;
     setAcademicYears(parsedYears);
   }, [userData]);
@@ -189,9 +193,7 @@ const CasteDetails = ({ userData }) => {
       } catch (error) {
         console.error("Error deleting academic year", error);
         // Handle errors, maybe show an alert to the user
-        alert(
-          "There was an error deleting the academic year. Please try again."
-        );
+        alert("There was an error deleting the academic year. Please try again.");
       }
     }
   }, []);
@@ -541,3 +543,7 @@ const CasteDetails = ({ userData }) => {
 };
 
 export default CasteDetails;
+
+
+
+
