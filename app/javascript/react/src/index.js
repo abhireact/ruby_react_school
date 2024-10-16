@@ -17,9 +17,9 @@ import CreateCaste from "./components/Students/About_Student/create_caste";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
-  WingsIndexg: WingManagement,
-  SchoolIndex:SchoolInfo,
- AcademicIndex:AcademicYearManagement,
+  WingsIndex: WingManagement,
+  SchoolIndex: SchoolInfo,
+  AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
 };
 
@@ -57,4 +57,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
