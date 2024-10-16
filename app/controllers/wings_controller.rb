@@ -4,6 +4,12 @@ class WingsController < ApplicationController
   def index
     @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
   end
+
+  def getdata
+    @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
+    render json:@wings, status: :created
+  end
+
   # POST /wings
   def create
         @wings = MgWing.new(wing_params)
@@ -12,7 +18,7 @@ class WingsController < ApplicationController
         @wings.created_by= session[:user_id]
         @wings.updated_by= session[:user_id]
         if @wings.save
-          redirect_to action: "index"
+          render json: { message: "Academic year Created"}, status: :created
         end
       end
 
@@ -21,7 +27,7 @@ class WingsController < ApplicationController
           # binding.pry
           @wings = MgWing.find(params[:id])
           if @wings.update(wing_params)
-            render json: { message: "Academic year upfated"}, status: :created
+            render json: { message: "Academic year updated"}, status: :created
           end
         end
         # DELETE /academic_years/:id

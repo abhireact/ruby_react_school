@@ -13,7 +13,7 @@ import Employees from "./components/Employee/EmployeesIndex";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
-  WingsIndexg: WingManagement,
+  WingsIndex: WingManagement,
   SchoolIndex:SchoolInfo,
  AcademicIndex:AcademicYearManagement,
   EmployeesIndex: Employees,
