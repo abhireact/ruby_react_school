@@ -15,7 +15,7 @@ const componentMapping = {
   reactRender: Home,
   WingsIndex: WingManagement,
   SchoolIndex:SchoolInfo,
- AcademicIndex:AcademicYearManagement,
+  AcademicIndex:AcademicYearManagement,
 
 };
 

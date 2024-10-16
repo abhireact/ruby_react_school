@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   draw :sessions
   draw :wings
   draw:schools
+  draw:academics
+
 
 
 

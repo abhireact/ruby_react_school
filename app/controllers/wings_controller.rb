@@ -1,14 +1,6 @@
 class WingsController < ApplicationController
   layout "mindcom"
 
-  # def index
-  #   @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
-  # end
-
-  # def getdata
-  #   @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
-  #   render json:@wings, status: :created
-  # end
   def index
     @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
     
@@ -37,7 +29,7 @@ class WingsController < ApplicationController
         end
       end
 
-     # PATCH/PUT /academic_years/:id
+     # PATCH/PUT /wings/:id
         def update
           # binding.pry
           @wings = MgWing.find(params[:id])
@@ -45,19 +37,16 @@ class WingsController < ApplicationController
             render json: { message: "Academic year updated"}, status: :created
           end
         end
-        # DELETE /academic_years/:id
-        def delete
+        # DELETE /wings/:id
+        def destroy
           @wings = MgWing.find(params[:id])
-          boolVal = MgDependancyClass.wing_dependancy("mg_wing_id", params[:id])
-          
-          if boolVal
-            flash[:error] = "Cannot Delete this Wing is Having Dependencies"
+          @wings = MgTimeTable.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
+          if @wings.present?
+            @wings.update(is_deleted: 1) # Soft delete by updating the is_deleted flag
+            render json: { message: 'Academic year deleted successfully' }, status: :ok
           else
-            @wings.update(is_deleted: 1)
-            flash[:notice] = "Deleted Successfully"
+            render json: { errors: 'Academic year not found or already deleted' }, status: :not_found
           end
-      
-          redirect_to action: "index"
         end
         private
         def wing_params
