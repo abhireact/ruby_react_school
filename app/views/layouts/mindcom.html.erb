@@ -41,6 +41,7 @@
   </script>
 </head>
 <body class="g-sidenav-show bg-gray-300">
+ 
   <!-- Sidebar -->
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main" style="
   background-image: linear-gradient(195deg, #234c71 0%, #1556ad 100%)
@@ -71,11 +72,17 @@
             ]
           }]},
           {name: "School",icon: "image",link: "/schools",
-            submodules: [{name: "School Information",
-              submodules: [
-                { name: "School Information", link: "/schools" },
-              ]
-            }]}] %>
+          submodules: [{name: "School Information",
+            submodules: [
+              { name: "School Information", link: "/schools" },
+              { name: "Account", link: "/account" },
+              { name: "Academic", link: "/schools/academic" },
+              # { name: "Wings", link: "/wings" },
+              { name: "Class", link: "/class" },
+
+
+            ]
+          }]}] %>
             <% modules.each do |module_item| %>
             <li class="nav-item">
               <% is_active_module = request.path == module_item[:link] || 
@@ -195,6 +202,11 @@
 
         <!-- Content -->
         <div class="container-fluid py-4">
+        <noscript>
+          <div style="background-color: red; color: white; padding: 10px; text-align: center;">
+            <strong>JavaScript is disabled in your browser.</strong> This application will not work properly without JavaScript enabled. Please enable JavaScript and reload the page.
+          </div>
+        </noscript>
           <%= yield %>
         </div>
       </main>

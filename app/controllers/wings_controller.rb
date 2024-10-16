@@ -2,33 +2,45 @@ class WingsController < ApplicationController
   layout "mindcom"
 
   def index
-    @school_data = { academic_year: ["2022-2023","2023-2024"], class: ["I","II","III"] }
+    @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
   end
-
-  def show
-  end
-
+  # POST /wings
   def create
-    # Get the academic_year from the request parameters
-    academic_year = params[:academic_year]
+        @wings = MgWing.new(wing_params)
+        @wings.mg_school_id = session[:current_user_school_id]
+        @wings.is_deleted= 0
+        @wings.created_by= session[:user_id]
+        @wings.updated_by= session[:user_id]
+        if @wings.save
+          redirect_to action: "index"
+        end
+      end
 
-    # Check if academic_year is present
-    if academic_year.blank?
-      render json: { error: "Academic year cannot be blank" }, status: :unprocessable_entity
-      return
-    end
-
-    # Print the received academic_year to the server logs
-    Rails.logger.info("Received academic year: #{academic_year}")
-
-    # Optionally, send a JSON response back to the React component
-    render json: { message: "Academic year received", academic_year: academic_year }, status: :created
-  end
-
-  private
-
-  def wing_params
-    # Use strong parameters to permit the academic_year parameter
-    params.permit(:academic_year)
-  end
+     # PATCH/PUT /academic_years/:id
+        def update
+          # binding.pry
+          @wings = MgWing.find(params[:id])
+          if @wings.update(wing_params)
+            render json: { message: "Academic year upfated"}, status: :created
+          end
+        end
+        # DELETE /academic_years/:id
+        def delete
+          @wings = MgWing.find(params[:id])
+          boolVal = MgDependancyClass.wing_dependancy("mg_wing_id", params[:id])
+          
+          if boolVal
+            flash[:error] = "Cannot Delete this Wing is Having Dependencies"
+          else
+            @wings.update(is_deleted: 1)
+            flash[:notice] = "Deleted Successfully"
+          end
+      
+          redirect_to action: "index"
+        end
+        private
+        def wing_params
+          params.require(:wings).permit(:wing_name, :status, :created_by, :updated_by, :is_deleted, :mg_school_id)
+        end
+      
 end
