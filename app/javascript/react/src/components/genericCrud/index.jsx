@@ -164,11 +164,7 @@ const GenericCRUD = ({
           response = await axios.post(`/${apiEndpoint}`, payload, { headers });
         }
 
-<<<<<<< HEAD
-        if (response.status === 200) {
-=======
         if (response.status === 201 || response.status === 200) {
->>>>>>> main
           const updatedItem = response.data;
           setItems((prevItems) => {
             if (editData) {

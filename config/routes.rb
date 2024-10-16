@@ -27,8 +27,11 @@ Rails.application.routes.draw do
   end
   draw :sessions
   draw :wings
-  draw:schools
+  draw :schools
   draw :employees
+  draw :classes
+  draw :category
+  draw :castes
 
 
 
