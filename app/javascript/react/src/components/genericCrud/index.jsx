@@ -113,8 +113,33 @@ const GenericCRUD = ({
     setShowDrawer(false);
     setEditData(null);
     setErrorMessage("");
+    fetchItems();
   }, []);
-
+  const fetchItems = useCallback(async () => {
+    try {
+      // Get the CSRF token from the meta tag
+      const token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
+  
+      // Set the headers, including the CSRF token
+      const headers = {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json",
+      };
+  
+      // Make the GET request with headers
+      const response = await axios.get(`/${apiEndpoint}/getdata`, { headers });
+  
+      // Update the items with the fetched data
+      console.log(response);
+      setItems(response.data);
+    } catch (error) {
+      console.error("Error fetching items", error);
+      setErrorMessage("Failed to fetch items. Please try again.");
+    }
+  }, [apiEndpoint]);
+  
   const handleFormSubmit = useCallback(
     async (values, { setSubmitting, setErrors }) => {
       const token = document
@@ -139,12 +164,12 @@ const GenericCRUD = ({
           response = await axios.post(`/${apiEndpoint}`, payload, { headers });
         }
 
-        if (response.status === 201) {
+        if (response.status === 201 || response.status === 200) {
           const updatedItem = response.data;
           setItems((prevItems) => {
             if (editData) {
               return prevItems.map((item) =>
-                item.id === editData.id ? updatedItem : item
+                item.id === updatedItem.id ? updatedItem : item
               );
             } else {
               return [...prevItems, updatedItem];
@@ -152,7 +177,7 @@ const GenericCRUD = ({
           });
           handleCloseDrawer();
           setErrorMessage("");
-          window.reload();
+          // window.location.reload()
         }
       } catch (error) {
         console.error("There was an error submitting the form!", error);
