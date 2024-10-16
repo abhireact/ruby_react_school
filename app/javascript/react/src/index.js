@@ -18,8 +18,8 @@ import CreateCaste from "./components/Students/About_Student/create_caste";
 const componentMapping = {
   reactRender: Home,
   WingsIndex: WingManagement,
-  SchoolIndex: SchoolInfo,
-  AcademicIndex: AcademicYearManagement,
+  SchoolIndex:SchoolInfo,
+ AcademicIndex:AcademicYearManagement,
   EmployeesIndex: Employees,
 };
 
