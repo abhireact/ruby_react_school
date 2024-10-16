@@ -1,13 +1,28 @@
 class WingsController < ApplicationController
   layout "mindcom"
 
+  # def index
+  #   @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
+  # end
+
+  # def getdata
+  #   @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
+  #   render json:@wings, status: :created
+  # end
   def index
     @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
-  end
-
-  def getdata
-    @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
-    render json:@wings, status: :created
+    
+    # Check if it's an API request (via format or params)
+    respond_to do |format|
+      format.html # renders the default index.html.erb
+      format.json do
+        if params[:api_request].present?
+          render json: @wings, status: :created
+        else
+          render json: { error: "API request parameter missing" }, status: :bad_request
+        end
+      end
+    end
   end
 
   # POST /wings
