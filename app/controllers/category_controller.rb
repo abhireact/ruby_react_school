@@ -4,11 +4,16 @@ class CategoryController < ApplicationController
   
     def index
         @castecategory=MgCasteCategory.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id])
-    end
-  
-    def getdata
-      @castecategory = MgCasteCategory.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
-      render json:@castecategory, status: :created
+        respond_to do |format|
+            format.html # renders the default index.html.erb
+            format.json do
+              if params[:api_request].present?
+                render json: @castecategory, status: :created
+              else
+                render json: { error: "API request parameter missing" }, status: :bad_request
+              end
+            end
+          end
     end
   
     # POST /wings
@@ -31,22 +36,23 @@ class CategoryController < ApplicationController
               render json: { message: "Caste Updated"}, status: :created
             end
           end
+
+
           # DELETE /academic_years/:id
           def destroy
 
-
-
-            @castecategory = MgCasteCategory.find(params[:id])
-          boolVal = MgDependancyClass.casteCategory_dependancy("mg_caste_category_id", params[:id])
-          
-          if boolVal
-            flash[:error] = "Cannot Delete this Wing is Having Dependencies"
-          else
-            @wings.update(is_deleted: 1)
-            flash[:notice] = "Deleted Successfully"
-          end
-      
-          render json: { message: "Academic year Created"}, status: :created
+            @castecategory=MgCasteCategory.find(params[:id])
+              # res = view_context.find_dependency("mg_caste_id",params[:id])
+       
+           boolVal = MgDependancyClass.caste_dependancy("mg_caste_category_id",params[:id])
+           if boolVal == true
+             flash[:error]  = "Cannot Delete this Caste is Having Dependencies"
+           else
+              @castecategory.update(:is_deleted=>1)
+               flash[:notice] = "Deleted Successfully"
+           end
+        
+           render json: { message: "Academic year Created"}, status: :created
 
 
           

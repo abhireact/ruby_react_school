@@ -7,12 +7,22 @@ class CastesController < ApplicationController
   
     def index
         @caste=MgCaste.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id])
+        respond_to do |format|
+            format.html # renders the default index.html.erb
+            format.json do
+              if params[:api_request].present?
+                render json: @caste, status: :created
+              else
+                render json: { error: "API request parameter missing" }, status: :bad_request
+              end
+            end
+          end
     end
   
-    def getdata
-      @caste = MgCaste.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
-      render json:@caste, status: :created
-    end
+    # def getdata
+    #   @caste = MgCaste.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]) 
+    #   render json:@caste, status: :created
+    # end
   
     # POST /wings
     def create

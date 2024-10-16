@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as XLSX from "xlsx";
@@ -12,7 +18,6 @@ import {
 } from "react-bootstrap";
 import { Eye, Edit, Trash, Search } from "lucide-react";
 
-// Custom hook for search functionality
 const useSearch = (items, searchKeys) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -80,7 +85,7 @@ const GenericCRUD = ({
   const [editData, setEditData] = useState(null);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [isViewMode, setIsViewMode] = useState(false);
   console.log(
     title,
     description,
@@ -108,29 +113,45 @@ const GenericCRUD = ({
     setEditData(item);
     setShowDrawer(true);
   }, []);
+  const handleShowDrawerview = useCallback((item = null) => {
+    setEditData(item);
+    setShowDrawer(true);
+    setIsViewMode(true); // Set view mode to true
+  }, []);
 
   const handleCloseDrawer = useCallback(() => {
     setShowDrawer(false);
     setEditData(null);
     setErrorMessage("");
+    setIsViewMode(false); // Set view mode to true
+    // if (formikRef.current) {
+    //   formikRef.current.resetForm();
+    // }
     fetchItems();
   }, []);
+
   const fetchItems = useCallback(async () => {
     try {
       // Get the CSRF token from the meta tag
       const token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
-  
+
       // Set the headers, including the CSRF token
       const headers = {
         "X-CSRF-Token": token,
         "Content-Type": "application/json",
       };
-  
-      // Make the GET request with headers
-      const response = await axios.get(`/${apiEndpoint}/getdata`, { headers });
-  
+
+      // Make the GET request with headers and params
+      const response = await axios.get(`/${apiEndpoint}`, {
+        headers,
+        params: {
+          api_request: true,
+          format: "json",
+        },
+      });
+
       // Update the items with the fetched data
       console.log(response);
       setItems(response.data);
@@ -139,7 +160,7 @@ const GenericCRUD = ({
       setErrorMessage("Failed to fetch items. Please try again.");
     }
   }, [apiEndpoint]);
-  
+
   const handleFormSubmit = useCallback(
     async (values, { setSubmitting, setErrors }) => {
       const token = document
@@ -210,11 +231,10 @@ const GenericCRUD = ({
           await axios.delete(`/${apiEndpoint}/${id}`, {
             headers: { "X-CSRF-Token": token },
           });
-
+          fetchItems();
           setItems((prevItems) => prevItems.filter((item) => item.id !== id));
         } catch (error) {
           console.error("Error deleting item", error);
-          alert("There was an error deleting the item. Please try again.");
         }
       }
     },
@@ -324,25 +344,41 @@ const GenericCRUD = ({
                     />
                   </InputGroup>
                 </div>
-                <Table id="items-list" className="table table-flush">
-                  <thead className="thead-light">
+                <Table
+                  id="items-list"
+                  className="table table-hover table-striped mb-0"
+                >
+                  <thead>
                     <tr>
                       {columns.map((col) => (
-                        <th key={col.key}>{col.label}</th>
+                        <th
+                          key={col.key}
+                          className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3"
+                        >
+                          {col.label}
+                        </th>
                       ))}
-                      <th>Action</th>
+                      <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {currentItems.map((item) => (
                       <tr key={item.id}>
                         {columns.map((col) => (
-                          <td key={col.key}>{item[col.key]}</td>
+                          <td
+                            key={col.key}
+                            className="align-middle text-sm ps-3"
+                          >
+                            {item[col.key]}
+                          </td>
                         ))}
-                        <td>
+                        <td className="align-middle ps-3">
                           <Button
                             variant="link"
                             className="text-secondary p-0 me-2"
+                            onClick={() => handleShowDrawerview(item)}
                           >
                             <Eye size={18} />
                           </Button>
@@ -455,7 +491,7 @@ const GenericCRUD = ({
                   {errorMessage}
                 </div>
               )}
-              <Formik
+              {/* <Formik
                 initialValues={editData || {}}
                 enableReinitialize={true}
                 validationSchema={validationSchema}
@@ -467,7 +503,9 @@ const GenericCRUD = ({
                       <div className="row" key={field.name}>
                         <div className="col-md-12">
                           <label htmlFor={field.name}>{field.label}</label>
-                          <div className="input-group input-group-outline my-1">
+                          <div
+                           className="input-group input-group-outline my-1"
+                           >
                             <Field
                               name={field.name}
                               type={field.type}
@@ -502,6 +540,65 @@ const GenericCRUD = ({
                         </button>
                       </div>
                     </div>
+                  </Form>
+                )}
+              </Formik> */}
+              <Formik
+                initialValues={editData || {}}
+                enableReinitialize={true}
+                validationSchema={validationSchema}
+                onSubmit={handleFormSubmit}
+              >
+                {({ errors, touched, isSubmitting }) => (
+                  <Form>
+                    {formFields.map((field) => (
+                      <div className="row" key={field.name}>
+                        <div className="col-md-12">
+                          <label htmlFor={field.name}>{field.label}</label>
+                          <div
+                            className={
+                              isViewMode
+                                ? "my-1" // No input-group class when in view mode
+                                : "input-group input-group-outline my-1"
+                            }
+                          >
+                            <Field
+                              name={field.name}
+                              type={field.type}
+                              className={`form-control ${
+                                touched[field.name] && errors[field.name]
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              placeholder={field.label}
+                              disabled={isViewMode} // Disable field in view mode
+                            />
+                            <ErrorMessage
+                              name={field.name}
+                              component="div"
+                              className="invalid-feedback"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {!isViewMode && ( // Only show buttons if not in view mode
+                      <div className="row">
+                        <div className="col-md-12 d-flex justify-content-end">
+                          <button
+                            type="submit"
+                            className="btn btn-info my-4"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting
+                              ? "Updating..."
+                              : editData
+                              ? "Update"
+                              : "Create"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>
