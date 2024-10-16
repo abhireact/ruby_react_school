@@ -115,22 +115,52 @@ const GenericCRUD = ({
     setErrorMessage("");
     fetchItems();
   }, []);
+  // const fetchItems = useCallback(async () => {
+  //   try {
+  //     // Get the CSRF token from the meta tag
+  //     const token = document
+  //       .querySelector('meta[name="csrf-token"]')
+  //       .getAttribute("content");
+  
+  //     // Set the headers, including the CSRF token
+  //     const headers = {
+  //       "X-CSRF-Token": token,
+  //       "Content-Type": "application/json",
+  //     };
+  
+  //     // Make the GET request with headers
+  //     const response = await axios.get(`/${apiEndpoint}/getdata`, { headers });
+  
+  //     // Update the items with the fetched data
+  //     console.log(response);
+  //     setItems(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching items", error);
+  //     setErrorMessage("Failed to fetch items. Please try again.");
+  //   }
+  // }, [apiEndpoint]);
   const fetchItems = useCallback(async () => {
     try {
       // Get the CSRF token from the meta tag
       const token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
-  
+      
       // Set the headers, including the CSRF token
       const headers = {
         "X-CSRF-Token": token,
         "Content-Type": "application/json",
       };
-  
-      // Make the GET request with headers
-      const response = await axios.get(`/${apiEndpoint}/getdata`, { headers });
-  
+      
+      // Make the GET request with headers and params
+      const response = await axios.get(`/${apiEndpoint}`, { 
+        headers,
+        params: { 
+          api_request: true,
+          format: 'json'
+        }
+      });
+      
       // Update the items with the fetched data
       console.log(response);
       setItems(response.data);
