@@ -9,6 +9,7 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
+import Classes from "./components/Classes/ClassesIndex"
 
 // Mapping of element IDs to components
 const componentMapping = {
@@ -17,6 +18,7 @@ const componentMapping = {
   SchoolIndex:SchoolInfo,
  AcademicIndex:AcademicYearManagement,
   EmployeesIndex: Employees,
+  ClassesIndex:Classes
 };
 
 // Function to render a component

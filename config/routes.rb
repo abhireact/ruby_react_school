@@ -21,15 +21,16 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "classes/index"
 
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
   end
   draw :sessions
   draw :wings
-  draw:schools
+  draw :schools
   draw :employees
-
+  draw :classes
 
 
 
