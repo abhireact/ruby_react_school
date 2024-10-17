@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 import {
   Table,
   Button,
@@ -30,9 +31,16 @@ const validationSchema = Yup.object().shape({
     end_date: Yup.date().required("End date is required"),
   }),
 });
+const editValidationSchema = Yup.object().shape({
+  course_name: Yup.string().required("Class name is required"),
+  code: Yup.string().required("Class code is required"),
+  mg_wing_id: Yup.string().required("Wing is required"),
+  mg_time_table_id: Yup.string().required("Academic Year is required"),
+});
 
 const ClassesIndex = ({ userData }) => {
   console.log(userData, "user data");
+
   const [classes, setClasses] = useState(userData.classes || []);
   const [wings, setWings] = useState(userData.wings_data || []);
   const [academicYears, setAcademicYears] = useState(
@@ -73,7 +81,7 @@ const ClassesIndex = ({ userData }) => {
     values.mg_time_table_id = Number(values.mg_time_table_id);
     values.mg_wing_id = Number(values.mg_wing_id);
     values.batch.end_date = convertDateFormat(values.batch.end_date);
-     values.batch.start_date = convertDateFormat(values.batch.start_date);
+    values.batch.start_date = convertDateFormat(values.batch.start_date);
     const token = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
@@ -86,11 +94,11 @@ const ClassesIndex = ({ userData }) => {
       },
       body: JSON.stringify({
         mg_course: {
-          course_name:values.course_name,
+          course_name: values.course_name,
           code: values.code,
-          mg_wing_id:values.mg_wing_id,
+          mg_wing_id: values.mg_wing_id,
           mg_time_table_id: values.mg_time_table_id,
-          section_name:values.batch.name
+          section_name: values.batch.name,
         },
         batch: values.batch,
         mg_time_table_id: userData.current_academic_year_id,
@@ -106,22 +114,66 @@ const ClassesIndex = ({ userData }) => {
   };
 
   const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this class?")) {
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
+
+      axios
+        .delete(`/classes/${id}`, {
+          headers: {
+            "X-CSRF-Token": csrfToken,
+          },
+        })
+        .then(() => {
+          setClasses(classes.filter((c) => c.id !== id));
+          // Optionally, you can add a success message here
+        })
+        .catch((error) => {
+          console.error("Error deleting class:", error);
+          // Optionally, you can add an error message here
+        });
+    }
+  };
+
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editingClass, setEditingClass] = useState(null);
+
+  // ... (keep existing functions)
+
+  const handleEditClick = (classItem) => {
+    setEditingClass(classItem);
+    setShowEditForm(true);
+  };
+
+  const handleEditSubmit = (values, { setSubmitting }) => {
     const token = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
 
-    fetch(`/classes/${id}`, {
-      method: "DELETE",
+    fetch(`/classes/${editingClass.id}`, {
+      method: "PATCH",
       headers: {
+        "Content-Type": "application/json",
         "X-CSRF-Token": token,
       },
+      body: JSON.stringify({
+        course: {
+          course_name: values.course_name,
+          code: values.code,
+          mg_wing_id: values.mg_wing_id,
+          mg_time_table_id: values.mg_time_table_id,
+        },
+      }),
     })
-      .then(() => {
-        setClasses(classes.filter((c) => c.id !== id));
+      .then((response) => response.json())
+      .then((data) => {
+        setClasses(classes.map((c) => (c.id === editingClass.id ? data : c)));
+        setShowEditForm(false);
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => console.error("Error:", error))
+      .finally(() => setSubmitting(false));
   };
-
 
   return (
     <div className="container mt-4">
@@ -194,6 +246,13 @@ const ClassesIndex = ({ userData }) => {
                   <td>{classItem.code}</td>
                   <td>{classItem.mg_wing_id}</td>
                   <td>
+                    <Button
+                      variant="link"
+                      className="text-primary p-0 me-2"
+                      onClick={() => handleEditClick(classItem)}
+                    >
+                      <Edit size={18} />
+                    </Button>
                     <Button
                       variant="link"
                       className="text-danger p-0"
@@ -372,8 +431,7 @@ const ClassesIndex = ({ userData }) => {
                       <Field
                         name="batch.name"
                         className={`form-control ${
-                          touched.batch?.name &&
-                          errors.batch?.name
+                          touched.batch?.name && errors.batch?.name
                             ? "is-invalid"
                             : ""
                         }`}
@@ -439,6 +497,138 @@ const ClassesIndex = ({ userData }) => {
               </Form>
             )}
           </Formik>
+        </Offcanvas.Body>
+      </Offcanvas>
+      <Offcanvas
+        show={showEditForm}
+        onHide={() => setShowEditForm(false)}
+        placement="end"
+        style={{ width: "60%" }}
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Edit Class</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          {editingClass && (
+            <Formik
+              initialValues={{
+                course_name: editingClass.course_name,
+                code: editingClass.code,
+                mg_wing_id: editingClass.mg_wing_id,
+                mg_time_table_id: editingClass.mg_time_table_id,
+              }}
+              validationSchema={editValidationSchema}
+              onSubmit={handleEditSubmit}
+            >
+              {({ errors, touched, isSubmitting }) => (
+                <Form>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label>Class Name</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          name="course_name"
+                          className={`form-control ${
+                            touched.course_name && errors.course_name
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="course_name"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <label>Class Code</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          name="code"
+                          className={`form-control ${
+                            touched.code && errors.code ? "is-invalid" : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="code"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label>Wing</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          as="select"
+                          name="mg_wing_id"
+                          className={`form-control ${
+                            touched.mg_wing_id && errors.mg_wing_id
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                        >
+                          <option value="" label="Select wing" />
+                          {wings.map((wing) => (
+                            <option key={wing.id} value={wing.id}>
+                              {wing.wing_name}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="mg_wing_id"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <label>Academic Year</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          as="select"
+                          name="mg_time_table_id"
+                          className={`form-control ${
+                            touched.mg_time_table_id && errors.mg_time_table_id
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                        >
+                          <option value="" label="Select academic year" />
+                          {academicYears.map((year) => (
+                            <option key={year.id} value={year.id}>
+                              {year.name}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="mg_time_table_id"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-12 d-flex justify-content-end">
+                      <button
+                        type="submit"
+                        className="btn btn-info my-4"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Updating..." : "Update Class"}
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          )}
         </Offcanvas.Body>
       </Offcanvas>
     </div>

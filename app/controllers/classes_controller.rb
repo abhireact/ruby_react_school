@@ -168,9 +168,10 @@ class ClassesController < ApplicationController
     @course = MgCourse.find(params[:id])
 
     logger.info ' index page ' if @course.update(mg_course_params)
-    flash[:notice] = ' Class Updated Successfully'
+    flash[:notice] = 'Class Updated Successfully'
+    return unless @course.update(mg_course_params)
 
-    redirect_to controller: 'classes', action: 'index'
+    render json: { message: 'Classes  updated' }, status: :created
   end
   # binding.pry
 

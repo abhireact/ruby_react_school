@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import DataTable from "../../Datatable";
 
 const validationSchema = Yup.object().shape({
   school_name: Yup.string().required("School name is required"),
@@ -20,6 +21,24 @@ const validationSchema = Yup.object().shape({
 });
 
 const SchoolInfo = ({ userData }) => {
+
+
+  const columns = [
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: 'Name' },
+    { key: 'email', label: 'Email' },
+    
+  ];
+
+  const data = [
+    { id: 1, name: 'John Doe', email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
+    { id: 1, name: 'John Doe', email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
+    { id: 1, name: 'John Doe', email: 'john@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
+
+  ];
   const [schoolData, setSchoolData] = useState(userData[0]);
 
   const handleSubmit = (values, { setSubmitting }) => {
@@ -46,9 +65,7 @@ const SchoolInfo = ({ userData }) => {
         console.error("Error updating school info", error);
         // Handle errors, maybe show an alert to the user
       })
-      .finally(() => {
-        setSubmitting(false);
-      });
+
   };
 
   return (
@@ -329,7 +346,6 @@ const SchoolInfo = ({ userData }) => {
                             </div>
                           </div>
                         </div>
-                        //
                         {/* <div className="row">
                           <div className="col-md-6">
                             <label htmlFor="affiliatedTo">Affiliated To</label>
@@ -565,6 +581,10 @@ const SchoolInfo = ({ userData }) => {
           </div>
         </>
       )}
+
+
+<DataTable columns={columns} data={data} />
+
     </div>
   );
 };
