@@ -2,21 +2,23 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import store from "./store";
-
-// Import components
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n";
 import Home from "./components/Home";
 import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
-
+import Employees from "./components/Employee/EmployeesIndex";
+import Dashboard from "./components/Dashboard/index";
 
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
   WingsIndex: WingManagement,
-  SchoolIndex:SchoolInfo,
-  AcademicIndex:AcademicYearManagement,
-
+  SchoolIndex: SchoolInfo,
+  AcademicIndex: AcademicYearManagement,
+  EmployeesIndex: Employees,
+  DashboardIndex: Dashboard,
 };
 
 // Function to render a component
@@ -37,7 +39,9 @@ const renderComponent = (elementId, Component) => {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
       <Provider store={store}>
-        <Component {...(userData ? { userData } : {})} />
+        <I18nextProvider i18n={i18n}>
+          <Component {...(userData ? { userData } : {})} />
+        </I18nextProvider>
       </Provider>
     );
   }

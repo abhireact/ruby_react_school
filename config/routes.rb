@@ -1,4 +1,4 @@
-# Rails.application.routes.draw do
+
 
 #   resources :wings
 #   # root "home#index"
@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   draw :wings
   draw:schools
   draw:academics
+  draw:dashboards
 
 
 

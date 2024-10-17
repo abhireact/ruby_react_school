@@ -1473,7 +1473,6 @@ const GenericCRUD = ({
   const [editData, setEditData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isViewMode, setIsViewMode] = useState(false);
-
   useEffect(() => {
     setItems(initialData);
   }, [initialData]);
@@ -1515,7 +1514,7 @@ const GenericCRUD = ({
           format: "json",
         },
       });
-
+      console.log(response);
       setItems(response.data);
     } catch (error) {
       console.error("Error fetching items", error);

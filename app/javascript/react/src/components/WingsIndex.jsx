@@ -6,11 +6,11 @@
 // const Wing = (props) => {
 //   const user = JSON.parse(props.userData);
 //   //   const dispatch = useDispatch();
-//   const { academicYear, classData, sectionData } = useSelector((state) => ({
-//     academicYear: state.academicYear,
-//     classData: state.classData,
-//     sectionData: state.sectionData,
-//   }));
+  // const { academicYear, classData, sectionData } = useSelector((state) => ({
+  //   academicYear: state.academicYear,
+  //   classData: state.classData,
+  //   sectionData: state.sectionData,
+  // }));
 
 //   // Now you can use academicYear, classData, and sectionData
 //   console.log(academicYear,"academic"); // Logs academic year data
@@ -96,11 +96,11 @@
 //   //
 //   //   };
 
-//     useEffect(() => {
-//       if (user.academic_year) {
-//         dispatch({ type: "SET_ACADEMIC_YEAR", payload: user.academic_year });
-//       }
-//     }, [dispatch]);
+    // useEffect(() => {
+    //   if (user.academic_year) {
+    //     dispatch({ type: "SET_ACADEMIC_YEAR", payload: user.academic_year });
+    //   }
+    // }, [dispatch]);
 //     console.log(academicYear, "academicafeterupdate");
 //   return (
 //     <div className="card mb-4">
@@ -135,8 +135,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AnimatedChatWithChart from "./animatedChat";
-
+import { useTranslation } from "react-i18next";
+import "./i18n";
+import Dropdown from "./Dropdown";
 const Wing = ({ userData }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { academicYear, classData, sectionData } = useSelector((state) => ({
     academicYear: state.academicYear,
@@ -183,14 +186,14 @@ const Wing = ({ userData }) => {
       console.error("Error submitting data:", error);
     }
   };
-
+  const optionsArray = ["Option 1", "Option 2", "Option 3"];
   return (
     <div className="card mb-4">
       <div className="card-body">
         <form id="sectionChangeForm" onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
-              <label htmlFor="academicYear" className="form-label">
+              {/* <label htmlFor="academicYear" className="form-label">
                 Academic Year
               </label>
               <select
@@ -204,7 +207,14 @@ const Wing = ({ userData }) => {
                 <option value="">Select Academic Year</option>
                 <option value="2024-2025">2024-2025</option>
                 <option value="2025-2026">2025-2026</option>
-              </select>
+              </select> */}
+              <Dropdown
+                options={optionsArray}
+                name="academic_year"
+                required
+                value={selectedAcademicYear}
+                onChange={(e) => setSelectedAcademicYear(e.target.value)}
+              />
               <div className="invalid-feedback" id="error-academic_year"></div>
             </div>
             <div className="col-12 mt-3">
@@ -219,7 +229,7 @@ const Wing = ({ userData }) => {
 
       <div className="card mt-4" id="basic-info">
         <div className="card-header">
-          <h5>Basic Info</h5>
+          <h5>{t("Basic Info")}</h5>
         </div>
         <div className="card-body pt-0">
           <div className="row">
