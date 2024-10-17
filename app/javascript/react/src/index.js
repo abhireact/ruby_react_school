@@ -9,6 +9,7 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
+import Dashboard from "./components/Dashboard/index";
 
 import StudentDetails from "./components/Students/About_Student/Student_Details";
 import CreateStudent from "./components/Students/About_Student/create_student";
@@ -18,9 +19,10 @@ import CreateCaste from "./components/Students/About_Student/create_caste";
 const componentMapping = {
   reactRender: Home,
   WingsIndex: WingManagement,
-  SchoolIndex:SchoolInfo,
- AcademicIndex:AcademicYearManagement,
+  SchoolIndex: SchoolInfo,
+  AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
+  DashboardIndex: Dashboard,
 };
 
 // Function to render a component
