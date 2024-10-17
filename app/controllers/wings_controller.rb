@@ -39,8 +39,7 @@ class WingsController < ApplicationController
         end
         # DELETE /wings/:id
         def destroy
-          @wings = MgWing.find(params[:id])
-          @wings = MgTimeTable.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
+          @wings = MgWing.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
           if @wings.present?
             @wings.update(is_deleted: 1) # Soft delete by updating the is_deleted flag
             render json: { message: 'Academic year deleted successfully' }, status: :ok
