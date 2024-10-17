@@ -19,6 +19,8 @@ import CasteManagement from "./components/caste";
 import CategoryManagement from "./components/category";
 import StudentHobbyManagement from "./components/student_hobby";
 import HouseManagement from "./components/house";
+import SportsManagement from "./components/sports";
+import SubjectsManagement from "./components/subjects";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -31,6 +33,8 @@ const componentMapping = {
   CategoryIndex: CategoryManagement,
   StudentHobbyIndex: StudentHobbyManagement,
   HouseIndex: HouseManagement,
+  SportsIndex: SportsManagement,
+  SubjectsIndex: SubjectsManagement,
 };
 
 // Function to render a component

@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   draw :schools
   draw:academics
   draw :houses
+  draw :sports
+  draw :subjects
 
 
   draw :classes
