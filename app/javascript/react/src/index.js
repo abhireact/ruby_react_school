@@ -17,6 +17,8 @@ import CreateCaste from "./components/Students/About_Student/create_caste";
 import ClassManagement from "./components/school/classes";
 import CasteManagement from "./components/caste";
 import CategoryManagement from "./components/category";
+import StudentHobbyManagement from "./components/student_hobby";
+import HouseManagement from "./components/house";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -27,6 +29,8 @@ const componentMapping = {
   ClassIndex: ClassManagement,
   CasteIndex: CasteManagement,
   CategoryIndex: CategoryManagement,
+  StudentHobbyIndex: StudentHobbyManagement,
+  HouseIndex: HouseManagement,
 };
 
 // Function to render a component

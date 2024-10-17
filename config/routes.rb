@@ -29,11 +29,13 @@ Rails.application.routes.draw do
   draw :wings
   draw :schools
   draw:academics
+  draw :houses
 
 
   draw :classes
   draw :category
   draw :castes
+  draw :student_hobbies
 
 
 

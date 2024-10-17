@@ -1,2 +1,0 @@
-class MgSubjectComponentsController < ApplicationController
-end
