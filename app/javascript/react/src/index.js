@@ -9,14 +9,16 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
+import Dashboard from "./components/Dashboard/index";
 
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
   WingsIndex: WingManagement,
-  SchoolIndex:SchoolInfo,
- AcademicIndex:AcademicYearManagement,
+  SchoolIndex: SchoolInfo,
+  AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
+  DashboardIndex: Dashboard,
 };
 
 // Function to render a component

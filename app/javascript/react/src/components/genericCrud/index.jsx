@@ -86,17 +86,6 @@ const GenericCRUD = ({
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [errorMessage, setErrorMessage] = useState("");
   const [isViewMode, setIsViewMode] = useState(false);
-  console.log(
-    title,
-    description,
-    initialData,
-    columns,
-    apiEndpoint,
-    validationSchema,
-    formFields,
-    "data from components"
-  );
-
   useEffect(() => {
     setItems(initialData);
   }, [initialData]);
@@ -151,8 +140,6 @@ const GenericCRUD = ({
           format: "json",
         },
       });
-
-      // Update the items with the fetched data
       console.log(response);
       setItems(response.data);
     } catch (error) {
