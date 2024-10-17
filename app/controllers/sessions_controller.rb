@@ -336,7 +336,7 @@ def permanent_blocking
     puts "----------School ID--> #{session[:current_user_school_id]} ------------"
     puts "#----------You are logging into #{@user_type} ------------#"
     puts "successfully Loggind in"
-    redirect_to controller: "wings", action: "index"
+    redirect_to controller: "dashboard", action: "index"
     # redirect_to wings_path
     # redirect_to wings_path(format: :html)
     elsif @user_type == "student"

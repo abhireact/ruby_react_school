@@ -21,7 +21,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
   end
@@ -32,6 +31,7 @@ Rails.application.routes.draw do
   draw :houses
   draw :sports
   draw :subjects
+  draw:dashboards
 
 
   draw :classes
