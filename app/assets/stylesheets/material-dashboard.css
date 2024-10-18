@@ -2915,7 +2915,7 @@ textarea.form-control-lg {
 
 .form-select:focus {
   border-color: transparent;
-  outline: 0;
+  outline: 1;
   box-shadow: none;
 }
 
