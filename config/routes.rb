@@ -1,5 +1,3 @@
-
-
 #   resources :wings
 #   # root "home#index"
 #    root "sessions#index"
@@ -17,10 +15,11 @@
 #   # root "posts#index"
 # end
 
-
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'classes/index'
+
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
   end
@@ -42,7 +41,7 @@ Rails.application.routes.draw do
 
 
 
- #-------------------------------------#
+  #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -55,10 +54,10 @@ Rails.application.routes.draw do
  #-------------------------------------#
 
 
- resources :demos
- resources :dummy
+  resources :demos
+  resources :dummy
  resources :students
 
- root to: 'sessions#index'
+  root to: 'sessions#index'
   # match ':controller(/:action(/:id))', :via => [:get, :post]
 end
