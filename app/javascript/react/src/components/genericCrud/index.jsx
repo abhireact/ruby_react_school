@@ -1339,7 +1339,7 @@
 // export default GenericCRUD;
 
 // removed unnessary things and added Datatable **************************************
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as XLSX from "xlsx";
@@ -1347,6 +1347,7 @@ import axios from "axios";
 import { Button, Form as BootstrapForm, InputGroup } from "react-bootstrap";
 import { Eye, Edit, Trash } from "lucide-react";
 import DataTable from "../Datatable"; // Import your DataTable component
+import CustomAutocomplete from "../Autocomplete";
 
 const CustomInput = ({ field, form, ...props }) => (
   <input {...field} {...props} className="form-control" />
@@ -1394,17 +1395,6 @@ const CustomRadio = ({ field, form, options, ...props }) => (
   </div>
 );
 
-const CustomAutoComplete = ({ field, form, options, ...props }) => (
-  <select {...field} {...props} className="form-control">
-    <option value="">Search {props.placeholder}</option>
-    {options.map((option) => (
-      <option key={option.value} value={option.value}>
-        {option.label}
-      </option>
-    ))}
-  </select>
-);
-
 const FormField = ({ field, isViewMode, ...props }) => {
   switch (field.fieldType) {
     case "select":
@@ -1439,7 +1429,7 @@ const FormField = ({ field, isViewMode, ...props }) => {
       return (
         <Field
           name={field.name}
-          component={CustomAutoComplete}
+          component={CustomAutocomplete}
           options={field.options}
           disabled={isViewMode}
           placeholder={field.label}
@@ -1473,6 +1463,8 @@ const GenericCRUD = ({
   const [editData, setEditData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isViewMode, setIsViewMode] = useState(false);
+  // const formikRef = useRef(null);
+
   useEffect(() => {
     setItems(initialData);
   }, [initialData]);
@@ -1490,9 +1482,13 @@ const GenericCRUD = ({
 
   const handleCloseDrawer = useCallback(() => {
     setShowDrawer(false);
+
     setEditData(null);
     setErrorMessage("");
     setIsViewMode(false); // Set view mode to false
+    // if (formikRef.current) {
+    //   formikRef.current.resetForm();
+    // }
     fetchItems();
   }, []);
 
@@ -1728,6 +1724,7 @@ const GenericCRUD = ({
                 </div>
               )}
               <Formik
+                // innerRef={formikRef}
                 initialValues={editData || {}}
                 enableReinitialize={true}
                 validationSchema={validationSchema}
