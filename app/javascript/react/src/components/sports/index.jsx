@@ -17,7 +17,7 @@ const SportsManagement = ({ userData }) => {
   return (
     <GenericCRUD
       title="Sports Management"
-      description="Manage Sports ."
+      description="Manage Sports"
       initialData={userData}
       columns={columns}
       apiEndpoint="sports"

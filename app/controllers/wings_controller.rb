@@ -43,20 +43,6 @@ class WingsController < ApplicationController
 
 
         def destroy
-<<<<<<< HEAD
-          @wings = MgWing.find(params[:id])
-    boolVal = MgDependancyClass.wing_dependancy("mg_wing_id", params[:id])
-    
-    if boolVal
-      flash[:error] = "Cannot Delete this Wing is Having Dependencies"
-    else
-      @wings.update(is_deleted: 1)
-      flash[:notice] = "Deleted Successfully"
-    end
-      
-     end 
-
-=======
           @wings = MgWing.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
           if @wings.present?
             @wings.update(is_deleted: 1) # Soft delete by updating the is_deleted flag
@@ -65,7 +51,6 @@ class WingsController < ApplicationController
             render json: { errors: 'Academic year not found or already deleted' }, status: :not_found
           end
         end
->>>>>>> main
         private
         def wing_params
           params.require(:wings).permit(:wing_name, :status, :created_by, :updated_by, :is_deleted, :mg_school_id)

@@ -22,6 +22,7 @@ import StudentHobbyManagement from "./components/student_hobby";
 import HouseManagement from "./components/house";
 import SportsManagement from "./components/sports";
 import SubjectsManagement from "./components/subjects";
+import SubjectArchiveManager from "./components/subject_archive";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -37,6 +38,7 @@ const componentMapping = {
   SportsIndex: SportsManagement,
   SubjectsIndex: SubjectsManagement,
   DashboardIndex: Dashboard,
+  SubjectArchiveIndex: SubjectArchiveManager,
 };
 
 // Function to render a component

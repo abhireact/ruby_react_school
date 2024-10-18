@@ -9,12 +9,12 @@
 
 //   const validationSchema = Yup.object({
 //     wing_name : Yup.string().required("Required"),
-    
+
 //   });
 
 //   const formFields = [
 //     { name : "wing_name", label: "Wing Name", type: "text" },
-    
+
 //   ];
 
 //   return (
@@ -30,7 +30,6 @@
 //   );
 // };
 // export default WingManagement;
-
 
 import React from "react";
 import GenericCRUD from "../../genericCrud";
@@ -51,11 +50,11 @@ const WingManagement = ({ userData }) => {
   });
 
   const formFields = [
-    { 
-      name: "wing_name", 
-      label: "Wing Name", 
+    {
+      name: "wing_name",
+      label: "Wing Name",
       type: "text",
-      fieldType: "input" 
+      fieldType: "input",
     },
     {
       name: "wing_type",
@@ -63,8 +62,8 @@ const WingManagement = ({ userData }) => {
       fieldType: "select",
       options: [
         { value: "academic", label: "Academic" },
-        { value: "administrative", label: "Administrative" }
-      ]
+        { value: "administrative", label: "Administrative" },
+      ],
     },
     {
       name: "wing_type",
@@ -72,13 +71,13 @@ const WingManagement = ({ userData }) => {
       fieldType: "radio",
       options: [
         { value: "academic", label: "Academic" },
-        { value: "administrative", label: "Administrative" }
-      ]
+        { value: "administrative", label: "Administrative" },
+      ],
     },
     {
       name: "is_active",
       label: "Active Status",
-      fieldType: "checkbox"
+      fieldType: "checkbox",
     },
     {
       name: "preferred_location",
@@ -87,9 +86,9 @@ const WingManagement = ({ userData }) => {
       options: [
         { value: "building_a", label: "Building A" },
         { value: "building_b", label: "Building B" },
-        { value: "building_c", label: "Building C" }
-      ]
-    }
+        { value: "building_c", label: "Building C" },
+      ],
+    },
   ];
 
   return (

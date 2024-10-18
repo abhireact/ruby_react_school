@@ -27,11 +27,12 @@ Rails.application.routes.draw do
   draw :sessions
   draw :wings
   draw :schools
-  draw:academics
+  draw :academics
   draw :houses
   draw :sports
   draw :subjects
-  draw:dashboards
+  draw :dashboards
+  draw :subject_archives
 
 
   draw :classes
