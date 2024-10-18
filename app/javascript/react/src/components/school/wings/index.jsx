@@ -87,8 +87,14 @@ const WingManagement = ({ userData }) => {
         { value: "building_a", label: "Building A" },
         { value: "building_b", label: "Building B" },
         { value: "building_c", label: "Building C" },
-      ],
-    },
+        { value: "building_d", label: "Building D" },
+        { value: "building_e", label: "Building E" },
+        { value: "building_f", label: "Building F" },
+        { value: "building_g", label: "Building G" },
+        { value: "building_h", label: "Building H" },
+        { value: "building_i", label: "Building I" }
+      ]
+    }
   ];
 
   return (
