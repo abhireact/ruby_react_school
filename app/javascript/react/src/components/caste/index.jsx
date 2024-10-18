@@ -2,7 +2,7 @@ import React from "react";
 import * as Yup from "yup";
 import GenericCRUD from "../genericCrud";
 const CasteManagement = ({ userData }) => {
-  console.log( userData, "userrdata in wings");
+  console.log(userData, "userrdata in wings");
   const columns = [{ key: "name", label: "Caste Name" }];
 
   const validationSchema = Yup.object({
@@ -10,8 +10,13 @@ const CasteManagement = ({ userData }) => {
   });
 
   const formFields = [
-    { name: "name", label: "Caste Name", type: "text" },
-    { name: "description", label: "Description", type: "text" },
+    { name: "name", label: "Caste Name", type: "text", fieldType: "input" },
+    {
+      name: "description",
+      label: "Description",
+      type: "text",
+      fieldType: "input",
+    },
   ];
 
   return (

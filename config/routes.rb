@@ -1,63 +1,33 @@
-#   resources :wings
-#   # root "home#index"
-#    root "sessions#index"
-#   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-#   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-#   # Can be used by load balancers and uptime monitors to verify that the app is live.
-#   get "up" => "rails/health#show", as: :rails_health_check
-
-#   # Render dynamic PWA files from app/views/pwa/*
-#   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-#   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-#   # Defines the root path route ("/")
-#   # root "posts#index"
-# end
-
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
   get 'classes/index'
 
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
   end
+
   draw :sessions
   draw :wings
   draw :schools
   draw :academics
   draw :houses
   draw :sports
+  draw :castes
+  draw :category
+  draw :student_hobbies
   draw :subjects
   draw :dashboards
   draw :subject_archives
-
-
   draw :classes
-  draw :category
-  draw :castes
-  draw :student_hobbies
 
-
-
-  #-------------------------------------#
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Reveal health status on /up
   get 'up' => 'rails/health#show', as: :rails_health_check
+  
   # Render dynamic PWA files from app/views/pwa/*
   get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
-  # Defines the root path route ("/")
-  # root "posts#index"
- #-------------------------------------#
-
 
   resources :demos
   resources :dummy
- resources :students
 
   root to: 'sessions#index'
-  # match ':controller(/:action(/:id))', :via => [:get, :post]
 end
