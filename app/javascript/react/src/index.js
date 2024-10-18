@@ -9,6 +9,7 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
+import Classes from "./components/Classes/ClassesIndex"
 import Dashboard from "./components/Dashboard/index";
 
 import StudentDetails from "./components/Students/About_Student/Student_Details";
@@ -23,6 +24,7 @@ const componentMapping = {
   AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
   DashboardIndex: Dashboard,
+  ClassesIndex:Classes
 };
 
 // Function to render a component
