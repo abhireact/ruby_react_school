@@ -1,7 +1,7 @@
-delete 'classes/:id', to: 'classes#delete'
-
-get 'classes/update/:id' => 'classes#employee_update'
-
-get 'classes/index'
-
-resources :classes
+ get 'classes', to:'classes#index'
+ resources :classes do
+    member do
+      delete :delete
+      get 'batchList', to: 'classes#batcheList'
+    end
+  end

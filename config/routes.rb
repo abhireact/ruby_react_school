@@ -18,7 +18,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  get 'classes/index'
+ 
+
 
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
@@ -31,7 +32,8 @@ Rails.application.routes.draw do
   draw :schools
   draw :academics
   draw :dashboards
-
+  draw :cbsc_examinations
+ 
   #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
