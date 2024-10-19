@@ -1,5 +1,4 @@
 class ClassesController < ApplicationController
-<<<<<<< HEAD
     layout "mindcom"
    # before_action :login_required
    # helper_method :user_signed_in?
@@ -177,7 +176,6 @@ class ClassesController < ApplicationController
       params.require(:batch).permit(:name, :is_deleted, :mg_school_id, :created_by, :updated_by)
    end
  end
-=======
   layout 'mindcom'
   # before_action :login_required
   # helper_method :user_signed_in?
@@ -371,4 +369,3 @@ class ClassesController < ApplicationController
     params.require(:batch).permit(:name, :is_deleted, :mg_school_id, :created_by, :updated_by)
   end
 end
->>>>>>> main

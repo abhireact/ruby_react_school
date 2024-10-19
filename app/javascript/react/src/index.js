@@ -9,7 +9,7 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
-import Classes from "./components/Classes/ClassesIndex"
+import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
 
 import StudentDetails from "./components/Students/About_Student/Student_Details";
@@ -24,6 +24,7 @@ import HouseManagement from "./components/house";
 import SportsManagement from "./components/sports";
 import SubjectsManagement from "./components/subjects";
 import SubjectArchiveManager from "./components/subject_archive";
+import ListManagement from "./components/subject_archive/list";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -39,8 +40,9 @@ const componentMapping = {
   SportsIndex: SportsManagement,
   SubjectsIndex: SubjectsManagement,
   DashboardIndex: Dashboard,
-  ClassesIndex:Classes,
+  ClassesIndex: Classes,
   SubjectArchiveIndex: SubjectArchiveManager,
+  ListManagement: ListManagement,
 };
 
 // Function to render a component

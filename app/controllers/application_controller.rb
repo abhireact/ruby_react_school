@@ -7,7 +7,8 @@ class ApplicationController < ActionController::Base
     courses = view_context.get_course_by_academic_year(params[:mg_time_table_id])
     courses_ids = []
     courses.each do |v, i| courses_ids << i end
-    courses_batches = view_context.get_course_batch_by_courses(courses_ids)
+ 
+      courses_batches = view_context.get_course_batch_by_courses(courses_ids)
     if user.present? && user.user_type == "employee"
       employee = MgEmployee.find_by(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id], :mg_user_id=>session[:user_id])
       courses = view_context.get_employee_courses(employee.id, params[:mg_time_table_id]) if employee.present?

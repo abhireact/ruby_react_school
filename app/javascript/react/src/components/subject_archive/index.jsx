@@ -1,28 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-
 const SubjectArchiveManager = () => {
   const [items, setItems] = useState([]);
-  const [classes, setClasses] = useState([]); // To store fetched classes
-  const [sections, setSections] = useState([]); // To store fetched sections
+  const [classes, setClasses] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { academicYear, classData, sectionData } = useSelector((state) => ({
-    academicYear: state.academicYear, // Array of academic year objects
-    classData: state.classData, // Array of class objects
-    sectionData: state.sectionData, // Array of section objects
+  const { academicYear, sectionData } = useSelector((state) => ({
+    academicYear: state.academicYear,
+    sectionData: state.sectionData,
   }));
 
   const [selectedAcademicYear, setSelectedAcademicYear] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
 
-  // Fetch classes based on academic year (mg_time_table_id)
   const fetchCoursesAndSections = useCallback(async () => {
     if (!selectedAcademicYear) return;
 
@@ -38,13 +36,22 @@ const SubjectArchiveManager = () => {
           "Content-Type": "application/json",
         },
         params: {
-          mg_time_table_id: selectedAcademicYear, // Pass the academic year id
+          mg_time_table_id: selectedAcademicYear,
         },
       });
 
-      // Update class and section data
-      setClasses(response.data.courses); // Assuming 'courses' is the key in the response for classes
-      setSections([]); // Reset sections as new classes are fetched
+      // Update class data based on response
+      if (response.data.courses_batches) {
+        setClasses(
+          response.data.courses_batches.map((batch) => ({
+            id: batch[1], // Course ID
+            name: batch[0], // Course name
+          }))
+        );
+      } else {
+        setClasses([]);
+      }
+      setSections([]);
     } catch (error) {
       setErrorMessage("Failed to fetch classes and sections");
       console.error(error);
@@ -53,9 +60,8 @@ const SubjectArchiveManager = () => {
     }
   }, [selectedAcademicYear]);
 
-  // Fetch subjects based on selected academic year and class
-  const fetchItems = useCallback(async () => {
-    if (!selectedAcademicYear || !selectedClass) return;
+  const fetchSubjects = useCallback(async () => {
+    if (!selectedClass) return;
 
     try {
       setLoading(true);
@@ -63,22 +69,30 @@ const SubjectArchiveManager = () => {
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
 
-      const response = await axios.get("/subject_archives/getdata", {
+      const response = await axios.get("/subject_archives/get_subject", {
         headers: {
           "X-CSRF-Token": token,
           "Content-Type": "application/json",
         },
         params: {
-          academic_year_id: selectedAcademicYear,
-          class_section: selectedClass,
-          request_type: "subjects",
+          department_id: selectedClass,
+          api_request: true,
         },
       });
 
+      // Only extract arrays that actually contain subjects
       if (Array.isArray(response.data)) {
-        setItems(response.data);
+        const flattenedSubjects = response.data
+          .filter((item) => Array.isArray(item) && item.length > 0) // Filter out empty arrays
+          .map((item) => item[0]) // Extract subject info from each array
+          .map((subject) => ({
+            name: subject[0], // Subject name
+            id: subject[1], // Subject ID
+          }));
+
+        setSubjects(flattenedSubjects);
       } else {
-        setItems([]);
+        setSubjects([]);
       }
     } catch (error) {
       setErrorMessage("Failed to fetch subjects");
@@ -86,23 +100,30 @@ const SubjectArchiveManager = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedAcademicYear, selectedClass]);
+  }, [selectedClass]);
 
   useEffect(() => {
     if (selectedAcademicYear) {
-      fetchCoursesAndSections(); // Fetch classes when academic year changes
+      fetchCoursesAndSections();
     }
   }, [selectedAcademicYear, fetchCoursesAndSections]);
+
+  useEffect(() => {
+    fetchSubjects();
+  }, [selectedClass, fetchSubjects]);
 
   const handleFormSubmit = useCallback(async (values, { setSubmitting }) => {
     try {
       const token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
+
+      // Ensure you're sending the correct request structure
       await axios.post(
         "/subject_archives/subject_archive_create",
         {
           selectedemployees: values.selectedSubjects,
+          // api_request: true, // Ensure this is included if backend expects it in body
         },
         {
           headers: {
@@ -112,7 +133,7 @@ const SubjectArchiveManager = () => {
         }
       );
 
-      window.location.href = "/subject_archives/archived_subject_list";
+      window.location.href = "/subject_archives_list";
     } catch (error) {
       setErrorMessage("Failed to archive subjects");
       console.error(error);
@@ -159,8 +180,9 @@ const SubjectArchiveManager = () => {
                         value={selectedAcademicYear}
                         onChange={(e) => {
                           setSelectedAcademicYear(e.target.value);
-                          setSelectedClass(""); // Reset class selection
-                          setSections([]); // Clear sections on academic year change
+                          setSelectedClass("");
+                          setSections([]);
+                          setSubjects([]); // Clear subjects when academic year changes
                         }}
                       >
                         <option value="">Select Academic Year</option>
@@ -181,38 +203,16 @@ const SubjectArchiveManager = () => {
                         value={selectedClass}
                         onChange={(e) => {
                           setSelectedClass(e.target.value);
-                          setSelectedSection(""); // Reset section when class changes
+                          setSelectedSection("");
+                          setSubjects([]); // Clear subjects when class changes
                         }}
                       >
                         <option value="">Select Class</option>
                         {classes.map((cls) => (
                           <option key={cls.id} value={cls.id}>
-                            {cls.course_name}
+                            {cls.name}
                           </option>
                         ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="col-md-6 mt-3">
-                    <div className="input-group input-group-outline">
-                      <label className="form-label">Section</label>
-                      <select
-                        className="form-control"
-                        value={selectedSection}
-                        onChange={(e) => setSelectedSection(e.target.value)}
-                        disabled={!selectedClass} // Disable until class is selected
-                      >
-                        <option value="">Select Section</option>
-                        {sectionData
-                          .filter(
-                            (section) => section.classId === selectedClass
-                          )
-                          .map((section) => (
-                            <option key={section.id} value={section.id}>
-                              {section.section_name}
-                            </option>
-                          ))}
                       </select>
                     </div>
                   </div>
@@ -221,7 +221,7 @@ const SubjectArchiveManager = () => {
                 {loading ? (
                   <div className="text-center py-4">Loading subjects...</div>
                 ) : (
-                  items.length > 0 && (
+                  subjects.length > 0 && (
                     <div className="mb-4">
                       <div className="card">
                         <div className="card-header p-3">
@@ -230,69 +230,69 @@ const SubjectArchiveManager = () => {
                               type="checkbox"
                               className="form-check-input"
                               onChange={(e) => {
-                                const allItemIds = items.map((item) => item.id);
+                                const allItemIds = subjects.map(
+                                  (subject) => subject.id
+                                ); // Map to get all subject IDs
                                 setFieldValue(
                                   "selectedSubjects",
                                   e.target.checked ? allItemIds : []
                                 );
                               }}
                               checked={
-                                values.selectedSubjects.length === items.length
+                                values.selectedSubjects.length ===
+                                subjects.length
                               }
                             />
                             <span className="ml-2">Select All Subjects</span>
                           </label>
                         </div>
                         <div className="card-body">
-                          <div className="row">
-                            {items.map((subject) => (
-                              <div key={subject.id} className="col-md-4 mb-3">
-                                <label className="d-flex items-center">
-                                  <input
-                                    type="checkbox"
-                                    className="form-check-input me-2"
-                                    value={subject.id}
-                                    checked={values.selectedSubjects.includes(
-                                      subject.id
-                                    )}
-                                    onChange={(e) => {
-                                      const newSelected = e.target.checked
-                                        ? [
-                                            ...values.selectedSubjects,
-                                            subject.id,
-                                          ]
-                                        : values.selectedSubjects.filter(
-                                            (id) => id !== subject.id
-                                          );
-                                      setFieldValue(
-                                        "selectedSubjects",
-                                        newSelected
+                          {subjects.map((subject) => (
+                            <div key={subject.id} className="form-check">
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id={`subject-${subject.id}`}
+                                checked={values.selectedSubjects.includes(
+                                  subject.id
+                                )}
+                                onChange={(e) => {
+                                  const updatedSubjects = e.target.checked
+                                    ? [...values.selectedSubjects, subject.id]
+                                    : values.selectedSubjects.filter(
+                                        (id) => id !== subject.id
                                       );
-                                    }}
-                                  />
-                                  <span>{subject.name}</span>
-                                </label>
+                                  setFieldValue(
+                                    "selectedSubjects",
+                                    updatedSubjects
+                                  );
+                                }}
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor={`subject-${subject.id}`}
+                              >
+                                {subject.name} {/* Display subject name */}
+                              </label>
+                            </div>
+                          ))}
+                          {errors.selectedSubjects &&
+                            touched.selectedSubjects && (
+                              <div className="text-danger">
+                                {errors.selectedSubjects}
                               </div>
-                            ))}
-                          </div>
+                            )}
                         </div>
                       </div>
-                      <ErrorMessage
-                        name="selectedSubjects"
-                        component="div"
-                        className="text-danger"
-                      />
                     </div>
                   )
                 )}
 
-                <Button
-                  className="btn btn-primary"
-                  type="submit"
-                  disabled={loading || values.selectedSubjects.length === 0}
-                >
-                  Archive Selected Subjects
-                </Button>
+                <div className="text-center">
+                  <Button type="submit" variant="primary">
+                    Archive Subjects
+                  </Button>
+                </div>
               </Form>
             )}
           </Formik>

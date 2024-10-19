@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   draw :dashboards
   draw :subject_archives
   draw :classes
+  draw :application
 
   # Reveal health status on /up
   get 'up' => 'rails/health#show', as: :rails_health_check
