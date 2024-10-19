@@ -12,19 +12,6 @@ import Employees from "./components/Employee/EmployeesIndex";
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
 
-import StudentDetails from "./components/Students/About_Student/Student_Details";
-import CreateStudent from "./components/Students/About_Student/create_student";
-import CasteDetails from "./components/Students/About_Student/caste";
-import CreateCaste from "./components/Students/About_Student/create_caste";
-import ClassManagement from "./components/school/classes";
-import CasteManagement from "./components/caste";
-import CategoryManagement from "./components/category";
-import StudentHobbyManagement from "./components/student_hobby";
-import HouseManagement from "./components/house";
-import SportsManagement from "./components/sports";
-import SubjectsManagement from "./components/subjects";
-import SubjectArchiveManager from "./components/subject_archive";
-import ListManagement from "./components/subject_archive/list";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -43,6 +30,7 @@ const componentMapping = {
   ClassesIndex: Classes,
   SubjectArchiveIndex: SubjectArchiveManager,
   ListManagement: ListManagement,
+  ExamType:ExamType
 };
 
 // Function to render a component

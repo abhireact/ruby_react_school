@@ -340,6 +340,17 @@ class ClassesController < ApplicationController
 
     end
   end
+  def batcheList
+    puts 'StudentsHash -- is coming'
+    @sql = "SELECT id, name, start_date, end_date FROM mg_batches WHERE mg_course_id = #{params[:id]} AND is_deleted = '0' AND mg_school_id = #{session[:current_user_school_id]}"
+    @batch_list = MgBatch.find_by_sql(@sql)
+
+ respond_to do |format|
+    format.json { render json: @batch_list }
+    format.html { render layout: false } # or whatever HTML response you want to give
+    format.all { head :not_acceptable }  # For any unsupported formats
+  end
+  end
 
   def update
     @course = MgCourse.find(params[:id])
