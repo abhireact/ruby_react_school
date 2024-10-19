@@ -1,4 +1,4 @@
- get 'classes', to:'classes#index'
+get 'classes', to:'classes#index'
  resources :classes do
     member do
       delete :delete

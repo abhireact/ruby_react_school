@@ -1,20 +1,20 @@
 class MgSubject < ApplicationRecord
-  validates(:index, { uniqueness: { scope: [:mg_school_id, :mg_course_id], conditions: lambda {
-    where({ is_deleted: false })
-  }, allow_nil: true, allow_blank: true } })
-  belongs_to(:mg_wing)
-  belongs_to(:mg_school)
-  has_many :mg_online_educations,  dependent: :destroy 
-  has_many :mg_create_question_papers,  dependent: :destroy 
-  has_many :mg_batch_subjects,  dependent: :destroy 
-  has_many :mg_employee_subjects,  dependent: :destroy 
-  has_many :mg_time_table_entries,  dependent: :destroy 
-  has_many :mg_subject_components,  dependent: :destroy 
-  validates_presence_of(:subject_name)
-  validates(:max_weekly_class, { numericality: { only_integer: true } })
+  # validates(:index, { uniqueness: { scope: [:mg_school_id, :mg_course_id], conditions: lambda {
+  #   where({ is_deleted: false })
+  # }, allow_nil: true, allow_blank: true } })
+  # belongs_to(:mg_wing)
+  # belongs_to(:mg_school)
+  # has_many :mg_online_educations,  dependent: :destroy 
+  # has_many :mg_create_question_papers,  dependent: :destroy 
+  # has_many :mg_batch_subjects,  dependent: :destroy 
+  # has_many :mg_employee_subjects,  dependent: :destroy 
+  # has_many :mg_time_table_entries,  dependent: :destroy 
+  # has_many :mg_subject_components,  dependent: :destroy 
+  # validates_presence_of(:subject_name)
+  # validates(:max_weekly_class, { numericality: { only_integer: true } })
   belongs_to(:mg_course)
-  delegate :course_name, to: :mg_course
-  delegate :course_batch_name, to: :mg_batch
+  # delegate :course_name, to: :mg_course
+  # delegate :course_batch_name, to: :mg_batch
 
   def can_destroy?
     table_list = Array.new

@@ -57,13 +57,25 @@
   <hr class="horizontal light mt-0 mb-2">
   <div class="collapse navbar-collapse w-auto h-auto" id="sidenav-collapse-main">
     <ul class="navbar-nav">
-      <% modules = [{name: "Wings",icon: "image",link: "/dashboard",
+      <% modules = [
+        {name: "Master Settings",icon: "image",link: "/category/caste",
+          submodules: [{name: "Student Settings",
+            submodules: [
+              { name: "Caste", link: "/castes" },
+              { name: "Caste Category", link: "/category"},
+              { name: "Hobby", link: "/student_hobbies"},
+              { name: "House", link: "/houses"},
+              { name: "Sports", link: "/sports"},
+            ]
+          }]},
+        {name: "Wings",icon: "image",link: "/wings",
         submodules: [{name: "Manage Wings",
           submodules: [
             { name: "Wings", link: "/wings" },
             { name: "Dummy", link: "/dummy" }
           ]
         }]},
+        
         {name: "Examination",icon: "image",link: "/examination",
           submodules: [{name: "Manage Examination",
             submodules: [
@@ -71,6 +83,30 @@
               { name: "Exam 2", link: "/exam2" }
             ]
           }]},
+          {name: "Classes",icon: "image",link: "/classes",
+          submodules: [{name: "Manage Class",
+            submodules: [
+              { name: "List Classes & Sections", link: "/classes" },
+              { name: "Create Class", link: "/classes/new" }
+            ]
+          }]},
+          {name: "Students",icon: "image",link: "/students",
+          submodules: [{name: "About Students",
+            submodules: [
+              { name: "Student Details ", link: "/students" },
+              { name: "Caste", link: "/students/caste"}
+            ]
+          }]},
+
+          {name: "Subjects",icon: "image",link: "/subjects",
+          submodules: [{name: "Manage Subject",
+            submodules: [
+              { name: "Subject Details ", link: "/subjects" },
+              { name: "Subject Archive", link: "/subject_archives"},
+              { name: "Subject Archive List", link: "/subject_archives_list"},
+            ]
+          }]},
+          
           {name: "School",icon: "image",link: "/schools",
           submodules: [{name: "School Information",
             submodules: [

@@ -9,9 +9,8 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
-import Classes from "./components/Classes/ClassesIndex"
+import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
-import ExamType from "./components/Examination/ExamType";
 
 // Mapping of element IDs to components
 const componentMapping = {
@@ -20,8 +19,17 @@ const componentMapping = {
   SchoolIndex: SchoolInfo,
   AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
+  ClassIndex: ClassManagement,
+  CasteIndex: CasteManagement,
+  CategoryIndex: CategoryManagement,
+  StudentHobbyIndex: StudentHobbyManagement,
+  HouseIndex: HouseManagement,
+  SportsIndex: SportsManagement,
+  SubjectsIndex: SubjectsManagement,
   DashboardIndex: Dashboard,
-  ClassesIndex:Classes,
+  ClassesIndex: Classes,
+  SubjectArchiveIndex: SubjectArchiveManager,
+  ListManagement: ListManagement,
   ExamType:ExamType
 };
 
@@ -59,4 +67,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-

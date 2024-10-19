@@ -193,7 +193,13 @@ module ApplicationHelper
 
 	def get_course_batch_by_courses(courses_ids)
 		current_date = Date.today
-		MgBatch.where(:is_deleted=>0, :mg_school_id=>session[:current_user_school_id], :mg_course_id=>courses_ids).joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")
+        # binding.pry
+		# MgBatch.where(:is_deleted=>0, :mg_school_id=>session[:current_user_school_id], :mg_course_id=>courses_ids).joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")
+
+        MgBatch.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id], :mg_course_id => courses_ids)
+       .joins(:mg_course)
+       .pluck(Arel.sql("CONCAT(mg_courses.course_name, '-', mg_batches.name)"), "id")
+
 
 	end
 
