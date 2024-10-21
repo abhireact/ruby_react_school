@@ -18,13 +18,14 @@ Rails.application.routes.draw do
   draw :subjects
   draw :dashboards
   draw :cbsc_examinations
+  draw :classes
  
   #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   draw :subject_archives
-  draw :classes
+ 
   draw :application
 
   # Reveal health status on /up
@@ -36,6 +37,9 @@ Rails.application.routes.draw do
 
   resources :demos
   resources :dummy
+
+
+  
 
   root to: 'sessions#index'
 end

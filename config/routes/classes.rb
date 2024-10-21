@@ -1,7 +1,5 @@
-get 'classes', to:'classes#index'
- resources :classes do
-    member do
-      delete :delete
-      get 'batchList', to: 'classes#batcheList'
-    end
-  end
+ get 'classes', to:'classes#index'
+ post '/classes/create', to: 'classes#create'
+ patch '/classes/:id', to: 'classes#edit'
+ delete  '/classes/:id', to: 'classes#destroy'
+ resources :classes

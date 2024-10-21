@@ -1,7 +1,13 @@
 class CbscExaminationsController < ApplicationController
   layout 'mindcom'
   #include CheckExamReport, GetParticularGrade
-  helper_method :sort_column, :sort_direction
+  include ApplicationHelper 
+  
+  helper_method :get_class_section, :sort_column, :sort_direction
+    
+   
+
+
   # before_action :login_required
   before_action :set_exam_type, only: %i[show edit update destroy]
 
@@ -14,12 +20,13 @@ class CbscExaminationsController < ApplicationController
     @batches = MgBatch.find_by(mg_school_id: session[:current_user_school_id], is_deleted: 0)
 
     @exam_types = MgCbscExamType.where(is_deleted: false, mg_school_id: session[:current_user_school_id], mg_time_table_id: @current_academic_year_id)
+    @classSection = view_context.get_class_section(@current_academic_year_id)
     @react_data = {
       academic_year_data:@current_academic_year,
       examtype_data: @exam_types,
       classes: @classes,
-      batches: @batches
-    
+      batches: @batches,
+      class_section:@classSection
     }
   end
 
@@ -57,7 +64,8 @@ class CbscExaminationsController < ApplicationController
           )
         end
       end
-      flash[:notice] = "Exam Type Created Successfully"
+              
+          render json: { message: "Exam Type  Created"}, status: :created
     else
       flash[:error] = "Exam Type is Already Used, Please Try Another Name"
     end
@@ -100,13 +108,14 @@ class CbscExaminationsController < ApplicationController
 
   def destroy
     if dependency_exists?("mg_cbsc_exam_type_id", params[:id])
-      flash[:error] = "Cannot delete this Exam Type as it has dependencies."
+       render json: { error: "Cannot delete this Exam Type as it has dependencies." }, status: :unprocessable_entity
+  
     else
       @exam_type.update(is_deleted: true)
       MgCbscExamTypeAssociation.where(mg_cbsc_exam_type_id: @exam_type.id).update_all(is_deleted: true)
-      flash[:notice] = "Deleted Successfully"
+      render json: { message: "Exam Type Deleted"}, status: :created
     end
-    redirect_to action: "index"
+    # redirect_to action: "index"
   end
 
   private

@@ -11,373 +11,14 @@ import {
   Offcanvas,
 } from "react-bootstrap";
 import { Edit, Trash, Search } from "lucide-react";
-let dummyData = {
-  academic_year_data: [175],
-  examtype_data: [
-    {
-      id: 189,
-      exam_type_name: "Term-1",
-      description: "",
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      is_deleted: false,
-      created_at: "2024-05-20T04:37:15.000Z",
-      updated_at: "2024-05-20T04:37:15.000Z",
-      index: 1,
-      mg_time_table_id: 175,
-    },
-    {
-      id: 190,
-      exam_type_name: "Term-2",
-      description: "",
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      is_deleted: false,
-      created_at: "2024-05-20T04:37:15.000Z",
-      updated_at: "2024-05-20T04:37:15.000Z",
-      index: 2,
-      mg_time_table_id: 175,
-    },
-    {
-      id: 191,
-      exam_type_name: "Academic Year",
-      description: "",
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      is_deleted: false,
-      created_at: "2024-05-20T04:37:15.000Z",
-      updated_at: "2024-05-20T04:37:15.000Z",
-      index: 3,
-      mg_time_table_id: 175,
-    },
-  ],
-  classes: [
-    {
-      id: 1868,
-      course_name: "NURSERYdtest",
-      code: "NUR",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 252,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-10-18T07:15:21.000Z",
-      mg_time_table_id: 175,
-      index: 1,
-    },
-    {
-      id: 1869,
-      course_name: "LKG",
-      code: "LKG",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 250,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:20:49.000Z",
-      mg_time_table_id: 175,
-      index: 2,
-    },
-    {
-      id: 1870,
-      course_name: "UKG",
-      code: "UKG",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 250,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:20:58.000Z",
-      mg_time_table_id: 175,
-      index: 3,
-    },
-    {
-      id: 1871,
-      course_name: "I",
-      code: "I",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 251,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:21:07.000Z",
-      mg_time_table_id: 175,
-      index: 4,
-    },
-    {
-      id: 1872,
-      course_name: "II",
-      code: "II",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 251,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:21:20.000Z",
-      mg_time_table_id: 175,
-      index: 5,
-    },
-    {
-      id: 1873,
-      course_name: "III",
-      code: "III",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 251,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:21:30.000Z",
-      mg_time_table_id: 175,
-      index: 6,
-    },
-    {
-      id: 1874,
-      course_name: "IV",
-      code: "IV",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 251,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:21:55.000Z",
-      mg_time_table_id: 175,
-      index: 7,
-    },
-    {
-      id: 1875,
-      course_name: "V",
-      code: "V",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 251,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:22:01.000Z",
-      mg_time_table_id: 175,
-      index: 8,
-    },
-    {
-      id: 1876,
-      course_name: "VI",
-      code: "VI",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 252,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:22:21.000Z",
-      mg_time_table_id: 175,
-      index: 9,
-    },
-    {
-      id: 1877,
-      course_name: "VII",
-      code: "VII",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 252,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:22:25.000Z",
-      mg_time_table_id: 175,
-      index: 10,
-    },
-    {
-      id: 1878,
-      course_name: "VIII",
-      code: "VIII",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 252,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:22:37.000Z",
-      mg_time_table_id: 175,
-      index: 11,
-    },
-    {
-      id: 1879,
-      course_name: "IX",
-      code: "IX",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 252,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:22:55.000Z",
-      mg_time_table_id: 175,
-      index: 12,
-    },
-    {
-      id: 1880,
-      course_name: "X",
-      code: "X",
-      section_name: null,
-      grading_type: "4",
-      mg_wing_id: 252,
-      is_deleted: false,
-      mg_school_id: 71,
-      created_by: 160098,
-      updated_by: 160098,
-      created_at: "2024-03-15T07:04:54.000Z",
-      updated_at: "2024-03-15T07:23:05.000Z",
-      mg_time_table_id: 175,
-      index: 13,
-    },
-  ],
-  userData: [
-    {
-      id: 1,
-      name: "Alice Smith",
-      email: "alice.smith@example.com",
-      class_id: 1868,
-    },
-    {
-      id: 2,
-      name: "Bob Johnson",
-      email: "bob.johnson@example.com",
-      class_id: 1869,
-    },
-    {
-      id: 3,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      class_id: 1870,
-    },
-    {
-      id: 4,
-      name: "David Wilson",
-      email: "david.wilson@example.com",
-      class_id: 1871,
-    },
-    {
-      id: 5,
-      name: "Eva Davis",
-      email: "eva.davis@example.com",
-      class_id: 1872,
-    },
-    {
-      id: 6,
-      name: "Fiona Clark",
-      email: "fiona.clark@example.com",
-      class_id: 1873,
-    },
-    {
-      id: 7,
-      name: "George Martin",
-      email: "george.martin@example.com",
-      class_id: 1874,
-    },
-    {
-      id: 8,
-      name: "Hannah Lee",
-      email: "hannah.lee@example.com",
-      class_id: 1875,
-    },
-    {
-      id: 9,
-      name: "Ian Wright",
-      email: "ian.wright@example.com",
-      class_id: 1876,
-    },
-    {
-      id: 10,
-      name: "Julia Roberts",
-      email: "julia.roberts@example.com",
-      class_id: 1877,
-    },
-    {
-      id: 11,
-      name: "Kevin Brown",
-      email: "kevin.brown@example.com",
-      class_id: 1878,
-    },
-    {
-      id: 12,
-      name: "Lily Adams",
-      email: "lily.adams@example.com",
-      class_id: 1879,
-    },
-    {
-      id: 13,
-      name: "Michael Green",
-      email: "michael.green@example.com",
-      class_id: 1880,
-    },
-  ],
-};
+
 const validationSchema = Yup.object().shape({
   exam_type_name: Yup.string().required("Exam type name is required"),
   description: Yup.string(),
   index: Yup.string(),
 });
-function createCombinedCourseBatchData(data) {
-  // Array to hold the combined course-batch data
-  const combinedData = [];
 
-  // Iterate through each user to get class and related course data
-  data.userData?.forEach((user) => {
-    // Find the class corresponding to the user's class_id
-    const course = data.classes.find((course) => course.id === user.class_id);
-
-    if (course) {
-      // Create a combined object with the required fields
-      const combinedEntry = {
-        courseId: course.id,
-        courseName: course.course_name,
-        batchId: user.class_id,
-        batchName: course.course_name, // Assuming batch name is the same as course name
-      };
-
-      // Add the combined entry to the combined data array
-      combinedData.push(combinedEntry);
-    }
-  });
-
-  return combinedData;
-}
 const ExamType = ({ userData }) => {
-  const combinedCourseBatchData = createCombinedCourseBatchData(dummyData);
-  console.log(combinedCourseBatchData, "combined course and batch ");
   console.log(userData, "ruby controller data");
   const [examTypes, setExamTypes] = useState(userData.examtype_data || []);
 
@@ -387,7 +28,6 @@ const ExamType = ({ userData }) => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingExamType, setEditingExamType] = useState(null);
-  const [selectedClasses, setSelectedClasses] = useState([]);
 
   const filteredExamTypes = useMemo(() => {
     return examTypes.filter((examType) =>
@@ -416,11 +56,22 @@ const ExamType = ({ userData }) => {
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSubmit = (values, { setSubmitting }) => {
+    const formattedData = selectedClass.map((item) => {
+      const selectedItem = userData.class_section.find((c) => c[1] === item);
+      return selectedItem ? selectedItem[1] : null;
+    });
+
+    // Filter out any null values (if they exist)
+    const cleanedData = formattedData.filter((item) => item !== null);
+
+    // Output or send data in the desired format
+    console.log("Selected Class:", cleanedData);
+
     const token = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
 
-    fetch("/cbsc_examinations", {
+    fetch("/cbsc_examinations/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -430,12 +81,16 @@ const ExamType = ({ userData }) => {
         mg_cbsc_exam_type: {
           ...values,
         },
+        selected_class: cleanedData,
       }),
     })
       .then((response) => response.json())
-      .then((data) => {
-        setExamTypes([...examTypes, data]);
+      .then(() => {
         setShowCreateForm(false);
+        resetForm(); // Reset the form fields
+        setSelectedClass([]); // Reset the selected classes
+
+        window.location.reload();
       })
       .catch((error) => console.error("Error:", error))
       .finally(() => setSubmitting(false));
@@ -454,6 +109,7 @@ const ExamType = ({ userData }) => {
           },
         })
         .then(() => {
+          window.location.reload();
           setExamTypes(examTypes.filter((et) => et.id !== id));
         })
         .catch((error) => {
@@ -468,6 +124,13 @@ const ExamType = ({ userData }) => {
   };
 
   const handleEditSubmit = (values, { setSubmitting }) => {
+    const formattedData = selectedClass.map((item) => {
+      const selectedItem = userData.class_section.find((c) => c[1] === item);
+      return selectedItem ? selectedItem[1] : null;
+    });
+
+    const cleanedData = formattedData.filter((item) => item !== null);
+
     const token = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
@@ -482,8 +145,7 @@ const ExamType = ({ userData }) => {
         mg_cbsc_exam_type: {
           ...values,
         },
-
-        selected_class: selectedClasses,
+        selected_class: cleanedData,
       }),
     })
       .then((response) => response.json())
@@ -492,11 +154,22 @@ const ExamType = ({ userData }) => {
           examTypes.map((et) => (et.id === editingExamType.id ? data : et))
         );
         setShowEditForm(false);
+        window.location.reload();
       })
       .catch((error) => console.error("Error:", error))
       .finally(() => setSubmitting(false));
   };
 
+  const [selectedClass, setSelectedClass] = useState([]);
+  const handleSelectChange = (e) => {
+    const value = e.target.value;
+    // If the value is already selected, remove it. Otherwise, add it.
+    setSelectedClass((prevSelected) =>
+      prevSelected.includes(value)
+        ? prevSelected.filter((v) => v !== value)
+        : [...prevSelected, value]
+    );
+  };
   return (
     <div className="container mt-4">
       <div className="card mb-4">
@@ -681,6 +354,49 @@ const ExamType = ({ userData }) => {
                     </div>
                   </div>
                 </div>
+                <div className="row">
+                  <h3>Select Classes and Sections</h3>
+                  <div
+                    style={{
+                      maxHeight: "300px",
+                      overflowY: "scroll",
+                      border: "1px solid #ccc",
+                      padding: "10px",
+                    }}
+                  >
+                    <div
+                      style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
+                    >
+                      {userData.class_section.map(([name, id], index) => (
+                        <div key={index} style={{ flex: "0 0 48%" }}>
+                          {" "}
+                          {/* Set width to 48% for two items per row */}
+                          <label>
+                            <input
+                              type="checkbox"
+                              value={id}
+                              onChange={handleSelectChange}
+                              checked={selectedClass.includes(id)}
+                            />
+                            &nbsp; &nbsp;
+                            {name}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-12 d-flex justify-content-end">
+                    <button
+                      type="submit"
+                      className="btn btn-info my-4"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Creating..." : "Submit"}
+                    </button>
+                  </div>
+                </div>
               </Form>
             )}
           </Formik>
@@ -701,6 +417,7 @@ const ExamType = ({ userData }) => {
               initialValues={{
                 exam_type_name: editingExamType.exam_type_name,
                 description: editingExamType.description,
+                index: editingExamType.index,
               }}
               validationSchema={validationSchema}
               onSubmit={handleEditSubmit}
@@ -708,7 +425,23 @@ const ExamType = ({ userData }) => {
               {({ errors, touched, isSubmitting }) => (
                 <Form>
                   <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
+                      <label>Index</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          name="index"
+                          className={`form-control ${
+                            touched.index && errors.index ? "is-invalid" : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="index"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
                       <label>Exam Type Name</label>
                       <div className="input-group input-group-outline my-1">
                         <Field
@@ -727,9 +460,8 @@ const ExamType = ({ userData }) => {
                       </div>
                     </div>
                   </div>
-
                   <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                       <label>Description</label>
                       <div className="input-group input-group-outline my-1">
                         <Field
@@ -749,36 +481,40 @@ const ExamType = ({ userData }) => {
                       </div>
                     </div>
                   </div>
-
                   <div className="row">
-                    <div className="col-md-12">
-                      <label>Academic Year</label>
-                      <div className="input-group input-group-outline my-1">
-                        <Field
-                          as="select"
-                          name="mg_time_table_id"
-                          className={`form-control ${
-                            touched.mg_time_table_id && errors.mg_time_table_id
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        >
-                          <option value="" label="Select academic year" />
-                          {academicYears.map((year) => (
-                            <option key={year.id} value={year.id}>
-                              {year.name}
-                            </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name="mg_time_table_id"
-                          component="div"
-                          className="invalid-feedback"
-                        />
+                    <h3>Select Classes and Sections</h3>
+                    <div
+                      style={{
+                        maxHeight: "300px",
+                        overflowY: "scroll",
+                        border: "1px solid #ccc",
+                        padding: "10px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "10px",
+                        }}
+                      >
+                        {userData.class_section.map(([name, id], index) => (
+                          <div key={index} style={{ flex: "0 0 48%" }}>
+                            <label>
+                              <input
+                                type="checkbox"
+                                value={id}
+                                onChange={handleSelectChange}
+                                checked={selectedClass.includes(id)}
+                              />
+                              &nbsp; &nbsp;
+                              {name}
+                            </label>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
-
                   <div className="row">
                     <div className="col-md-12 d-flex justify-content-end">
                       <button
