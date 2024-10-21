@@ -40,9 +40,6 @@ const editValidationSchema = Yup.object().shape({
 });
 
 const ClassesIndex = ({ userData }) => {
-  // Example usage
-
-
   console.log(userData, "user data");
 
   const [classes, setClasses] = useState(userData.classes || []);
