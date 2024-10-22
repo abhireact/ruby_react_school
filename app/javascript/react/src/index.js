@@ -11,20 +11,8 @@ import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
+import ExamType from "./components/Examination/ExamType"
 
-import StudentDetails from "./components/Students/About_Student/Student_Details";
-import CreateStudent from "./components/Students/About_Student/create_student";
-import CasteDetails from "./components/Students/About_Student/caste";
-import CreateCaste from "./components/Students/About_Student/create_caste";
-import ClassManagement from "./components/school/classes";
-import CasteManagement from "./components/caste";
-import CategoryManagement from "./components/category";
-import StudentHobbyManagement from "./components/student_hobby";
-import HouseManagement from "./components/house";
-import SportsManagement from "./components/sports";
-import SubjectsManagement from "./components/subjects";
-import SubjectArchiveManager from "./components/subject_archive";
-import ListManagement from "./components/subject_archive/list";
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
@@ -35,17 +23,9 @@ const componentMapping = {
   SchoolIndex: SchoolInfo,
   AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
-  ClassIndex: ClassManagement,
-  CasteIndex: CasteManagement,
-  CategoryIndex: CategoryManagement,
-  StudentHobbyIndex: StudentHobbyManagement,
-  HouseIndex: HouseManagement,
-  SportsIndex: SportsManagement,
-  SubjectsIndex: SubjectsManagement,
   DashboardIndex: Dashboard,
   ClassesIndex: Classes,
-  SubjectArchiveIndex: SubjectArchiveManager,
-  ListManagement: ListManagement,
+  ExamType: ExamType,
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,

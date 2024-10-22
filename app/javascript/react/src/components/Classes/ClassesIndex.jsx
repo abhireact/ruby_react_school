@@ -9,8 +9,9 @@ import {
   InputGroup,
   Pagination,
   Offcanvas,
+  Modal,
 } from "react-bootstrap";
-import { Eye, Edit, Trash, Search } from "lucide-react";
+import { Eye, Edit, Trash, Search, List } from "lucide-react";
 
 function convertDateFormat(dateString) {
   // Split the date string into an array
@@ -136,6 +137,23 @@ const ClassesIndex = ({ userData }) => {
     }
   };
 
+  const [showSectionsModal, setShowSectionsModal] = useState(false);
+  const [sections, setSections] = useState([]);
+  const [selectedClass, setSelectedClass] = useState(null);
+  // New function to fetch and show sections
+  const handleSections = (id) => {
+    axios
+      .get(`/classes/${id}/batchList`)
+      .then((response) => {
+        setSections(response.data);
+        setShowSectionsModal(true);
+        setSelectedClass(classes.find((c) => c.id === id));
+      })
+      .catch((error) => {
+        console.error("Error fetching sections:", error);
+      });
+  };
+
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
 
@@ -259,6 +277,13 @@ const ClassesIndex = ({ userData }) => {
                       onClick={() => handleDelete(classItem.id)}
                     >
                       <Trash size={18} />
+                    </Button>
+                    <Button
+                      variant="link"
+                      className="text-info p-0"
+                      onClick={() => handleSections(classItem.id)}
+                    >
+                      <List size={18} />
                     </Button>
                   </td>
                 </tr>
@@ -631,6 +656,30 @@ const ClassesIndex = ({ userData }) => {
           )}
         </Offcanvas.Body>
       </Offcanvas>
+      <Modal
+        show={showSectionsModal}
+        onHide={() => setShowSectionsModal(false)}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Sections in {selectedClass?.course_name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ul>
+            {sections.map((section) => (
+              <li key={section.id}>{section.name}</li>
+            ))}
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowSectionsModal(false)}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
