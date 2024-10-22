@@ -25,6 +25,9 @@ import SportsManagement from "./components/sports";
 import SubjectsManagement from "./components/subjects";
 import SubjectArchiveManager from "./components/subject_archive";
 import ListManagement from "./components/subject_archive/list";
+import EmpListManagement from "./components/emp_subjects/list";
+import EmpSybIndex from "./components/emp_subjects";
+import BatchSubjectManagement from "./components/subjects/batch";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -43,6 +46,9 @@ const componentMapping = {
   ClassesIndex: Classes,
   SubjectArchiveIndex: SubjectArchiveManager,
   ListManagement: ListManagement,
+  EmpListManagement: EmpListManagement,
+  EmpSybIndex: EmpSybIndex,
+  BatchSubjectManagement: BatchSubjectManagement,
 };
 
 // Function to render a component

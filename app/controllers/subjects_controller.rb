@@ -126,6 +126,37 @@ class SubjectsController < ApplicationController
 	end
 
 
+
+
+
+
+# subject section get data
+def batch_subject_asso
+    @current_academic_year_id = if params[:mg_time_table_id].present?
+      params[:mg_time_table_id]
+    else
+      view_context.get_current_academic_year(session[:current_user_school_id])
+    end
+
+    courses = MgCourse.where(
+      mg_time_table_id: @current_academic_year_id,
+      is_deleted: 0,
+      mg_school_id: session[:current_user_school_id]
+    ).pluck(:id)
+
+    @batches = MgBatch.where(
+      is_deleted: 0,
+      mg_school_id: session[:current_user_school_id],
+      mg_course_id: courses
+    ).includes(:mg_course)
+
+    respond_to do |format|
+      format.html
+      format.js # For AJAX requests
+    end
+  end
+
+
     private
 
     def sort_column
