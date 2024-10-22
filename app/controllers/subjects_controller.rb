@@ -6,18 +6,18 @@ class SubjectsController < ApplicationController
 
     def index
         current_academic_year = MgTimeTable.where("start_date < \"#{Date.today}\" && \"#{Date.today}\" < end_date")
-		.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id])
-		.pluck(:id)
+		    .where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id])
+		     .pluck(:id)
 
-		@current_academic_year_id = current_academic_year[0]
-		@current_academic_year_id = params[:mg_time_table_id] if params[:mg_time_table_id]
-		courses = MgCourse.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id], :mg_time_table_id => @current_academic_year_id).pluck(:id)
-	    if session[:table_array].present?
-	    	@table_array = session[:table_array]
-	    	@id = session[:table_array_id]
-	    	session[:table_array_id] = nil
-	    	session[:table_array] = nil
-	    end
+		   @current_academic_year_id = current_academic_year[0]
+		   @current_academic_year_id = params[:mg_time_table_id] if params[:mg_time_table_id]
+		    courses = MgCourse.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id], :mg_time_table_id => @current_academic_year_id).pluck(:id)
+	           if session[:table_array].present?
+	    	        @table_array = session[:table_array]
+	    	        @id = session[:table_array_id]
+	    	        session[:table_array_id] = nil
+	            	session[:table_array] = nil
+	           end
 	    @subjects = MgSubject.includes(:mg_course).where(:mg_course_id => courses, :is_deleted => 0, :mg_school_id => session[:current_user_school_id], is_archive: 0).order('mg_course_id').search(params[:search]).order(sort_column + " " + sort_direction)
 	    respond_to do |format|
             format.html # renders the default index.html.erb
@@ -30,11 +30,6 @@ class SubjectsController < ApplicationController
             end
           end
     end
-
-
-
-
-
 
     def create
         MgSubject.transaction do
@@ -68,8 +63,6 @@ class SubjectsController < ApplicationController
     end
     
     
-
-
 
     def update
         MgSubject.transaction do
