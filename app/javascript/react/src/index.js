@@ -11,7 +11,8 @@ import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
-import ExamType from "./components/Examination/ExamType"
+import ExamType from "./components/Examination/ExamType";
+import SectionIndex from "./components/Section/SectionIndex";
 
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
@@ -29,6 +30,7 @@ const componentMapping = {
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
+  SectionIndex:SectionIndex
 };
 
 // Function to render a component
