@@ -59,7 +59,16 @@
     <ul class="navbar-nav">
       <% modules = [
         {name: "Master Settings",icon: "image",link: "/category/caste",
-          submodules: [{name: "Student Settings",
+          submodules: [{name: "School Setting",
+          submodules: [
+            { name: "School Information", link: "/schools" },
+            { name: "Account", link: "/account" },
+            { name: "Academic", link: "/academics" },
+            { name: "Wings", link: "/wings" },
+            { name: "Greeting Messages", link: "/mg_greeting_messages" },
+            { name: "Holiday List", link: "/attendances/holiday_lists" }
+          ]
+        },{name: "Student Settings",
             submodules: [
               { name: "Caste", link: "/category/caste" },
               { name: "Caste Category", link: "/category/castecategory"},
@@ -114,29 +123,11 @@
               { name: "Employee Subject", link: "/emp_subjects"},
             ]
           }]},
-          
-          {name: "School",icon: "image",link: "/schools",
-          submodules: [{name: "School Information",
-            submodules: [
-              { name: "School Information", link: "/schools" },
-              { name: "Account", link: "/account" },
-              { name: "Academic", link: "/academics" },
-              { name: "Wings", link: "/wings" },
-              { name: "Class", link: "/classes/index" },
-
-
-            ]
-          }]},
+   
           {name: "Addmision",icon: "image",link: "/addmissions",
           submodules: [{name: "Admission Setting",
             submodules: [
               { name: "Addmission Date", link: "/addmissions" },
-              # { name: "Account", link: "/account" },
-              # { name: "Academic", link: "/academics" },
-              # { name: "Wings", link: "/wings" },
-              { name: "Class", link: "/classes" },
-              { name: "Greeting Messages", link: "/mg_greeting_messages" },
-              { name: "Holiday List", link: "/attendances/holiday_lists" }
             ]
           }]}] %>
             <% modules.each do |module_item| %>

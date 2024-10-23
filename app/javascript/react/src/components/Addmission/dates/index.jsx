@@ -37,7 +37,7 @@ window.location.href =`/mg_admission_settings/admission_setting_detail/${item?.i
 
   const validationSchema = Yup.object({
     // mg_time_table_id: Yup.string().required("Required"),
-    start_date: Yup.string().required("Required"),
+    // start_date: Yup.string().required("Required"),
   });
 
   const formFields = [
@@ -61,7 +61,7 @@ window.location.href =`/mg_admission_settings/admission_setting_detail/${item?.i
       validationSchema={validationSchema}
       formFields={formFields}
       needinbuilticon={true}
-      additionalActions={additionalActions}
+      // additionalActions={additionalActions}
     />
   );
 };
