@@ -1,0 +1,149 @@
+<% navigation_add 'Leaves', guardian_leave_path %>
+<% navigation_add 'Apply Leave', guardian_leave_path %>
+
+<h4 class="form-section-heading mc-margin-bottom-20">Apply Leave </h4>
+<%= form_for :attendances , url:attendances_apply_leave_for_student_path, id:@student.id, :html => {:id => 'LeaveApplyID', :class => 'LeaveApplyClass' } do |f| %>
+<!--attendances_createstudent_path-->
+
+<div class="row mc-padding-20 form-section-box">
+  <div id="hideFromToDateForStudentAttendanceDIVID">
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <%= f.label :From_Date , t('fromddate'),:class=>"mg-label" %><span class="required-field">&nbsp;*</span>
+    <%= f.text_field :from_date ,:class=>"form-control"%>
+  </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <%= f.label :To_Date, t('todate') ,:class=>"mg-label"%><span class="required-field">&nbsp;*</span>
+    <%= f.text_field :to_date  ,:class=>"form-control"%>
+  
+
+</div>
+</div>
+      
+
+       
+        
+    <%= f.hidden_field :is_halfday, :value => false ,:id=>"halfdayfield"%>
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+       <%= f.label :is_halfday , t('ishalfday'),:class=> "mg-label"%><br>
+       <input id="attendances_halfday" type="checkbox"  onclick="toggleAll();" name="attendances[halfday]" , class="form-control"> 
+    </div> 
+
+
+     <%= f.hidden_field :is_afternoon, :value => false ,:id=>"afternoonfield"%>
+    <p>
+    <div id="hideAndSickID" style="display:none">
+
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+          <%= f.label :Date, t('date') ,:class=>"mg-label"%><span class="required-field"> *</span>
+          <%= f.text_field :date  ,:class=>"form-control"%>
+        </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+        <%= f.label :morning , t('morning') ,:class=> "mg-label"%>
+        <%= f.radio_button :is_afternoon, false, :checked=>true%>
+      </div>
+        
+
+        <%= f.label :afternoon, t('afternoon'),:class=> "mg-label"%>
+        <%= f.radio_button :is_afternoon, true%>
+          </div>
+    
+</p>
+
+    <div class="no-of-days-attendence">
+      
+    </div>
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <p>
+      <%= f.label :reason , t('reason'),:class=> "mg-label"%><span class="required-field">&nbsp;*</span>
+      <%= f.text_area :reason ,:class=>"form-control"%>
+    </p>
+  </div>
+  </div>
+
+
+<!--         <%#= f.hidden_field :mg_batch_id, :value => @batID[0] %> -->
+    <%= f.hidden_field :mg_student_id, :value => @student.id %>
+    <%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+    <%= f.hidden_field :created_by, :value => session[:user_id]%>
+    <%= f.hidden_field :updated_by, :value => session[:user_id] %>
+    <%= f.hidden_field :is_deleted, :value => 0 %>
+    <%= f.hidden_field :mg_batch_id, :value => @batID[0] %>
+
+    
+
+
+
+        <p class="mg-p-mgtop">
+          <%#= f.submit t("save") ,:id => "FormID-Demo" ,:class=>"Form-form-btn mg-small-form-btn"%>
+           <a onclick="$(this).closest('form').submit()" id="FormID-Demo"  , class="Form-form-btn mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+          <%= link_to t('cancel'), :back, { :class=>"Form-form-btn mc-margin-bottom-20 flat-button"} %> 
+        </p>
+      <% end %>
+
+
+
+
+<script>
+dateFormatStr =  getJsDateFormat();
+
+
+$(document).ready(function () {
+     
+       $( "#attendances_from_date" ).datepicker({ minDate:new Date(), changeMonth: true,
+                changeYear: true,dateFormat: dateFormatStr });
+
+       $( "#attendances_to_date" ).datepicker({ minDate:new Date(), changeMonth: true,
+                changeYear: true,dateFormat: dateFormatStr });
+
+       $( "#attendances_date" ).datepicker({minDate:new Date(), changeMonth: true,
+                changeYear: true,dateFormat: dateFormatStr });
+
+$("#LeaveApplyID").validate({
+rules: {
+"attendances[from_date]": {required: true},
+"attendances[to_date]": {required: true},
+"attendances[reason]": {required: true},
+"attendances[date]": {required: true}
+
+}
+});
+});
+
+function toggleAll()
+{
+ $("#hideAndSickID").toggle();
+ $("#hideFromToDateForStudentAttendanceDIVID").toggle();
+}
+     //==================Dob & Admission date validation starts==========================
+     $(document).on("change","#attendances_from_date",function(e){
+      var admission_date=$("#attendances_to_date").val();
+      var dob=$(this).val();
+     // alert(getDateObj(dob,dateFormatStr)+3);
+     //if(getDateObj(dob,dateFormatStr)>getDateObj(admission_date,dateFormatStr)){
+      if(dob && admission_date) { 
+      if(!compareDate(dob, admission_date, dateFormatStr)) {
+        alert("From Date should be lesser than To Date");
+        document.getElementById('attendances_from_date').value ="";
+      }
+    }
+   });
+   $(document).on("change","#attendances_to_date",function(e){
+
+      var admission_date=$(this).val();
+      var dob=$("#attendances_from_date").val();
+
+        //if(getDateObj(dob,dateFormatStr)>getDateObj(admission_date,dateFormatStr)){
+        if(dob && admission_date) { 
+         if(!compareDate(dob, admission_date, dateFormatStr)){ 
+          alert("From Date should be lesser than To Date");
+          document.getElementById('attendances_to_date').value ="";
+        }
+       } 
+   });
+     //======================Dob & Admission date validation ends==============
+
+
+</script>

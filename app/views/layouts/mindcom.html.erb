@@ -68,6 +68,12 @@
               { name: "Sports", link: "/category/sports"},
               { name: "Extra Curricular", link: "/category/extra_curricular_index"},
             ]
+          },{name: "Employee Settings",
+            submodules: [
+              { name: "Employee Department", link: "/mg_employee_departments" },
+              { name: "Employee Profile", link: "/mg_employee_positions"},
+              { name: "Weekdays", link: "/mg_employee_weekdays"},
+            ]
           }]},
         {name: "Wings",icon: "image",link: "/wings",
         submodules: [{name: "Manage Wings",
@@ -114,11 +120,23 @@
             submodules: [
               { name: "School Information", link: "/schools" },
               { name: "Account", link: "/account" },
-              { name: "Academic", link: "/schools/academic" },
+              { name: "Academic", link: "/academics" },
+              { name: "Wings", link: "/wings" },
+              { name: "Class", link: "/classes/index" },
+
+
+            ]
+          }]},
+          {name: "Addmision",icon: "image",link: "/addmissions",
+          submodules: [{name: "Admission Setting",
+            submodules: [
+              { name: "Addmission Date", link: "/addmissions" },
+              # { name: "Account", link: "/account" },
+              # { name: "Academic", link: "/academics" },
               # { name: "Wings", link: "/wings" },
               { name: "Class", link: "/classes" },
-
-
+              { name: "Greeting Messages", link: "/mg_greeting_messages" },
+              { name: "Holiday List", link: "/attendances/holiday_lists" }
             ]
           }]}] %>
             <% modules.each do |module_item| %>

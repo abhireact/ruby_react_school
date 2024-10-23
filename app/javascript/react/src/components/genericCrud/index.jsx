@@ -1458,6 +1458,8 @@ const GenericCRUD = ({
   validationSchema,
   formFields,
   payloadKey,
+  needinbuilticon,
+  additionalActions = [],
 }) => {
   const [items, setItems] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -1465,6 +1467,7 @@ const GenericCRUD = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isViewMode, setIsViewMode] = useState(false);
   // const formikRef = useRef(null);
+  console.log(additionalActions,needinbuilticon, "debhcdewj");
 
   useEffect(() => {
     setItems(initialData);
@@ -1677,6 +1680,8 @@ const GenericCRUD = ({
                 onView={handleShowDrawerview}
                 onEdit={handleShowDrawer}
                 onDelete={handleDelete}
+                needinbuilticon={needinbuilticon}
+                additionalActions={additionalActions}
               />
             </div>
           </div>

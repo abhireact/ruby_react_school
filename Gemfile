@@ -62,3 +62,5 @@ gem "carrierwave"              # File uploads for Rails
 # gem "rubocop-rspec", require: false # If using RSpec
 gem "active_model_otp"         # Two-factor authentication support
 gem "ckeditor"                 # Rich text editor
+gem 'validates_overlap'
+gem 'activerecord-import'

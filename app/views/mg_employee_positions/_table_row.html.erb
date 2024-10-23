@@ -1,0 +1,22 @@
+<!-- Sec --> 
+
+		<%  @dep=MgEmployeeCategory.find_by_id( employee_position.mg_employee_category_id)%>
+       
+      <tr>
+        <td><%= @dep.category_name unless @dep.nil? %></td>
+        <td><%= employee_position.position_name %></td>
+        <!-- <td><%#= if employee_position.status then "Inactive" else "Active" end %></td> -->
+
+
+
+        <td>
+           <!-- <button title="Edit" class="edit-employee-position mg-icon-btn" id="editEmployeePositionID-<%#= employee_position.id%>"><i class="fa fa-pencil-square-o"></i></button> -->
+           <%= link_to "<i class=\"fa fa-pencil-square-o\"></i>".html_safe ,{controller: "mg_employee_positions",action: "edit", id: employee_position.id },
+                                method: :get,:title=>"Edit" ,:class=>"mg-icon-btn edit-btn"  %>
+        <!--    <button title="Delete" class="delete-employee-position mg-icon-btn" id="deleteEmployeePositionID-<%= employee_position.id%>"><i class="fa fa-trash"></i></button> -->
+          <!-- <span style="left: -190px; position: relative; float: right; top: -3px;"> -->
+          <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe, {:controller => "mg_employee_positions", :action => "delete",:id =>employee_position.id }, :method=>'post' ,:title=>"Delete" ,:class=>"mg-icon-btn",data: { confirm: 'Are you sure to delete?' } %>
+          <!-- </span> -->
+        </td>
+
+      </tr>

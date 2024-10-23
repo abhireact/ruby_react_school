@@ -1,0 +1,979 @@
+
+<% navigation_add 'Attendance', :controller=>'attendances', :action=>'view_attendance' %>
+
+<!-- Sec --><!-- Partial left content -->
+<%#= render partial: 'dashboards/guardian_dashboard_left' %>
+<!-- Partial Index -->
+<%= render partial: 'guardian' %>
+<!-- Partial Section close-->
+<%#= render partial: 'dashboards/guardian_dashboard_close' %>
+
+
+
+
+
+
+
+
+<style> 
+.ui-datepicker-calendar {
+   display: none; 
+    }
+</style>
+
+<script >
+  var cuurent_month = 0;
+var start_week = 0;
+ $(document).on("click","#current_week",function(e){
+                      $( ".attendance-month-one-student" ).datepicker("hide");
+                          var d = new Date();
+                          var month = d.getMonth();
+                          var year=d.getFullYear();
+                
+
+                    var days = new Array(7);
+                    days[0]=  "Sun";
+                    days[1] = "Mon";
+                    days[2] = "Tues";
+                    days[3] = "Wed";
+                    days[4] = "Thur";
+                    days[5] = "Fri";
+                    days[6] = "Sat";
+
+
+
+                    Date.prototype.getDayName = function() {
+                            return days[ this.getDay() ];
+                        };
+                        var curr = new Date(); // get current date
+                    var first = (curr.getDate()-1) - (curr.getDay()-1); // First day is the day of the month - the day of the week
+                    var last = first + 6; // last day is the first day + 6
+                    var  y = curr.getFullYear();
+                    var m = curr.getMonth();
+                    var last_day_of_month = new Date(y, m + 1, 0)
+                    var last_day = last_day_of_month.getDate()
+                   // $('input[type="checkbox"]').click(function(){
+                          if($(this).prop("checked") == true){
+                            start_week = first
+                            cuurent_month = last
+                          }else{
+                            start_week = 1;
+                            cuurent_month = parseInt(daysInMonth(month, year));
+                          }
+                    //  generate dynamic calendr here
+                    var totalDays = parseInt(daysInMonth1(new Date().getMonth()+1, new Date().getFullYear()));
+                    var strDates = "<tr><th>Name</th>"
+                    var next_month_day = 1;
+                    
+                    for(var index=start_week; index <= cuurent_month;index++){
+                               var now = new Date( new Date().getFullYear(),new Date().getMonth(),index);
+                                if (index >last_day)
+                                 {
+                                  // alert()
+                                  strDates +="<th>"+next_month_day+"<br/>"+now.getDayName()+"</th>";
+                                  next_month_day++;
+                                 }else if(index < 1){
+                                  var last_day_of_month = new Date(y, m - 2, 0);
+                                  var last_day = last_day_of_month.getDate();
+                                  var last_month_day = last_day+index
+                                  strDates +="<th>"+last_month_day+"<br/>"+now.getDayName()+"</th>";
+                                 }else{
+                                  strDates +="<th>"+index+"<br/>"+now.getDayName()+"</th>";
+                                }   
+                                 
+                                
+                    }
+                  //  console.log(strDates);
+                  $('.header-row-data').empty();
+                    $('.header-row-data').prepend( strDates );
+
+
+                    // Making Ajax Call to find the student name  
+
+
+                    
+                     var urlLink = "/attendances/gardian_index/"; 
+                     // alert("hhii")
+
+                   $.ajax({
+               
+                        url: urlLink,
+                        cache: false, 
+                        success: function(data) {
+                       
+                                var strName = "";
+
+                        // var month = parseInt(new Date().getMonth());
+                        // var year = parseInt(new Date().getMonth());
+                          var d1 = new Date();
+                          var month1 = d1.getMonth();
+                          var year1=d1.getFullYear();
+                          var day=new Date().getDate();
+                        var month = parseInt(month1) + 1;
+                        var year = parseInt(year1);
+
+
+
+                           var holiday_array = [];
+            for(var holiday = 0;holiday < data[2].length;holiday++){
+                     
+                      if (data[2][holiday].start_year == data[2][holiday].end_year && data[2][holiday].start_year == year)
+            {
+
+                      if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }
+                    else if (data[2][holiday].start_month < month && data[2][holiday].end_month > month) 
+                    {
+                      for (var i = 1; i <= totalDays; i++) 
+                      {
+                     
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }  
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                     
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                   
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+
+            }
+            else if (data[2][holiday].start_year == year && data[2][holiday].end_year == year+1 ) 
+
+            {
+
+                      if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    } 
+                    else if (data[2][holiday].start_month < month) 
+                    {
+                      for (var i =1; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    } 
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+            }
+            else if (data[2][holiday].start_year == year-1 && data[2][holiday].end_year == year ) 
+            {
+                    if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }
+                    else if (data[2][holiday].end_month > month) 
+                    {
+                      for (var i =1; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }  
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+
+            };
+            
+          } //end of for loop for holiday 
+                                     
+                                for(var outerIndex = 0;outerIndex < data[0].length;outerIndex++){
+                                    strName += "<tr><td>"+data[0][outerIndex].first_name+"</td>"
+                                    for(var index=start_week; index <= cuurent_month;index++){
+                                    
+                                      var value=0;
+                                       if(day<index){
+                                      value=4;
+                                      }else{
+                                       if(data[1].length >0){
+                                      
+                                       for(var dbindex=0;dbindex< data[1].length;dbindex++){
+                                                var checkDate=month+'/'+index+'/'+year
+                      
+                                                d = new Date(checkDate); //This returns Wed Apr 02 2014 17:28:55 GMT+0800 (Malay Peninsula Standard Time)
+                                                x = d.getDay(); //This returns a number, starting with 0 for Sunday
+                                                if(x==0){
+                                                  value = 2;
+                                                }
+                                                
+                                                if(data[1][dbindex].year ==year && data[1][dbindex].month ==month && data[1][dbindex].day== index && data[1][dbindex].mg_student_id==data[0][outerIndex].id && x !=0){
+                                                   
+                                                   value = 1;
+
+                                                }
+
+                                     }
+                                     }else{
+                                    var checkDate=month+'/'+index+'/'+year;
+                                    // alert(checkDate)
+                                            x = new Date(checkDate).getDay();
+                                            if(x==0){
+                                              value = 2;
+                                            }
+                                   }
+                                 }
+                                 if($.inArray(index,holiday_array) > -1){
+                                       value=8;
+                                      }
+                                 if(value!=4)
+                                        {
+
+                                      if(value == 2){
+                                        strName +="<td><i class='fa fa-ellipsis-h'></i></td>"
+                                      }
+                                       if (value == 8 && value != 2 && value != 1) {
+                                          strName +="<td><i class='fa fa-calendar-times-o' style=\"color:red;\"></i></td>"
+                                      }
+                                     if(value ==1){
+
+                                                  strName +="<td><i class='fa fa-circle' > </i></td>"
+                                                }
+
+                                                else{
+                                                  if(value != 2 && value != 8){
+                                                  strName +="<td><i class='fa fa-check' > </i></td>"
+                                                }
+                                                }
+                                                 }else{
+                                        strName +="<td></td>";
+                                      }
+
+
+                                    }
+                                    strName +="</tr>"
+                                }
+                                $('.att-calendar').empty();
+                                $('.att-calendar').append( strDates+"</tr>"+strName );
+                                console.log(strName);
+
+
+
+                              },
+                        error: function() {
+                                // alert("Ajax error!")
+                              }
+                });
+function daysInMonth1(iMonth, iYear){
+                    return new Date(iYear, iMonth, 0).getDate();
+                }  
+ });
+
+
+    $(document).ready(function(){
+
+              $(".content-tab-one-student").tabs();
+           //    $( ".attendance-month-one-student" ).datepicker({ dateFormat: 'dd-mm-yy' });
+
+               $('.attendance-month-one-student').val($.datepicker.formatDate('MM yy',new Date()));
+              
+                $('.attendance-month-one-student').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'MM yy',
+                    showButtonPanel: true,
+                    beforeShow: function (){
+                        setTimeout(function() {
+                         $(".ui-datepicker-buttonpane")
+                            .html('')
+                            .append("<button class='done-button-click-one-student-for-all-month-for-gardian'>Done</button>");
+                        }, 1)
+                    },
+                    onChangeMonthYear: function (){
+                        setTimeout(function() {
+                        
+                         $(".ui-datepicker-buttonpane")
+                            .html('')
+                            .append("<button class='done-button-click-one-student-for-all-month-for-gardian'>Done</button>");
+
+                   //         $(this).datepicker( "setDate", month + '/1/' + year );
+                        }, 1)
+                    }, 
+                    dateFormat: 'MM yy',
+                    onClose: function(dateText, inst) { 
+                        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                        // mon=parseInt("month");
+                        // month1=mon
+
+                        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                     // year1=year;
+                        $('.attendance-month-one-student').datepicker('setDate', new Date(year, month, 1));
+                    }
+                });
+
+
+function daysInMonth(iMonth, iYear){
+    return new Date(iYear, iMonth, 0).getDate();
+}  
+    
+    var month = parseInt($("#ui-datepicker-div .ui-datepicker-month :selected").val()) + 1;
+      var year = parseInt($("#ui-datepicker-div .ui-datepicker-year :selected").val());
+      if(isNaN(month)){
+        var presentDate = new Date();
+        month=presentDate.getMonth()+1;
+        year=presentDate.getFullYear();
+      }
+      var cuurent_month = parseInt(daysInMonth(month, year));
+      var start_week = 1;
+
+  $(document).on("click",".done-button-click-one-student-for-all-month-for-gardian",function(e){
+    // alert("1");
+  $( ".attendance-month-one-student" ).datepicker("hide");
+    // alert("2");
+      var month = parseInt($("#ui-datepicker-div .ui-datepicker-month :selected").val()) + 1;
+      var year = parseInt($("#ui-datepicker-div .ui-datepicker-year :selected").val());
+    // alert("3");
+
+     var days = new Array(7);
+                    days[0]=  "Sun";
+                    days[1] = "Mon";
+                    days[2] = "Tues";
+                    days[3] = "Wed";
+                    days[4] = "Thur";
+                    days[5] = "Fri";
+                    days[6] = "Sat";
+
+
+                    Date.prototype.getDayName = function() {
+                            return days[ this.getDay() ];
+                        };
+                    //  generate dynamic calendr here
+                    var cur_date = new Date();
+                    // alert(cur_date.getFullYear())
+                      if (!isNaN(month) && !isNaN(year))
+                      {
+                          if (cur_date.getMonth()+1 === month && cur_date.getFullYear() === year)
+                          {
+                          $("#current_week").attr("disabled", false);
+                          }else{
+                          
+                          $("#current_week").attr("checked", false);
+                          $("#current_week").attr("disabled", true);
+                            cuurent_month = parseInt(daysInMonth(month, year));
+                            start_week = 1;
+
+                        }
+                      }
+                      var curr = new Date(); // get current date
+                      var first = (curr.getDate()-1) - (curr.getDay()-1); // First day is the day of the month - the day of the week
+                      var last = first + 6; // last day is the first day + 6
+                     $('#current_week').click(function(){
+                            if($(this).prop("checked") == true){
+                              start_week = first
+                              cuurent_month = last
+                      // alert(cuurent_month)
+
+                            }else{
+                            cuurent_month = parseInt(daysInMonth(month, year));
+                            start_week = 1
+                            }
+                        });
+                    var totalDays = parseInt(daysInMonth(month, year));
+             
+                    var strDates = "<tr><th>Name</th>"
+                    for(var index=1; index <= cuurent_month;index++){
+                               var now = new Date(year,month-1,index);
+                               strDates +="<th>"+index+"<br/>"+now.getDayName()+"</th>";
+                                 
+                                
+                    }
+                    $('.header-row-data').empty();
+                    $('.header-row-data').prepend( strDates );
+
+
+                     var urlLink = "/attendances/gardian_index/"; 
+        // alert("4");
+
+                   $.ajax({
+               
+                        url: urlLink,
+                        cache: false, 
+                        success: function(data) {
+                      // alert("5");
+
+                                // Iterate JSON
+                                // Iterate generate total 
+                                var strName = "";
+                                var day=new Date().getDate();
+                                var current_month = parseInt(new Date().getMonth()) + 1;
+                                var current_year = parseInt(new Date().getFullYear());
+                        var month = parseInt($("#ui-datepicker-div .ui-datepicker-month :selected").val()) + 1;
+                        var year = parseInt($("#ui-datepicker-div .ui-datepicker-year :selected").val());
+                                     
+                             
+                           var holiday_array = [];
+            for(var holiday = 0;holiday < data[2].length;holiday++){
+                     
+                      if (data[2][holiday].start_year == data[2][holiday].end_year && data[2][holiday].start_year == year)
+            {
+
+                      if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }
+                    else if (data[2][holiday].start_month < month && data[2][holiday].end_month > month) 
+                    {
+                      for (var i = 1; i <= totalDays; i++) 
+                      {
+                     
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }  
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                     
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                   
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+
+            }
+            else if (data[2][holiday].start_year == year && data[2][holiday].end_year == year+1 ) 
+
+            {
+
+                      if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    } 
+                    else if (data[2][holiday].start_month < month) 
+                    {
+                      for (var i =1; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    } 
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+            }
+            else if (data[2][holiday].start_year == year-1 && data[2][holiday].end_year == year ) 
+            {
+                    if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }
+                    else if (data[2][holiday].end_month > month) 
+                    {
+                      for (var i =1; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }  
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+
+            };
+            
+          } //end of for loop for holiday 
+                                     
+                                for(var outerIndex = 0;outerIndex < data[0].length;outerIndex++){
+                                    strName += "<tr><td>"+data[0][outerIndex].first_name+"</td>"
+                                    for(var index=1; index <= totalDays;index++){
+                                    
+                                      var value=0;
+                                       if(day<index){
+                                      value=4;
+                                      }else{
+                                       if(data[1].length >0){
+                                      
+                                       for(var dbindex=0;dbindex< data[1].length;dbindex++){
+                                                var checkDate=month+'/'+index+'/'+year
+                      
+                                                d = new Date(checkDate); //This returns Wed Apr 02 2014 17:28:55 GMT+0800 (Malay Peninsula Standard Time)
+                                                x = d.getDay(); //This returns a number, starting with 0 for Sunday
+                                                if(x==0){
+                                                  value = 2;
+                                                }
+                                                
+                                                if(data[1][dbindex].year ==year && data[1][dbindex].month ==month && data[1][dbindex].day== index && data[1][dbindex].mg_student_id==data[0][outerIndex].id && x !=0){
+                                                   
+                                                   value = 1;
+
+                                                }
+
+                                     }
+                                     }else{
+                                    var checkDate=month+'/'+index+'/'+year;
+                                    // alert(checkDate)
+                                            x = new Date(checkDate).getDay();
+                                            if(x==0){
+                                              value = 2;
+                                            }
+                                   }
+                                 }
+                                 if($.inArray(index,holiday_array) > -1){
+                                       value=8;
+                                      }
+                                 if(value!=4)
+                                        {
+
+                                      if(value == 2){
+                                        strName +="<td><i class='fa fa-ellipsis-h'></i></td>"
+                                      }
+                                       if (value == 8 && value != 2 && value != 1) {
+                                          strName +="<td><i class='fa fa-calendar-times-o' style=\"color:red;\"></i></td>"
+                                      }
+                                     if(value ==1){
+
+                                                  strName +="<td><i class='fa fa-circle' > </i></td>"
+                                                }
+
+                                                else{
+                                                  if(value != 2 && value != 8){
+                                                  strName +="<td><i class='fa fa-check' > </i></td>"
+                                                }
+                                                }
+                                                 }else{
+                                        strName +="<td></td>";
+                                      }
+
+
+                                    }
+                                    strName +="</tr>"
+                                }
+                                $('.att-calendar').empty();
+                                $('.att-calendar').append( strDates+"</tr>"+strName );
+                                console.log(strName);
+
+
+
+                              },
+                        error: function() {
+                                // alert("Ajax error!")
+                              }
+                });
+
+
+        
+
+}) 
+
+
+
+    $(document).ready(function(){
+
+
+                    $( ".attendance-month-one-student" ).datepicker("hide");
+                          var d = new Date();
+                          var month = d.getMonth();
+                          var year=d.getFullYear();
+                
+
+                    var days = new Array(7);
+                    days[0]=  "Sun";
+                    days[1] = "Mon";
+                    days[2] = "Tues";
+                    days[3] = "Wed";
+                    days[4] = "Thur";
+                    days[5] = "Fri";
+                    days[6] = "Sat";
+
+
+
+                    Date.prototype.getDayName = function() {
+                            return days[ this.getDay() ];
+                        };
+                    //  generate dynamic calendr here
+                    var totalDays = parseInt(daysInMonth1(new Date().getMonth()+1, new Date().getFullYear()));
+                    var strDates = "<tr><th>Name</th>"
+                    for(var index=1; index <= totalDays;index++){
+                               var now = new Date( new Date().getFullYear(),new Date().getMonth(),index);
+                              //  console.log(now);
+                            //    var day = now.getDayName();
+                            //    var month = now.getMonthName();
+                               strDates +="<th>"+index+"<br/>"+now.getDayName()+"</th>";
+                                 
+                                
+                    }
+                  //  console.log(strDates);
+                  $('.header-row-data').empty();
+                    $('.header-row-data').prepend( strDates );
+
+
+                    // Making Ajax Call to find the student name  
+
+
+                    
+                     var urlLink = "/attendances/gardian_index/"; 
+                     // alert("hhii")
+
+                   $.ajax({
+               
+                        url: urlLink,
+                        cache: false, 
+                        success: function(data) {
+                       
+                                var strName = "";
+
+                        // var month = parseInt(new Date().getMonth());
+                        // var year = parseInt(new Date().getMonth());
+                          var d1 = new Date();
+                          var month1 = d1.getMonth();
+                          var year1=d1.getFullYear();
+                          var day=new Date().getDate();
+                        var month = parseInt(month1) + 1;
+                        var year = parseInt(year1);
+
+
+
+                           var holiday_array = [];
+            for(var holiday = 0;holiday < data[2].length;holiday++){
+                     
+                      if (data[2][holiday].start_year == data[2][holiday].end_year && data[2][holiday].start_year == year)
+            {
+
+                      if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }
+                    else if (data[2][holiday].start_month < month && data[2][holiday].end_month > month) 
+                    {
+                      for (var i = 1; i <= totalDays; i++) 
+                      {
+                     
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }  
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                     
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                   
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+
+            }
+            else if (data[2][holiday].start_year == year && data[2][holiday].end_year == year+1 ) 
+
+            {
+
+                      if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    } 
+                    else if (data[2][holiday].start_month < month) 
+                    {
+                      for (var i =1; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    } 
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+            }
+            else if (data[2][holiday].start_year == year-1 && data[2][holiday].end_year == year ) 
+            {
+                    if (data[2][holiday].start_month == data[2][holiday].end_month && data[2][holiday].start_month == month) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }
+                    else if (data[2][holiday].end_month > month) 
+                    {
+                      for (var i =1; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+                   
+                    }  
+                    else if (data[2][holiday].start_month == month && data[2][holiday].end_month != month ) 
+                    {
+                      for (var i = data[2][holiday].start_day; i <= totalDays; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    } 
+                    else if (data[2][holiday].start_month != month && data[2][holiday].end_month == month ) 
+                    {
+                      for (var i = 1 ; i <= data[2][holiday].end_day; i++) 
+                      {
+                        
+                        holiday_array.push(parseInt(i));
+                      };
+
+                    };
+
+
+            };
+            
+          } //end of for loop for holiday 
+                                     
+                                for(var outerIndex = 0;outerIndex < data[0].length;outerIndex++){
+                                    strName += "<tr><td>"+data[0][outerIndex].first_name+"</td>"
+                                    for(var index=1; index <= totalDays;index++){
+                                    
+                                      var value=0;
+                                       if(day<index){
+                                      value=4;
+                                      }else{
+                                       if(data[1].length >0){
+                                      
+                                       for(var dbindex=0;dbindex< data[1].length;dbindex++){
+                                                var checkDate=month+'/'+index+'/'+year
+                      
+                                                d = new Date(checkDate); //This returns Wed Apr 02 2014 17:28:55 GMT+0800 (Malay Peninsula Standard Time)
+                                                x = d.getDay(); //This returns a number, starting with 0 for Sunday
+                                                if(x==0){
+                                                  value = 2;
+                                                }
+                                                
+                                                if(data[1][dbindex].year ==year && data[1][dbindex].month ==month && data[1][dbindex].day== index && data[1][dbindex].mg_student_id==data[0][outerIndex].id && x !=0){
+                                                   
+                                                   value = 1;
+
+                                                }
+
+                                     }
+                                     }else{
+                                    var checkDate=month+'/'+index+'/'+year;
+                                    // alert(checkDate)
+                                            x = new Date(checkDate).getDay();
+                                            if(x==0){
+                                              value = 2;
+                                            }
+                                   }
+                                 }
+                                 if($.inArray(index,holiday_array) > -1){
+                                       value=8;
+                                      }
+                                 if(value!=4)
+                                        {
+
+                                      if(value == 2){
+                                        strName +="<td><i class='fa fa-ellipsis-h'></i></td>"
+                                      }
+                                       if (value == 8 && value != 2 && value != 1) {
+                                          strName +="<td><i class='fa fa-calendar-times-o' style=\"color:red;\"></i></td>"
+                                      }
+                                     if(value ==1){
+
+                                                  strName +="<td><i class='fa fa-circle' > </i></td>"
+                                                }
+
+                                                else{
+                                                  if(value != 2 && value != 8){
+                                                  strName +="<td><i class='fa fa-check' > </i></td>"
+                                                }
+                                                }
+                                                 }else{
+                                        strName +="<td></td>";
+                                      }
+
+
+                                    }
+                                    strName +="</tr>"
+                                }
+                                $('.att-calendar').empty();
+                                $('.att-calendar').append( strDates+"</tr>"+strName );
+                                console.log(strName);
+
+
+
+                              },
+                        error: function() {
+                                // alert("Ajax error!")
+                              }
+                });
+
+             
+                });
+
+              function daysInMonth1(iMonth, iYear){
+                    return new Date(iYear, iMonth, 0).getDate();
+                }  
+        });   
+      
+
+	 $(document).ready(function(){
+	 	focusCurrentTab("GuardianStudentAttendenceID", "GuardianStudentAttendenceLiID");
+   		focusDashboards();
+	 });
+</script>
