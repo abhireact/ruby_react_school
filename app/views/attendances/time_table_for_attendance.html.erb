@@ -1,0 +1,401 @@
+<!-- #version 1.1(25/09/18/Mamatha FOR student sort based on admission number and user id) -->
+<!-- #version 1.2(25/09/18/Mamatha FOR student sort based on roll number)  -->
+<!-- #version 1.3(25/09/18/Mamatha FOR binding.pry)  -->
+<!-- #version 1.4(30/10/18/Mamatha FOR user id in header)  -->
+<!-- #version 1.5(2/11/18/Mamatha FOR student full name)  -->
+<!-- #version 1.6(31/01/19/monalisa multiple student make as absent and present at a time)  -->
+<!-- #version 1.6(11/06/20/ pop up summary for marking absent, by Darshan)  -->
+
+<%#=@timeings.inspect%>
+
+<%if @holiday_dates.present?%>
+<div class="mg-custom-labels">
+ <h5>This is Holiday.</h5>
+ </div>
+<%else %>
+<%if @timeings.present?%>
+</br>
+<div id="absentdiv">
+  <!-- <button class="mc-margin-left-20 flat-button" onclick = "update_student()">Mark Absent</button> -->
+  <button class="mc-margin-left-20 flat-button" id="markabsent">Mark Absent</button>
+  <button class="mc-margin-left-20 flat-button" style= "display: none;" onclick = "update_student_present()">Mark Present</button>  <br/>
+  <br/>
+    </div>
+    <div id="absentdivwithoutsummary">
+      <button class="mc-margin-left-20 flat-button" onclick = "update_student()">Mark Absent</button>
+    </div>
+</br>
+   <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12 " id="checkboxdiv" > 
+   <label class="mg-label mg-label-width ">Summary</label>
+      <%=check_box_tag :summary_check , :class=>"present"%>      
+  </div>
+
+  <div id="spinner" style="display: none;">
+    <img src="/assets/ajax-loader.gif" alt="Loading..."/>
+  </div>
+  <div id="overlay" ></div>
+
+<!--   <div id="spinner">
+    <img src="/assets/ajax-loader.gif" alt="Loading..."/>
+    </div>
+  <div id="overlay"></div> -->
+
+  <h3 style="float: right;"><p id="demo"></p> </h3>
+<div class="mg-scroll-employee-bar">
+    <table class="batch-tbl mg-tbl-layout">   
+     <tr >
+      <th class="select_box_id"><%=t('select')%><br>
+        <div class="mg-text-margin">
+          <a id="checkAllCheckBoxInFeeParticularId" class="mg-pop-link">All</a>
+          <a id="unCheckAllCheckBoxInFeeParticularId" class="mg-pop-link">None</a>
+        </div>
+      </th>
+        <th>Student Name</th>
+        <%if @sort_by == "class_roll_number"
+          heading = "Admission Number"
+          elsif  @sort_by == "admission_number"
+          heading = "User Id"
+          elsif @sort_by == "roll_number"
+           heading = "Roll Number"
+          end
+           %>
+           <%if heading.present?%>
+        <th><%=heading%></th>
+        <%end%>
+         <%if @timeings.present?%>
+            <% @timeings.each do |commonClassTiming| %>
+              <th><%=commonClassTiming.start_time.strftime("%k:%M%p")%>-
+              <%=commonClassTiming.end_time.strftime("%k:%M%p")%>
+            </th>
+            <%end%>
+            <th id="action_id" style="width: 80px;"><%= t('actions')%></th>
+    <%end%>
+    </tr>
+ <% @students.each do |student| %> 
+   <tr >
+   <td class="mg-align-center select_box_id">
+            <%= check_box_tag 'mg_student_id[]',student.id ,false,{:class=>"present class-check-box-Class "}%>
+          </td>
+      <td><%="#{student.first_name}"+" #{(student.middle_name.gsub("-","") rescue  "")}"+" #{(student.last_name.gsub("-","") rescue  "" )}"%> </td>
+      <%if @sort_by == "class_roll_number"
+      data = student.class_roll_number
+      elsif  @sort_by == "admission_number"
+      data = student.admission_number
+      elsif @sort_by == "roll_number"
+       data = student.roll_number
+      end
+       %>
+       <%if @sort_by.present? && (@sort_by!= "first_name")%>
+    <th> <%=data%> </th>
+    <%end%>
+  
+        <%if @timeings.present?%>
+                	  	<%@timeings.each do |t| %>
+                            <%count=0%>
+                            <%if t.is_break%>
+                                    <%count=2%>
+                            <%end%>
+                            <%@absentDate.each do |check|%>
+                                    <%if t.is_break%>
+                                    <%count=2%>
+                                    <%else%>
+
+                                        <%batch_id = MgStudentBatchHistory.find_by(:mg_student_id => student.id, :mg_school_id => session[:current_user_school_id], :is_deleted => 0, :from_section_id => check.mg_batch_id)%>
+                                           <%if batch_id.present?%>
+                                              <%if check.mg_student_id==student.id && check.mg_class_timing_id==t.id && check.mg_batch_id==batch_id.from_section_id%>
+                                                  <%count=1%>  
+                                              <%end %>
+                                           <%else%>
+                                              <%if check.mg_student_id==student.id && check.mg_class_timing_id==t.id && check.mg_batch_id==student.mg_batch_id%>
+                                                  <%count=1%>  
+                                              <%end %>
+                                           <%end%>
+
+                                        <%#if check.mg_student_id==student.id && check.mg_class_timing_id==t.id && check.mg_batch_id==student.mg_batch_id%>
+                                            <%#count=1%>
+                                           
+                                        <%#end %>
+                                    <%end %>
+                            <%end%>
+                                    <%if count==1%>
+                                        <td class="mg-align-center"><a id="<%=t.id%>-<%=student.id%>-timeingsAID" class="click-absent-student-attendance-additional-cls mg-emp-std-a-link class_attendance_visible"><i class="fa fa-circle"></i></a>
+                                        <a id="timeingsAID" class="class_attendance_non_visible"><i class="fa fa-circle"></i></a></td>
+                                        <%count=0%>
+                                    <%elsif count==0%>
+                                        <td class="mg-align-center"><a id="<%=t.id%>-<%=student.id%>-timeingsAID" class="click-absent-student-attendance-additional-cls mg-emp-std-a-link class_attendance_visible"><i class="fa fa-check"> </i></a>
+                                        <a id="timeingsAID" class="class_attendance_non_visible"><i class="fa fa-check"> </i></a></td>
+                                        <%count=0%>
+                                      <%else%>
+                                    <td>Break</td>
+                                      <%count=0%>
+                                    <%end%>
+
+                              
+                    	<%end%>
+                      <td class="mark_absent_value"><button id="<%=student.id%>-studentAttendanceBYPeriodWiseBTNID" class="student-attendance-by-period-wise mg-icon-btn" style="font-size: 0.85em;">Mark Absent</button></td>
+        <%end%>
+	</tr>
+    <%end%>
+ </table>
+</div>
+<%if session[:user_type] == "employee"%>
+  <br>
+  <%if @finalize.present?%>
+      <%if @finalize_check == false%>
+
+        <%if @finalize_id.present? %>
+          <%=link_to "Submit",mg_attendance_finalize_times_attendance_finalize_update_path(:id=>@finalize_id),id:"finalize-submit",:class=>"btn btn-primary"%>
+        <%end%>
+    <%end%>
+  <%else%>
+      <button id="studentFinalize" class="btn btn-primary" >Finalize Attendance</button>
+  <%end%>
+  <!-- <button id="studentSubmit" class="btn btn-primary" >Submit</button> -->
+<%end%>
+ <%else%>
+ <div class="mg-custom-labels">
+ <h5>Time Table not yet assigned.</h5>
+ </div>
+ <%end%>
+ <div id="absentPeriodWiseStudentAattendanceDIVID"></div>
+  <div id="absentPeriodWiseStudentAattendanceeditDIVID"></div>
+  <!-- <div id="nameOfAbsentstudent"></div> -->
+  <div class="modal-dialog" id="nameOfAbsentstudent"   > 
+</div>
+<%end%>
+<%= hidden_field_tag "class_timing" , @classtiming %>
+<%= hidden_field_tag "student_id" , @stud %>
+<%= hidden_field_tag "batch_id" , params[:mg_batch_id] %>
+<%= hidden_field_tag "mg_time_table_id" ,params[:mg_time_table_id] %>
+<%if session[:user_type] == "employee"%>
+<%= hidden_field_tag "mg_employee_id" ,@employee_data.id %>
+<%end%>
+
+
+
+
+<script type="text/javascript">
+function spin(){
+    $("#overlay").show();
+    $("#spinner").show();
+  };
+
+  function stopSpin(){
+    $("#overlay").hide();
+    $("#spinner").hide();
+  };
+
+  $(document).on("click", "#checkAllCheckBoxInFeeParticularId", function(e){
+    $(".class-check-box-Class").prop('checked', true);
+
+    e.preventDefault();
+  });
+  $(document).on("click", "#unCheckAllCheckBoxInFeeParticularId", function(e){
+    $(".class-check-box-Class").prop('checked', false);
+    e.preventDefault();
+  });
+ 
+  $( document ).ready(function() {
+    $('#absentdiv').hide();
+    $('.disabling').removeAttr('disabled');
+  });
+
+  $(document).on("click", "#summary_check", function(e){
+    $('#absentdivwithoutsummary').hide();
+      if($('#summary_check').is(':checked')){
+        $('#absentdiv').show();
+        $('#absentdivwithoutsummary').hide();
+      }
+      else{
+        $('#absentdivwithoutsummary').show();
+        $('#absentdiv').hide();
+      }
+  });
+
+
+ 
+  $(document).on("click", "#markabsent", function(e){
+    var checkedVal = []
+    $(".present").each(function(){
+      if ($(this).is(':checked')){
+        checkedVal.push($(this).val());
+      }
+    });
+
+    if($('#summary_check').is(":checked")) {
+    $('.disabling').attr('disabled',true);
+      var urlLink = "/attendances/get_student_data/";
+        $.ajax({
+          url: urlLink ,
+          data:{'checkedVal': checkedVal},
+          type: "get",
+          success: function(html){
+            $("#nameOfAbsentstudent").dialog({
+                // modal: true,
+                minHeight: 'auto',
+                overflow: 'auto',
+                title: "Name Of Absent Student",
+                open: function () {
+                  $(this).html(html);
+                }
+            });
+           
+          }
+
+        });
+        $("#nameOfAbsentstudent").dialog.empty();
+    } 
+    else  
+    {
+     return true;
+    }
+  });
+
+  $(document).on("click", ".submtbt", function(e){
+    $(".ui-dialog-titlebar-close").click(); 
+  });
+
+ $(document).ready(function(){
+   $("#mark_absent_id").show();
+    $("#mark_present_id").show();
+    $("#action_id").show();
+    $("#checkboxdiv").show();
+    $("#absentdivwithoutsummary").show();
+    $(".mark_absent_value").show();
+    $(".select_box_id").show();
+    $(".class_attendance_non_visible").hide();
+    $(".class_attendance_non_visible").hide();
+    $(".class_attendance_visible").show();
+    $(".class_attendance_visible").show();
+
+
+    
+  var end_time = "<%=@end_time%>";
+  var finalize_check = "<%=@finalize_check %>";
+  // if finalize_check
+  // alert(finalize_check)
+  if (finalize_check == "true"){
+    endSession();
+  }else if (finalize_check == "false"){
+    if (end_time != ""){
+      $("#studentFinalize").hide();
+      timer_function(end_time);
+    }
+  }
+  
+  function timer_function(data){
+    var time_data = data;
+    var deadline = new Date(time_data).getTime();
+    var x = setInterval(function() { 
+      var now = new Date().getTime();
+      var diff = deadline - now;
+      var t = deadline - now; 
+      var days = Math.floor(t / (1000 * 60 * 60 * 24)); 
+      var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60)); 
+      var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60)); 
+      var seconds = Math.floor((t % (1000 * 60)) / 1000); 
+      document.getElementById("demo").innerHTML =  hours + "h " + minutes + "m " + seconds + "s "; 
+      if (t < 0) { 
+        clearInterval(x); 
+        // document.getElementById("demo").innerHTML = "Expired"
+          final_submit(); 
+      } 
+    }, 1000); 
+  }
+
+  function final_submit(){
+    var finalize_id =  "<%=@finalize_id%>";
+    var urlLink = "/mg_attendance_finalize_times/attendance_finalize_update/";
+    $.ajax({
+      url: urlLink ,
+      data:{'id': finalize_id},
+      type: "get",
+      success: function(response){
+        window.location.href = "/attendances/employee_student_attendance";
+        $("#finalize-submit").hide();
+        endSession(); 
+      }
+
+    });
+  }
+  
+  function endSession(){
+    $("#demo").hide();
+    $("#studentFinalize").hide();
+    $("#mark_absent_id").hide();
+    $("#mark_present_id").hide();
+    $("#action_id").hide();
+    $("#checkboxdiv").hide();
+    $("#absentdivwithoutsummary").hide();
+    $(".mark_absent_value").hide();
+    $(".select_box_id").hide();
+    $(".class_attendance_non_visible").show();
+    $(".class_attendance_non_visible").show();
+    $(".class_attendance_visible").hide();
+    $(".class_attendance_visible").hide();
+   
+  }
+
+  $(document).on("click","#studentFinalize",function(){
+    $("#studentFinalize").prop('disabled', true);
+    var batch_id = $("#batch_id").val();
+    var mg_time_table_id = $("#mg_time_table_id").val();
+    var employee_id = $("#mg_employee_id").val();
+    var time = moment().format('YYYY-MM-DD HH:mm:ss');
+    var absent_date = $("#date").val();
+    var urlLink = "/mg_attendance_finalize_times/new/";
+    $.ajax({
+      url: urlLink ,
+      data:{
+        mg_batch_id: batch_id,mg_time_table_id: mg_time_table_id,mg_employee_id: employee_id,time: time,absentDate: absent_date
+      },
+      cache: false,
+      success: function(html){
+         window.location.href = "/attendances/employee_student_attendance/";
+
+      }
+    });
+          
+  });
+});
+
+</script>
+<style>
+.ui-dialog-titlebar-close {
+    visibility: hidden;
+}
+.ui-dialog{
+  overflow:scroll;
+  height:250px;
+  max-height:300px;
+  border-radius: 3px;
+  overflow-x: hidden;
+}
+
+#spinner{
+    /*width:150px;
+    height: 150px;*/
+    position: relative;
+    /*top: 80%;*/
+    /*left: 33%;*/
+    text-align:center;
+    margin-left: -12em;
+    margin-top: 70px;
+    z-index:2;
+    overflow: auto;
+    display: none;
+  }   
+
+#overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 999;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+</style>
+
+

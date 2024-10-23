@@ -1,0 +1,32 @@
+<%#= render  partial: 'master_settings/master_settings_left' %>
+<% navigation_add t('Holiday'), :controller=>'attendances', :action=>'holiday_lists' %>
+<% navigation_add t('holiday_details'), :controller=>'attendances', :action=>"holiday_detail" %>
+<h4 class="form-section-heading mc-margin-bottom-20"><%= t('holiday_details')%></h4>
+<div>
+<label class="mg-label mg-tt-width" style="width:185px"><%= t('holiday_name') %></label>
+<%=@mg_holiday.holiday_name%><br>
+</div>
+<div>
+<label class="mg-label mg-tt-width" style="width:185px"><%= t('holiday_start_date') %></label>
+<%=@mg_holiday.holiday_start_date.strftime(@dateFormat)%><br>
+</div>
+<div>
+<label class="mg-label mg-tt-width" style="width:185px"><%= t('holiday_end_date') %></label>
+<%=@mg_holiday.holiday_end_date.strftime(@dateFormat)%><br>
+</div>
+<div>
+<label class="mg-label mg-tt-width mg-label-text-transform-none" style="width:185px"><%= t('applicable_for') %></label>
+<%= @mg_holiday.applicable_for%>
+</div>
+<div>
+<label class="mg-label mg-tt-width" style="width:185px"><%= t('description') %></label>
+<%=@mg_holiday.description%><br>
+</div>
+<%= link_to t('back'), {:controller=>'attendances',:action=>'holiday_lists'}, {:class=>"mg-small-form-btn cancel-form-dialog submit mc-margin-bottom-20 flat-button"} %>
+<%#= render  partial: 'application/common_left_close' %>
+<script>
+$( document ).ready(function() {
+      focusCurrentTab("HolidayListAID","HolidayListLiID");
+  });
+
+</script>

@@ -9,10 +9,8 @@ get 'subjects/index', to: 'subjects#index'
 get 'subjects/getdata', to: 'subjects#getdata'
 resources :subjects
 
-
-
 resources :batches do
-    member do
-      get 'manage_subjects', action: 'select_subject'  # This would create manage_subjects_batch_path instead
-    end
+  member do
+    get 'manage_subjects', action: 'select_subject' # This would create manage_subjects_batch_path instead
   end
+end

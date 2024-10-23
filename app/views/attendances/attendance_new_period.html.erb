@@ -1,0 +1,179 @@
+<%= form_for :attendances , url: attendance_create_path, :html => {
+                            :id => 'attendancesFormID'} do |f| %>
+ <%#= f.label :Select_all%>
+  
+   <!-- <%#  = check_box_tag 'selectAll', 1,false, {:onclick=>"checkInAttendance(this)", :class=>"select-all-event-check-box-class"}%><br> -->  
+<table class="batch-tbl mg-tbl-margin table-striped">  
+  <thead><tr>
+    <th>time </th>
+    <th>select<br>
+      <div class="mg-text-margin">
+        <a class="select-all-period mg-pop-link">All</a>&nbsp;<a class="select-none-period mg-pop-link">None</a>
+      </div>
+    </th>
+  </tr></thead>
+   <%select=0%>
+<% @timeings.each do |commonClassTiming| %>
+  <tr >
+      <td><%=commonClassTiming.start_time.strftime("%k:%M%p")%>-
+      <%=commonClassTiming.end_time.strftime("%k:%M%p")%>
+      </td>
+        <td id="selectedAttendanceNewTdID" class="mg-align-center">
+          <%count=0%>
+         
+
+
+          <%@absentDate.each do |check|%>
+
+                  <%if check.mg_student_id==@student_id.to_i && check.mg_class_timing_id==commonClassTiming.id && check.mg_batch_id==@batchId.to_i %>
+
+                      <%count=1%>
+                      <%if select==0%>
+                      <%@first_reson=check.reason%>
+                      <%select=2%>
+                      <%end%>
+                  <%else%>
+                  <%end %>
+          <%end %>
+          <%if count ==1%>
+            <%= check_box_tag 'mg_class_timing_id[]', commonClassTiming.id, true ,{:class=>"class-timeings-class"}%>
+            <%count=0%>
+          <%else%>
+            <%= check_box_tag 'mg_class_timing_id[]', commonClassTiming.id, false,{:class=>"class-timeings-class"}%>
+          <%end%>
+       </td>
+  </tr>
+    <%end%>
+   
+  </table>
+<div id="hideAndShowReasonDivID">
+      <%if @first_reson.present?%>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<p>
+        <%= f.label :reason , t('reason'),:class=> "mg-label"%><span class="required-field"></span><br>
+        <%= f.text_area :reason ,:class=>"mg-text-field form-control", :value=>@first_reson%>
+      </p>
+      <%else%>
+      <p>
+        <%= f.label :reason , t('reason'),:class=> "mg-label"%><span class="required-field"></span><br>
+        <%= f.text_area :reason ,:class=>"mg-text-field form-control"%>
+      </p>
+      </div>
+       <%end%>
+  </div>
+     
+      
+        <%= f.hidden_field :mg_batch_id, :value => @batchId %>
+        <%= f.hidden_field :mg_student_id, :value => @student_id %>
+        <%= f.hidden_field :absent_date, :value =>  @final_date%>
+        <%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+
+        <%= f.hidden_field :created_by, :value => session[:user_id]%>
+        <%= f.hidden_field :updated_by, :value => session[:user_id]%>
+        <%= f.hidden_field :is_deleted, :value => 0 %>
+      <% end %>
+      <p class="mg-p-mgtop">
+<button  id="studentAttendanceSavePeriodWiseTimeTableEmployeeBTNID" class="mc-margin-bottom-20 flat-button"><%=t('save')%></button>&nbsp;
+<button id="cancelPeriodWiseAttendanceBTNID" class="mg-small-form-btn cancel-form-dialog flat-button  margin-left-10"><%=t('cancel')%></button>
+</p>
+
+
+      <%#= check_box_tag "weekdays[#{value}]", 1,  @weekdaychecked.include?(value) ? true : false ,:style=>"margin-bottom: 12px;"%>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  var reason_check=$("#is_resion").is(':checked');
+  if(reason_check){
+    $("#hideAndShowReasonDivID").hide();
+  }
+});
+
+
+
+function checkInAttendance(source) {
+  checkboxes = document.getElementsByName('mg_class_timing_id[]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+
+
+
+  $(document).on("click", ".select-all-period", function(e){
+
+    $(".class-timeings-class").prop('checked', true);
+        e.preventDefault();
+  });
+   $(document).on("click", ".select-none-period", function(e){
+    $(".class-timeings-class").prop('checked', false);
+        e.preventDefault();
+  });
+
+
+  $(document).on("click", ".class-timeings-class", function(e){
+
+  checkboxes = document.getElementsByName('selectAll');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = false;
+  }
+});
+ var flagDialog = true;
+$(document).on("click", "#studentAttendanceSavePeriodWiseTimeTableEmployeeBTNID", function(e){
+     e.preventDefault();
+  if(flagDialog){
+      flagDialog = false;
+  var checkedvalue=new Array();
+  var uncheckedvalue=new Array();
+      $(".class-timeings-class").each(function(index){
+        var checked=$(this).is(':checked');
+        if(checked){
+          checkedvalue.push($(this).val());
+        }
+        else{
+          uncheckedvalue.push($(this).val());
+        }
+      });
+        var reason=$("#attendances_reason").val();
+        
+        var mg_batch_id=$("#attendances_mg_batch_id").val();
+        var mg_student_id=$("#attendances_mg_student_id").val();
+        var absent_date=$("#attendances_absent_date").val();
+        var mg_school_id=$("#attendances_mg_school_id").val();
+        var created_by=$("#attendances_created_by").val();
+        var updated_by=$("#attendances_updated_by").val();
+        var urlLink = "/attendances/attendance_create/"+mg_batch_id;
+        $.ajax({
+            url: urlLink ,
+            data:{
+               checkedvalue: checkedvalue, uncheckedvalue: uncheckedvalue, reason: reason, mg_batch_id: mg_batch_id, mg_student_id: mg_student_id, absent_date: absent_date, mg_school_id: mg_school_id, created_by: created_by, updated_by: updated_by, is_deleted: 0
+            },
+            cache: false,
+            success: function(html){
+                 // alert("successfully saved");
+                for(var classID=0;classID< checkedvalue.length;classID++){
+                 var data=$(document.getElementById(checkedvalue[classID]+'-'+mg_student_id+'-timeingsAID')).html()
+                  $("#"+checkedvalue[classID]+'-'+mg_student_id+'-timeingsAID').empty();
+                  $("#"+checkedvalue[classID]+'-'+mg_student_id+'-timeingsAID').append('<i class="fa fa-circle"></i>');
+               }
+
+               for(var classID=0;classID< uncheckedvalue.length;classID++){
+                 var data=$(document.getElementById(uncheckedvalue[classID]+'-'+mg_student_id+'-timeingsAID')).html()
+                  $("#"+uncheckedvalue[classID]+'-'+mg_student_id+'-timeingsAID').empty();
+                  $("#"+uncheckedvalue[classID]+'-'+mg_student_id+'-timeingsAID').append('<i class="fa fa-check"> </i>');
+               }
+               $(".ui-dialog-titlebar-close").click();
+            }
+
+        });
+
+      }
+});
+$(document).on("click", "#cancelPeriodWiseAttendanceBTNID", function(e){
+  $(".ui-dialog-titlebar-close").click();
+});
+
+
+
+      </script>

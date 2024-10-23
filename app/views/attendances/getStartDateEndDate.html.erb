@@ -1,0 +1,33 @@
+<%syear = @startDate[0].to_i %>
+<%smon = @startDate[1].to_i %>
+<%sday = @startDate[2].to_i %>
+<%eyear = @endDate[0].to_i %>
+<%emon = @endDate[1].to_i %>
+<%eday = @endDate[2].to_i %>
+
+<%#=text_field_tag "day_of_presence_onchange" ,nil,:class=>"mg-text-field holiday-dates"%>
+<label class="mg-label mg-tt-width" style="width:185px"><%=t('date')%><span class="required-field"> *</span></label><br />
+<%= text_field_tag "day_of_presence_onchange" ,nil,:class=>"mg-text-field holiday-dates form-control"%>
+
+
+<script type="text/javascript">
+s_year = <%= syear %>
+s_mon = <%= smon %>
+s_day = <%= sday %>
+e_year = <%= eyear %>
+e_mon = <%= emon %>
+e_day = <%= eday %>
+
+dateFormatStr =  getJsDateFormat();
+$("#day_of_presence_onchange").datepicker("destroy");
+$( "#day_of_presence_onchange" ).datepicker("refresh");
+	$( "#day_of_presence_onchange" ).datepicker({ 
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-1:+5",
+            minDate:  new Date(s_year, s_mon-1, s_day),
+            maxDate:  new Date(e_year, e_mon-1, e_day),
+            dateFormat: dateFormatStr
+        });
+
+</script>

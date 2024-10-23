@@ -1,0 +1,104 @@
+<!-- Sec -->
+<%= form_for :attendances , url: attendance_path(@attendances), :html => {
+                            :id => 'attendancesFormID'}, method: :patch do |f| %>
+
+
+      <p> 
+          <%= f.label :is_halfday, t('ishalfday') ,:class=> "mg-label"%>    
+      <%= f.hidden_field :is_halfday, :value => false ,:id=>"halfdayfield"%>
+         <input id="attendances_halfday" type="checkbox"  onclick="toggleAll();" name="attendances[halfday]"> 
+      </p> 
+       <%= f.hidden_field :is_afternoon, :value => false ,:id=>"afternoonfield"%>
+      <p>
+      <div id="whatever" style="display:none">
+          <%= f.label :morning , t('morning') ,:class=> "mg-label"%>
+          <%= f.radio_button :is_afternoon, false%>
+          <%= f.label :afternoon, t('afternoon'),:class=> "mg-label"%>
+          <%= f.radio_button :is_afternoon, true%>
+      </div>
+
+
+      <p>
+        <%= f.label :reason , t('reason'),:class=> "mg-label"%><br>
+        <%= f.text_area :reason ,:class=>"mg-text-field"%>
+      </p>
+
+
+        <%= f.hidden_field :mg_batch_id, :value => @batchId %>
+        <%= f.hidden_field :mg_student_id, :value => @student_id %>
+        <%= f.hidden_field :absent_date, :value => @final_date %>
+        <%= f.hidden_field :id, :value=> @attendances.id%>
+
+   <%= f.hidden_field :is_deleted, :value => 0 %>
+
+     
+      <% end %>
+        <button id="mg-student-leave-update-student-btn" ><%=t("submit")%></button>
+        <button id="mg-student-leave-clear-student-btn" >Clear</button>
+
+
+        <script type="text/javascript">
+        $(document).on("click","#mg-student-leave-update-student-btn",function(e){
+          // alert("u");
+
+        var halfday=$("#attendances_halfday").val();
+        var time=$("#afternoonfield").val();
+        // var no_of_days=$("#attendances_no_of_days").val();
+        var reason=$("#attendances_reason").val();
+        var isDeleted=$("#attendances_is_deleted").val();
+        var batch_id=$("#attendances_mg_batch_id").val();
+        var student_id=$("#attendances_mg_student_id").val();
+        var absent_date=$("#attendances_absent_date").val();
+        var id=$("#attendances_id").val();
+
+        
+        var day="<%=@day%>";
+        // alert("day :"+day)
+        $.ajax({
+            url: "attendances/"+id ,
+            type: "patch",
+            cache: false,
+            data: {"is_halfday":halfday,"is_afternoon":time,"reason":reason,"is_deleted":isDeleted,"mg_batch_id":batch_id,"mg_student_id":student_id,"absent_date":absent_date},
+            success:function(data){
+                  $(".ui-dialog-titlebar-close").click();
+                },
+            error: function(){
+              alert("Error: Please try again.");
+            }
+        
+        }); 
+});
+
+$(document).on("click","#mg-student-leave-clear-student-btn",function(e){
+  // alert("d");
+  var student_id=$("#attendances_mg_student_id").val();
+      var id=$("#attendances_id").val();
+      // alert("id :"+id);
+      var day="<%=@day%>"
+
+        $.ajax({
+        url: "/attendances/delete/"+id,
+        type: "patch",
+        cache: false,
+       
+
+        success:function(data){
+//            
+                var dayNum =  parseInt(day);
+                var tableData =dayNum+","+student_id;
+                $(document.getElementById(tableData)).html('<i class="fa fa-check"> </i>');
+//              
+              $(".ui-dialog-titlebar-close").click();
+              dayNum=0;
+              tableData=0;
+              // alert("success");
+            },
+        error: function(){
+          alert("Error: Please try again.");
+        }
+}); 
+
+});
+
+
+        </script>
