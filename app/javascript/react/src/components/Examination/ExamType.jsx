@@ -14,8 +14,9 @@ import { Edit, Trash, Search } from "lucide-react";
 
 const validationSchema = Yup.object().shape({
   exam_type_name: Yup.string().required("Exam type name is required"),
-  description: Yup.string(),
-  index: Yup.string(),
+  description: Yup.string().required("Description is required"),
+  mg_time_table_id: Yup.string().required("Academic Year is required"),
+
 });
 
 const ExamType = ({ userData }) => {
@@ -28,6 +29,9 @@ const ExamType = ({ userData }) => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingExamType, setEditingExamType] = useState(null);
+
+  const [academicYearData, setAcademicYearData] = useState(userData.academicYearsData || [])
+
 
   const filteredExamTypes = useMemo(() => {
     return examTypes.filter((examType) =>
@@ -43,6 +47,11 @@ const ExamType = ({ userData }) => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, entriesPerPage]);
+  useEffect(() => {
+    if (editingExamType) {
+      setSelectedAcademicYear(editingExamType.mg_time_table_id.toString());
+    }
+  }, [editingExamType]);
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
@@ -57,16 +66,13 @@ const ExamType = ({ userData }) => {
 
   const handleSubmit = (values, { setSubmitting }) => {
     const formattedData = selectedClass.map((item) => {
-      const selectedItem = userData.class_section.find((c) => c[1] === item);
+      const selectedItem = userData.class_section.find(([_, id]) => id === item);
       return selectedItem ? selectedItem[1] : null;
     });
 
-    // Filter out any null values (if they exist)
     const cleanedData = formattedData.filter((item) => item !== null);
 
-    // Output or send data in the desired format
-    console.log("Selected Class:", cleanedData);
-
+    // Rest of the code remains the same
     const token = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
@@ -79,17 +85,16 @@ const ExamType = ({ userData }) => {
       },
       body: JSON.stringify({
         mg_cbsc_exam_type: {
-          ...values,
+          exam_type_name: values.exam_type_name,
+          description: values.description,
         },
         selected_class: cleanedData,
+        mg_time_table_id: values.mg_time_table_id
       }),
     })
       .then((response) => response.json())
       .then(() => {
         setShowCreateForm(false);
-        resetForm(); // Reset the form fields
-        setSelectedClass([]); // Reset the selected classes
-
         window.location.reload();
       })
       .catch((error) => console.error("Error:", error))
@@ -101,40 +106,75 @@ const ExamType = ({ userData }) => {
       const csrfToken = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
-
+  
       axios
         .delete(`/cbsc_examinations/${id}`, {
           headers: {
             "X-CSRF-Token": csrfToken,
           },
         })
-        .then(() => {
-          window.location.reload();
-          setExamTypes(examTypes.filter((et) => et.id !== id));
+        .then((response) => {
+          if (response.data.status === 'success') {
+            // Remove the deleted item from the state
+            setExamTypes(prevExamTypes => 
+              prevExamTypes.filter(examType => examType.id !== id)
+            );
+            // Optional: Show success message
+            alert(response.data.message);
+          } else {
+            throw new Error(response.data.message);
+          }
         })
         .catch((error) => {
+          // Handle both network errors and server-returned errors
+          const errorMessage = error.response?.data?.message || error.message;
+          alert(errorMessage);
           console.error("Error deleting exam type:", error);
         });
     }
   };
 
   const handleEditClick = (examType) => {
+    // Set the academic year first
+    setSelectedAcademicYear(examType.mg_time_table_id.toString());
+    
+    // Find all exam associations for this exam type
+    const examAssociations = userData.exam_associationData.filter(
+      association => association.mg_cbsc_exam_type_id === examType.id
+    );
+    
+    // Get the class-section IDs from the associations
+    const associatedClassSections = examAssociations.map(association => {
+      return `${association.mg_course_id}-${association.mg_batch_id}`;
+    });
+    
+    // Set the pre-selected classes
+    setSelectedClass(associatedClassSections);
+    
+    // Set the exam type being edited
     setEditingExamType(examType);
+    
+    // Show the edit form
     setShowEditForm(true);
   };
-
   const handleEditSubmit = (values, { setSubmitting }) => {
-    const formattedData = selectedClass.map((item) => {
-      const selectedItem = userData.class_section.find((c) => c[1] === item);
-      return selectedItem ? selectedItem[1] : null;
-    });
-
-    const cleanedData = formattedData.filter((item) => item !== null);
-
+    // Get currently selected classes
+    const currentlySelectedClasses = new Set(selectedClass);
+    
+    // Find previously selected classes
+    const examAssociations = userData.exam_associationData.filter(
+      association => association.mg_cbsc_exam_type_id === editingExamType.id
+    );
+    
+    // Get classes that need to be deleted
+    const deletedClasses = examAssociations
+      .map(association => `${association.mg_course_id}-${association.mg_batch_id}`)
+      .filter(classId => !currentlySelectedClasses.has(classId));
+  
     const token = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
-
+  
     fetch(`/cbsc_examinations/${editingExamType.id}`, {
       method: "PATCH",
       headers: {
@@ -143,24 +183,49 @@ const ExamType = ({ userData }) => {
       },
       body: JSON.stringify({
         mg_cbsc_exam_type: {
-          ...values,
+          exam_type_name: values.exam_type_name,
+          description: values.description,
+          mg_time_table_id: values.mg_time_table_id
         },
-        selected_class: cleanedData,
+        selected_class: Array.from(currentlySelectedClasses),
+        delete_class: deletedClasses
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setExamTypes(
-          examTypes.map((et) => (et.id === editingExamType.id ? data : et))
-        );
-        setShowEditForm(false);
-        window.location.reload();
-      })
-      .catch((error) => console.error("Error:", error))
-      .finally(() => setSubmitting(false));
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      setShowEditForm(false);
+     // window.location.reload();
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Failed to update exam type. Please try again.");
+    })
+    .finally(() => {
+      setSubmitting(false);
+    });
+  };
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState("");
+  const [filteredClassSections, setFilteredClassSections] = useState([]);
+  const [selectedClass, setSelectedClass] = useState([]);
+  useEffect(() => {
+    if (selectedAcademicYear) {
+      // Filter class sections based on academic year
+      const filtered = userData.class_section.filter(([_, id, academicYearId]) => {
+        return academicYearId === parseInt(selectedAcademicYear);
+      });
+      setFilteredClassSections(filtered);
+    } else {
+      setFilteredClassSections([]);
+      setSelectedClass([]);
+    }
+  }, [selectedAcademicYear, userData.class_section]);
+  const handleAcademicYearChange = (e) => {
+    const yearId = e.target.value;
+    setSelectedAcademicYear(yearId);
   };
 
-  const [selectedClass, setSelectedClass] = useState([]);
   const handleSelectChange = (e) => {
     const value = e.target.value;
     // If the value is already selected, remove it. Otherwise, add it.
@@ -290,40 +355,55 @@ const ExamType = ({ userData }) => {
             initialValues={{
               exam_type_name: "",
               description: "",
-              index: "",
+              mg_time_table_id: "",
+
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ errors, touched, isSubmitting }) => (
+            {({ errors, touched, isSubmitting, setFieldValue }) => (
               <Form>
                 <div className="row">
                   <div className="col-md-6">
-                    <label>Index</label>
+                    <label>Academic Year</label>
                     <div className="input-group input-group-outline my-1">
                       <Field
-                        name="index"
-                        className={`form-control ${
-                          touched.index && errors.index ? "is-invalid" : ""
-                        }`}
-                      />
+                        as="select"
+                        name="mg_time_table_id"
+                        className={`form-control ${touched.mg_time_table_id && errors.mg_time_table_id ? "is-invalid" : ""
+                          }`}
+                        onChange={(e) => {
+                          handleAcademicYearChange(e);
+                          // Make sure to trigger Formik's onChange as well
+                          const event = e;
+                          setFieldValue("mg_time_table_id", e.target.value);
+                        }}
+                      >
+                        <option value="">Select Academic Year</option>
+                        {academicYearData.map((year) => (
+                          <option key={year.id} value={year.id}>
+                            {year.name}
+                          </option>
+                        ))}
+                      </Field>
                       <ErrorMessage
-                        name="index"
+                        name="mg_time_table_id"
                         component="div"
                         className="invalid-feedback"
                       />
                     </div>
                   </div>
+
+
                   <div className="col-md-6">
                     <label>Exam Type Name</label>
                     <div className="input-group input-group-outline my-1">
                       <Field
                         name="exam_type_name"
-                        className={`form-control ${
-                          touched.exam_type_name && errors.exam_type_name
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control ${touched.exam_type_name && errors.exam_type_name
+                          ? "is-invalid"
+                          : ""
+                          }`}
                       />
                       <ErrorMessage
                         name="exam_type_name"
@@ -340,11 +420,10 @@ const ExamType = ({ userData }) => {
                       <Field
                         name="description"
                         as="textarea"
-                        className={`form-control ${
-                          touched.description && errors.description
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control ${touched.description && errors.description
+                          ? "is-invalid"
+                          : ""
+                          }`}
                       />
                       <ErrorMessage
                         name="description"
@@ -354,38 +433,36 @@ const ExamType = ({ userData }) => {
                     </div>
                   </div>
                 </div>
-                <div className="row">
-                  <h3>Select Classes and Sections</h3>
-                  <div
-                    style={{
-                      maxHeight: "300px",
-                      overflowY: "scroll",
-                      border: "1px solid #ccc",
-                      padding: "10px",
-                    }}
-                  >
+                {selectedAcademicYear && (
+                  <div className="row">
+                    <h3>Select Classes and Sections</h3>
                     <div
-                      style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
+                      style={{
+                        maxHeight: "300px",
+                        overflowY: "scroll",
+                        border: "1px solid #ccc",
+                        padding: "10px",
+                      }}
                     >
-                      {userData.class_section.map(([name, id], index) => (
-                        <div key={index} style={{ flex: "0 0 48%" }}>
-                          {" "}
-                          {/* Set width to 48% for two items per row */}
-                          <label>
-                            <input
-                              type="checkbox"
-                              value={id}
-                              onChange={handleSelectChange}
-                              checked={selectedClass.includes(id)}
-                            />
-                            &nbsp; &nbsp;
-                            {name}
-                          </label>
-                        </div>
-                      ))}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                        {filteredClassSections.map(([name, id], index) => (
+                          <div key={index} style={{ flex: "0 0 48%" }}>
+                            <label>
+                              <input
+                                type="checkbox"
+                                value={id}
+                                onChange={handleSelectChange}
+                                checked={selectedClass.includes(id)}
+                              />
+                              &nbsp; &nbsp;
+                              {name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
                 <div className="row">
                   <div className="col-md-12 d-flex justify-content-end">
                     <button
@@ -393,7 +470,7 @@ const ExamType = ({ userData }) => {
                       className="btn btn-info my-4"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? "Creating..." : "Submit"}
+                      {isSubmitting ? "Submiting..." : "Submit"}
                     </button>
                   </div>
                 </div>
@@ -412,124 +489,128 @@ const ExamType = ({ userData }) => {
           <Offcanvas.Title>Edit Exam Type</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {editingExamType && (
-            <Formik
-              initialValues={{
-                exam_type_name: editingExamType.exam_type_name,
-                description: editingExamType.description,
-                index: editingExamType.index,
+        {editingExamType && (
+  <Formik
+    initialValues={{
+      exam_type_name: editingExamType.exam_type_name,
+      description: editingExamType.description,
+      mg_time_table_id: editingExamType.mg_time_table_id,
+    }}
+    validationSchema={validationSchema}
+    onSubmit={handleEditSubmit}
+  >
+    {({ errors, touched, isSubmitting, setFieldValue }) => (
+      <Form>
+        <div className="row">
+          <div className="col-md-6">
+            <label>Academic Year</label>
+            <div className="input-group input-group-outline my-1">
+              <Field
+                as="select"
+                name="mg_time_table_id"
+                className={`form-control ${
+                  touched.mg_time_table_id && errors.mg_time_table_id ? "is-invalid" : ""
+                }`}
+                onChange={(e) => {
+                  handleAcademicYearChange(e);
+                  setFieldValue("mg_time_table_id", e.target.value);
+                }}
+              >
+                <option value="">Select Academic Year</option>
+                {academicYearData.map((year) => (
+                  <option key={year.id} value={year.id}>
+                    {year.name}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage
+                name="mg_time_table_id"
+                component="div"
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <label>Exam Type Name</label>
+            <div className="input-group input-group-outline my-1">
+              <Field
+                name="exam_type_name"
+                className={`form-control ${
+                  touched.exam_type_name && errors.exam_type_name ? "is-invalid" : ""
+                }`}
+              />
+              <ErrorMessage
+                name="exam_type_name"
+                component="div"
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <label>Description</label>
+            <div className="input-group input-group-outline my-1">
+              <Field
+                name="description"
+                as="textarea"
+                className={`form-control ${
+                  touched.description && errors.description ? "is-invalid" : ""
+                }`}
+              />
+              <ErrorMessage
+                name="description"
+                component="div"
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+        </div>
+        {selectedAcademicYear && (
+          <div className="row">
+            <h3>Select Classes and Sections</h3>
+            <div
+              style={{
+                maxHeight: "300px",
+                overflowY: "scroll",
+                border: "1px solid #ccc",
+                padding: "10px",
               }}
-              validationSchema={validationSchema}
-              onSubmit={handleEditSubmit}
             >
-              {({ errors, touched, isSubmitting }) => (
-                <Form>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label>Index</label>
-                      <div className="input-group input-group-outline my-1">
-                        <Field
-                          name="index"
-                          className={`form-control ${
-                            touched.index && errors.index ? "is-invalid" : ""
-                          }`}
-                        />
-                        <ErrorMessage
-                          name="index"
-                          component="div"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <label>Exam Type Name</label>
-                      <div className="input-group input-group-outline my-1">
-                        <Field
-                          name="exam_type_name"
-                          className={`form-control ${
-                            touched.exam_type_name && errors.exam_type_name
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        <ErrorMessage
-                          name="exam_type_name"
-                          component="div"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                {filteredClassSections.map(([name, id], index) => (
+                  <div key={index} style={{ flex: "0 0 48%" }}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={id}
+                        onChange={handleSelectChange}
+                        checked={selectedClass.includes(id)}
+                      />
+                      &nbsp; &nbsp;
+                      {name}
+                    </label>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label>Description</label>
-                      <div className="input-group input-group-outline my-1">
-                        <Field
-                          name="description"
-                          as="textarea"
-                          className={`form-control ${
-                            touched.description && errors.description
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                        />
-                        <ErrorMessage
-                          name="description"
-                          component="div"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <h3>Select Classes and Sections</h3>
-                    <div
-                      style={{
-                        maxHeight: "300px",
-                        overflowY: "scroll",
-                        border: "1px solid #ccc",
-                        padding: "10px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: "10px",
-                        }}
-                      >
-                        {userData.class_section.map(([name, id], index) => (
-                          <div key={index} style={{ flex: "0 0 48%" }}>
-                            <label>
-                              <input
-                                type="checkbox"
-                                value={id}
-                                onChange={handleSelectChange}
-                                checked={selectedClass.includes(id)}
-                              />
-                              &nbsp; &nbsp;
-                              {name}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-12 d-flex justify-content-end">
-                      <button
-                        type="submit"
-                        className="btn btn-info my-4"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? "Updating..." : "Update Exam Type"}
-                      </button>
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          )}
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="row">
+          <div className="col-md-12 d-flex justify-content-end">
+            <button
+              type="submit"
+              className="btn btn-info my-4"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Updating..." : "Update Exam Type"}
+            </button>
+          </div>
+        </div>
+      </Form>
+    )}
+  </Formik>
+)}
         </Offcanvas.Body>
       </Offcanvas>
     </div>
