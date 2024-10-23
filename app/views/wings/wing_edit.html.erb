@@ -1,0 +1,70 @@
+<% navigation_add 'Wings', :controller => 'wings', :action => 'index' %>
+<% navigation_add 'Edit Wing', :controller => 'wings', :action => 'wing_edit' %>
+
+
+
+<%#= render  partial: 'master_settings/master_settings_left' %>
+
+<!-- <h4 class="mg-h4"><%#= t('edit_wing') %></h4> -->
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+    <h3 class="form-section-heading ">
+      <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Edit Wing</b>
+    </h3>
+  </div>
+</div>
+
+<div>
+<%= form_for :wings, :url=>{:controller=>'wings',:action=>'wing_update',:id=>@wings.id}, :html => {:id => 'wingManagementsID' } do |f| %>
+  <div class="row mc-padding-20 form-section-box">
+
+  <%= f.hidden_field :is_deleted, :value => 0 %>
+  <%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+  <%= f.hidden_field :created_by, :value => session[:user_id] %>
+  <%= f.hidden_field :updated_by, :value => session[:user_id] %>
+
+
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+      <label for="wing_name"><%= t('wing_name') %>
+                <span class="required-field">*</span>
+            </label>
+      <%= f.text_field :wing_name ,:class=>"form-control"%>
+      </div>
+</div>
+       <!-- <p>
+    <#%= f.label :Department_Code ,:class=>"mg-label"%><span class="required-field"> *</span><br>
+    <#%= f.text_field :department_code ,:class=>"mg-text-field"%>
+  </p>-->
+   <!--  <p>
+   
+      <#%= f.label :Status ,:class=>"mg-label"%>       <br />
+      <#%= f.label :status, t("active"), :value => "true" ,:class=>"mg-label-inner-form"  %>
+      <#%= f.radio_button :status, false , :checked => true%>
+      <#%= f.label :status, t("inactive"), :value => "false" ,:class=>"mg-label-inner-form" %>
+      <#%= f.radio_button :status, true %> <br />
+    </p>  -->
+  
+  <p class="mg-p-mgtop">
+    <%#= f.submit t('save'),:class=>"curriculum-managements-form-btn mg-small-form-btn" %>
+    <a onclick="$(this).closest('form').submit()" class="mg-small-form-btn submit mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+     <%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog cancel-form-dialog flat-button cancel-form-dialog margin-left-10"} %>
+  </p>
+<% end %>
+</div>
+
+<!-- Partial Section close-->
+<%#= render partial: 'schools/school_left_close' %>
+
+<script>
+$(document).ready(function () {
+  
+ focusCurrentTab("wingListAID","schoolWingLiID");
+        focusMasterSettings();
+$("#wingManagementsID").validate({
+
+rules: {
+"wings[wing_name]": {required: true}
+}
+});
+});
+ </script>

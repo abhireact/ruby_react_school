@@ -9,8 +9,10 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
-import Classes from "./components/Classes/ClassesIndex"
+import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
+import AddmissionDates from "./components/Addmission/dates";
+import ManageAdmissionSettings from "./components/Addmission/dates/manage";
 
 // Mapping of element IDs to components
 const componentMapping = {
@@ -20,7 +22,10 @@ const componentMapping = {
   AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
   DashboardIndex: Dashboard,
-  ClassesIndex:Classes
+  ClassesIndex: Classes,
+  AddmissionsIndex: AddmissionDates,
+  ManageAddmissionsIndex:ManageAdmissionSettings,
+
 };
 
 // Function to render a component
@@ -33,6 +38,7 @@ const renderComponent = (elementId, Component) => {
     let userData;
     try {
       userData = JSON.parse(rootElement.dataset.user || "{}");
+      // console.log(userData, "efsdfasdjkl");
     } catch (error) {
       console.error(`Error parsing user data for ${elementId}:`, error);
       userData = {};
@@ -57,4 +63,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-

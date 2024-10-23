@@ -31,6 +31,10 @@ Rails.application.routes.draw do
   draw :schools
   draw :academics
   draw :dashboards
+  draw :addmissions
+  draw :mg_admission_settings
+
+
 
   #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -43,7 +47,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   #-------------------------------------#
-
+  # get 'mg_admission_settings/admission_setting_detail'
+  # get 'mg_admission_settings/admission_setting_detail_create'
+  # resources :mg_admission_settings
   resources :demos
   resources :dummy
 
