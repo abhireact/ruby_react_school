@@ -414,27 +414,27 @@ const DataTable = ({ columns, data, onView, onEdit, onDelete }) => {
                     </td>
                   ))}
                   <td className="align-middle ps-3">
-                    {/* <Button
+                    <Button
                       variant="link"
                       className="text-secondary p-0 me-2"
                       onClick={() => onView(item)}
                     >
                       <Eye size={18} />
-                    </Button> */}
-                    {/* <Button
+                    </Button>
+                    <Button
                       variant="link"
                       className="text-secondary p-0 me-2"
                       onClick={() => onEdit(item)}
                     >
                       <Edit size={18} />
-                    </Button> */}
-                    {/* <Button
+                    </Button>
+                    <Button
                       variant="link"
                       className="text-secondary p-0"
                       onClick={() => onDelete(item.id)}
                     >
                       <Trash size={18} />
-                    </Button> */}
+                    </Button>
                   </td>
                 </tr>
               ))}

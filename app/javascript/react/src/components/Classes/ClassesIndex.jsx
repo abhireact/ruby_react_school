@@ -11,11 +11,23 @@ import {
   Offcanvas,
   Modal,
 } from "react-bootstrap";
-import { Eye, Edit, Trash, Search, List } from "lucide-react";
+import { Eye, Edit, Trash, Search, List,Plus } from "lucide-react";
 
 function convertDateFormat(dateString) {
   // Split the date string into an array
   const [year, month, day] = dateString.split("-");
+
+  // Return the formatted date
+  return `${day}/${month}/${year}`;
+}
+function formatDate(dateString) {
+  // Create a new Date object from the date string
+  const date = new Date(dateString);
+  
+  // Get day, month, and year
+  const day = String(date.getUTCDate()).padStart(2, '0'); // Get day (01-31)
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Get month (01-12, +1 since it's 0-indexed)
+  const year = date.getUTCFullYear(); // Get full year (YYYY)
 
   // Return the formatted date
   return `${day}/${month}/${year}`;
@@ -39,10 +51,17 @@ const editValidationSchema = Yup.object().shape({
   mg_time_table_id: Yup.string().required("Academic Year is required"),
 });
 
+const sectionValidationSchema = Yup.object().shape({
+  name: Yup.string().required("Section name is required"),
+  start_date: Yup.date().required("Start date is required"),
+  end_date: Yup.date().required("End date is required"),
+});
+
 const ClassesIndex = ({ userData }) => {
   console.log(userData, "user data");
 
   const [classes, setClasses] = useState(userData.classes || []);
+
   const [wings, setWings] = useState(userData.wings_data || []);
   const [academicYears, setAcademicYears] = useState(
     userData.academic_year_data || []
@@ -127,31 +146,89 @@ const ClassesIndex = ({ userData }) => {
           },
         })
         .then(() => {
-          setClasses(classes.filter((c) => c.id !== id));
+          window.location.reload();
           // Optionally, you can add a success message here
         })
         .catch((error) => {
           console.error("Error deleting class:", error);
-          // Optionally, you can add an error message here
+
         });
     }
   };
 
-  const [showSectionsModal, setShowSectionsModal] = useState(false);
-  const [sections, setSections] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(null);
+// First, make sure these state variables are defined at the top with your other useState declarations
+const [showSectionsModal, setShowSectionsModal] = useState(false);
+const [selectedClass, setSelectedClass] = useState(null);
+const [sections, setSections] = useState([]);
+const [showNewSectionForm, setShowNewSectionForm] = useState(false);
+
   // New function to fetch and show sections
-  const handleSections = (id) => {
-    axios
-      .get(`/classes/${id}/batchList`)
-      .then((response) => {
+  const handleSections = (id, classItem) => {
+    setSelectedClass(classItem); // Store the selected class details
+    setShowSectionsModal(true); // Show the modal
+    
+    fetchSections(id);
+  };
+  const fetchSections = (classId) => {
+    axios.get(`/batches/batcheList/${classId}`)
+      .then(response => {
         setSections(response.data);
-        setShowSectionsModal(true);
-        setSelectedClass(classes.find((c) => c.id === id));
       })
-      .catch((error) => {
-        console.error("Error fetching sections:", error);
+      .catch(error => {
+        console.error("Error fetching batches:", error);
       });
+  };
+  const handleDeleteSection = (id) => {
+    if (window.confirm("Are you sure you want to delete this class?")) {
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
+
+      axios
+        .delete(`/batches/${id}`, {
+          headers: {
+            "X-CSRF-Token": csrfToken,
+          },
+        })
+        .then(() => {
+          window.location.reload();
+          // Optionally, you can add a success message here
+        })
+        .catch((error) => {
+          console.error("Error deleting Section:", error);
+
+        });
+    }
+  };
+  const handleCreateSection = (values, { setSubmitting, resetForm }) => {
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
+
+    fetch('/batches/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': token
+      },
+      body: JSON.stringify({
+        mg_batch: {
+          mg_course_id: selectedClass.id,
+          name: values.name,
+          start_date: convertDateFormat(values.start_date),
+          end_date: convertDateFormat(values.end_date),
+          is_deleted: 0,
+        
+        }
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      window.location.reload();
+      fetchSections(selectedClass.id); // Refresh sections list
+      setShowNewSectionForm(false);
+      resetForm();
+    })
+    .catch(error => console.error('Error:', error))
+    .finally(() => setSubmitting(false));
   };
 
   const [showEditForm, setShowEditForm] = useState(false);
@@ -279,12 +356,13 @@ const ClassesIndex = ({ userData }) => {
                       <Trash size={18} />
                     </Button>
                     <Button
-                      variant="link"
-                      className="text-info p-0"
-                      onClick={() => handleSections(classItem.id)}
-                    >
-                      <List size={18} />
-                    </Button>
+  variant="link"
+  className="text-info p-0 ms-2"
+  onClick={() => handleSections(classItem.id, classItem)}
+>
+  <List size={18} />
+</Button>
+
                   </td>
                 </tr>
               ))}
@@ -448,7 +526,7 @@ const ClassesIndex = ({ userData }) => {
 
                 <div className="row mt-4">
                   <div className="col-md-12">
-                    <h5>Batch Details</h5>
+                    <h5>Section Details</h5>
                   </div>
                   <div className="col-md-4">
                     <label>Section Name</label>
@@ -656,30 +734,157 @@ const ClassesIndex = ({ userData }) => {
           )}
         </Offcanvas.Body>
       </Offcanvas>
-      <Modal
-        show={showSectionsModal}
-        onHide={() => setShowSectionsModal(false)}
-        size="lg"
+
+      <Offcanvas 
+        show={showSectionsModal} 
+        onHide={() => {
+          setShowSectionsModal(false);
+          setShowNewSectionForm(false);
+        }}
+        placement="end"
+        style={{ width: "50%" }}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Sections in {selectedClass?.course_name}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <ul>
-            {sections.map((section) => (
-              <li key={section.id}>{section.name}</li>
-            ))}
-          </ul>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowSectionsModal(false)}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>
+            Sections in {selectedClass?.course_name}
+          </Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <div className="mb-4">
+          {!showNewSectionForm &&  <Button 
+              variant="info" 
+              onClick={() => setShowNewSectionForm(true)}
+              className="mb-3"
+            >
+              <Plus size={18} className="me-2" />
+              Add New Section
+            </Button>} 
+          </div>
+
+          {showNewSectionForm && (
+            <div className="mb-4 p-3 border rounded">
+              <h6 className="mb-3">Create New Section</h6>
+              <Formik
+                initialValues={{
+                  name: "",
+                  start_date: "",
+                  end_date: ""
+                }}
+                validationSchema={sectionValidationSchema}
+                onSubmit={handleCreateSection}
+              >
+                {({ errors, touched, isSubmitting }) => (
+                  <Form><div className="row">
+                      <div className="col-md-4">
+                      <label>Section Name</label>
+                      <div className="input-group input-group-outline my-1">
+                      <Field
+                        name="name"
+                        className={`form-control ${
+                          touched.name && errors.name ? "is-invalid" : ""
+                        }`}
+                      />
+                      <ErrorMessage
+                        name="name"
+                        component="div"
+                        className="invalid-feedback"
+                      />
+                    </div>
+                    </div>
+                    <div className="col-md-4">
+                      <label>Start Date</label>
+                      <div className="input-group input-group-outline my-1">
+                      <Field
+                        type="date"
+                        name="start_date"
+                        className={`form-control ${
+                          touched.start_date && errors.start_date ? "is-invalid" : ""
+                        }`}
+                      />
+                      <ErrorMessage
+                        name="start_date"
+                        component="div"
+                        className="invalid-feedback"
+                      />
+                    </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <label>End Date</label>
+                      <div className="input-group input-group-outline my-1">
+                      <Field
+                        type="date"
+                        name="end_date"
+                        className={`form-control ${
+                          touched.end_date && errors.end_date ? "is-invalid" : ""
+                        }`}
+                      />
+                      <ErrorMessage
+                        name="end_date"
+                        component="div"
+                        className="invalid-feedback"
+                      />
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-end gap-2 my-4">
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => setShowNewSectionForm(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        type="submit" 
+                        variant="info"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Creating..." : "Create Section"}
+                      </Button>
+                    </div>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+          )}
+
+          {sections.length > 0 ? (
+            <Table responsive striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Section Name</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sections.map((section) => (
+                  <tr key={section.id}>
+                    <td>{section.name}</td>
+                    <td>{formatDate(section.start_date)}</td>
+                    <td>{formatDate(section.end_date)}</td>
+                    <td>
+                      <Button
+                        variant="link"
+                        className="text-danger p-0"
+                        onClick={() => handleDeleteSection(section.id)}
+                      >
+                        <Trash size={18} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-muted">No sections found for this class</p>
+            </div>
+          )}
+        </Offcanvas.Body>
+      </Offcanvas>
     </div>
   );
 };
