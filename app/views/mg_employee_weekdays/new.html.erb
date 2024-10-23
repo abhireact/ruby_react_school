@@ -1,0 +1,40 @@
+ <%= form_for :employee_weekdays, url: mg_employee_weekdays_path, method: :post, :html => {
+                            :id => 'employeeWeekdaysFormID' } do |f| %>
+
+  <p>
+    <%= f.label :name, t('name') ,:class=>"mg-label"%><span class="required-field"> *</span><br>
+    <%= f.text_field :name   %>
+  </p>
+ 
+  <%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id]%>
+
+  <%= f.hidden_field :created_by, :value => session[:user_id]%> 
+  <%= f.hidden_field :updated_by, :value => session[:user_id]%> 
+  
+  <%= f.hidden_field :is_deleted, :value => 0%> 
+
+  <p>
+    <%= f.submit t('save') ,:class=>"mg-small-form-btn"%>
+      <%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog"} %>
+
+  </p>
+<% end %>
+
+
+<%#= render  partial: '/event_committees/event_committees_left' %>
+
+
+<%#= render  partial: '/event_types/event_types_close' %>
+
+<script>
+$(document).ready(function () {
+  // $('#event_types_event_color').colorpicker('hide');
+$("#employeeWeekdaysFormID").validate({
+
+// rules: {
+// "employee_weekdays[name]": {required: true},
+// "employee_weekdays[event_color]": {required: true}
+// }
+});
+});
+</script>

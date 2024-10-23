@@ -1,0 +1,23 @@
+<!-- Sec --> 
+<h1>Listing Details</h1>
+<% @articles = MgEmployeeDepartment.where(:is_deleted=>0, :mg_school_id=>session[:current_user_school_id]) %>
+
+<table border="1">
+<tr align="left">   <%= link_to 'Add Departments!', mg_employee_departments_path,  :controller => :categories, :action => :index  %>  </tr>
+  <tr>
+    <th>Department_Name</th>
+    <th>Department_code</th>
+    <th>Status</th>
+  </tr>
+ 
+  <% @articles.each do |article| %>
+    <tr>
+      <td><%= article.department_name %></td>
+      <td><%= article.department_code %></td>
+      <td><%= article.status %></td>
+      <td><%= link_to "<i class=\"fa fa-pencil-square-o\"></i>".html_safe, edit_mg_employee_department_path(article) ,:title=>"Edit" ,:class=>"mg-icon-btn" %></td>
+      <td><%= link_to "<i class=\"fa fa-trash\"></i>".html_safe, mg_employee_department_path(article),
+                    method: :delete, data: { confirm: 'Are you sure?' } ,:title=>"Delete" ,:class=>"mg-icon-btn" %></td>
+    </tr>
+  <% end %>
+</table>

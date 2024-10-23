@@ -1,0 +1,18 @@
+<!-- Sec --> 
+      <tr>
+        <td><%= employee_department.department_name %></td>
+        <td><%= employee_department.department_code %></td>
+      
+       <!--  <td><%#= if employee_department.status then "In Active" else "Active" end %></td> -->
+
+        <td>
+           <!-- <button title="Edit" class="edit-employee-department mg-icon-btn" id="editEmployeeDepartmentID-<%#= employee_department.id%>"><i class="fa fa-pencil-square-o"></i></button> -->
+           <%= link_to "<i class=\"fa fa-pencil-square-o\"></i>".html_safe ,{controller: "mg_employee_departments",action: "edit", id: employee_department.id },
+                                method: :get,:title=>"Edit" ,:class=>"mg-icon-btn edit-btn"  %>
+           <!-- <button title="Delete" class="delete-employee-department mg-icon-btn" id="deleteEmployeeDepartmentID-<%= employee_department.id%>"><i class="fa fa-trash"></i></button> -->
+           <span style="left: -152px; position: relative; float: right; top: -3px;">
+          <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe, {:controller => "mg_employee_departments", :action => "delete",:id =>employee_department.id }, :method=>'post' ,:title=>"Delete" ,:class=>"mg-icon-btn",data: { confirm: 'Are you sure to delete?' } %>
+        </span>
+        </td>
+
+      </tr>
