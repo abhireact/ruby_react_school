@@ -10,8 +10,7 @@ class SessionsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
 
   def index
-    session[:school_functional_incharge] = ''
-    session[:user_type] = ''
+a    session[:user_type] = ''
 
     school_name = request.subdomain
     # school_name="sxiclu"
