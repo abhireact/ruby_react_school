@@ -54,8 +54,8 @@ gem "prawn"                    # PDF generation
 gem "prawn-table"              # Table support for Prawn
 gem "paperclip", "~> 6.1"      # File attachment library for ActiveRecord
 gem "activerecord-session_store", "~> 2.1" # Store sessions in the database
-gem "parser"                   # Ruby source and AST parser
-gem "unparser"                 # Unparser for Ruby AST
+# gem "parser"                   # Ruby source and AST parser
+# gem "unparser"                 # Unparser for Ruby AST
 gem "rubocop"                  # Ruby static code analyzer
 gem "rubocop-rails", require: false # RuboCop for Rails
 gem "carrierwave"              # File uploads for Rails

@@ -19,6 +19,7 @@ import SectionIndex from "./components/Section/SectionIndex";
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
+import GreetingMessageManagement from "./components/school/greetingmessage";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -34,7 +35,8 @@ const componentMapping = {
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
-  SectionIndex:SectionIndex
+  SectionIndex:SectionIndex,
+  GreetingMessageIndex:GreetingMessageManagement
 };
 
 // Function to render a component

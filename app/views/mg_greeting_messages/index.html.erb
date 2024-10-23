@@ -1,28 +1,3 @@
-<%= link_to t('add_greeting_message'), new_mg_greeting_message_path, class: "btn btn-primary" %>
-<h4 class="form-section-heading mc-margin-bottom-20"><%= t('greeting_messages') %></h4>
-<% if  @greetings.present? %>
-	<table class="table table-bordered table-striped">
-		<thead>
-			<th><%= t('start_time')%></th>
-			<th><%= t('end_time')%></th>
-			<th><%= t('message')%></th>
-			<th style="width: 10%;"><%= t('action')%></th>
-		</thead>
-		<tbody>
-			<%  @greetings.each do |greeting| %>
-				<tr>
-					<td><%= greeting.start_time.strftime("%d/%m/%Y %I:%M%p") if greeting.start_time %></td>
-					<td><%= greeting.end_time.strftime("%d/%m/%Y %I:%M%p") if greeting.end_time %></td>
-					<td><%= greeting.message %></td>
-					<td>
-						<%= link_to "<i class=\"fa fa-pencil-square-o\"></i>".html_safe, edit_mg_greeting_message_path(greeting.id), :method=>'get', :title=>"Edit", :class=>"mg-icon-btn" %>
-	      		        <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe, mg_greeting_message_path(greeting.id), :method=>'delete', :title=>"Delete", :class=>"mg-icon-btn", data: { confirm: "Are you sure?" }%>
-					</td>
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
-<% else%>
-	
-<% end %>
-
+<%# navigation_add 'School Info', :controller => 'wings', :action => 'index' %>
+<h1>Hii</h1>
+<div id="GreetingMessageIndex" data-user="<%=@greetings.to_json %>"></div>
