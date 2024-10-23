@@ -1,0 +1,2 @@
+module MgSubjectComponentsHelper
+end

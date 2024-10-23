@@ -409,7 +409,8 @@ const DataTable = ({ columns, data, onView, onEdit, onDelete }) => {
                 <tr key={index}>
                   {columns.map((col) => (
                     <td key={col.key} className="align-middle text-sm ps-3">
-                      {item[col.key]}
+                      {/* {item[col.key]} */}
+                      {col.render ? col.render(item) : item[col.key]}
                     </td>
                   ))}
                   <td className="align-middle ps-3">

@@ -38,6 +38,10 @@ class WingsController < ApplicationController
           end
         end
         # DELETE /wings/:id
+     
+
+
+
         def destroy
           @wings = MgWing.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
           if @wings.present?

@@ -1,0 +1,93 @@
+<!-- Sec --> 
+<table border="1" class="mg-showdata-bg mg-tbl-layout" cellspacing="1" cellpadding="1">
+
+<tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"><%=t("class_name")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+      <%course_name=MgCourse.find_by(:id=>@subjects.mg_course_id)%>
+        <label class="mg-label-inner-form"><%=course_name.course_name%></label>
+      </td>
+  </tr>
+  <tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"><%=t("subject_name")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+      <%if @subjects.subject_name.present? %>
+        <label class="mg-label-inner-form"> <%=@subjects.subject_name %></label>
+        <%else%>
+     <label class="mg-label-inner-form"><%="No Data"%></label>
+     <%end%>
+      </td>
+  </tr>
+  <tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"><%=t("subject_code")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+      <%if @subjects.subject_code.present? %>
+        <label class="mg-label-inner-form"> <%=@subjects.subject_code %></label>
+        <%else%>
+     <label class="mg-label-inner-form"><%="No Data"%></label>
+     <%end%>
+      </td>
+  </tr>
+  <tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"><%=t("maxweeklyclass")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+      <%if @subjects.max_weekly_class.present? %>
+        <label class="mg-label-inner-form"> <%=@subjects.max_weekly_class %></label>
+        <%else%>
+     <label class="mg-label-inner-form"><%="No Data"%></label>
+     <%end%>
+      </td>
+  </tr>
+  <tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"><%=t("Core Subject")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+         <% if @subjects.is_core==true %>
+         <label class="mg-label-inner-form">Yes</label>
+         <% else%>
+          <label class="mg-label-inner-form">No</label>
+         <% end%>
+       
+      </td>
+  </tr>
+  <tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"><%=t("Is Lab")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+         <% if @subjects.is_lab==true %>
+         <label class="mg-label-inner-form">Yes</label>
+         <% else%>
+          <label class="mg-label-inner-form">No</label>
+         <% end%>
+       
+      </td>
+  </tr>
+  <tr>
+      <td class="mg-td-width-half" valign="top">
+        <label class=" mg-label mg-label-text-transform-none"><%=t("noofclasses")%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+      <%if @subjects.no_of_classes.present? %>
+        <label class="mg-label-inner-form"> <%=@subjects.no_of_classes %></label>
+        <%else%>
+     <label class="mg-label-inner-form"><%="No Data"%></label>
+     <%end%>
+      </td>
+  </tr>
+ </table>
+
+<br/>
+
+   <%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog"} %>
+
+ 

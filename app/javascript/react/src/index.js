@@ -9,8 +9,14 @@ import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
+import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
+import ExamType from "./components/Examination/ExamType";
+import SectionIndex from "./components/Section/SectionIndex";
 
+import EmpListManagement from "./components/emp_subjects/list";
+import EmpSybIndex from "./components/emp_subjects";
+import BatchSubjectManagement from "./components/subjects/batch";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -19,6 +25,12 @@ const componentMapping = {
   AcademicIndex: AcademicYearManagement,
   EmployeesIndex: Employees,
   DashboardIndex: Dashboard,
+  ClassesIndex: Classes,
+  ExamType: ExamType,
+  EmpListManagement: EmpListManagement,
+  EmpSybIndex: EmpSybIndex,
+  BatchSubjectManagement: BatchSubjectManagement,
+  SectionIndex:SectionIndex
 };
 
 // Function to render a component
@@ -55,4 +67,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-

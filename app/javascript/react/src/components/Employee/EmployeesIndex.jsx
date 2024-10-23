@@ -117,27 +117,27 @@ const EmployeeList = ({ userData }) => {
       setSubmitting(false);
     }
   };
- const { t, i18n } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
 
- const changeEng = () => {
-   i18n.changeLanguage("en");
- };
+  const changeEng = () => {
+    i18n.changeLanguage("en");
+  };
 
- const changeHin = () => {
-   i18n.changeLanguage("hindi");
- };
+  const changeHin = () => {
+    i18n.changeLanguage("hindi");
+  };
 
- const changeArab = () => {
-   i18n.changeLanguage("arabic");
- };
+  const changeArab = () => {
+    i18n.changeLanguage("arabic");
+  };
   return (
     <div className="container-fluid py-4">
-       <>
-      HOME: {t("HOME")} Greetings: {t('Hi')}
-      <button onClick={changeEng}>Translate English</button>
-      <button onClick={changeHin}>Translate Hindi</button>
-      <button onClick={changeArab}>Translate Arabic</button>
-    </>
+      <>
+      {t("Hi")}
+        <button onClick={changeEng}>Translate English</button>
+        <button onClick={changeHin}>Translate Hindi</button>
+        <button onClick={changeArab}>Translate Arabic</button>
+      </>
       <div className="row">
         <div className="col-12">
           <div className="card">
