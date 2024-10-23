@@ -2,7 +2,6 @@ class CbscExaminationsController < ApplicationController
   layout 'mindcom'
   #include CheckExamReport, GetParticularGrade
   include ApplicationHelper 
-  include MgDependancyClass
   
   helper_method :get_class_section, :sort_column, :sort_direction
     
@@ -111,7 +110,6 @@ class CbscExaminationsController < ApplicationController
   end
 
   def destroy
-    binding.pry
     if dependency_exists?("mg_cbsc_exam_type_id", params[:id])
        render json: { error: "Cannot delete this Exam Type as it has dependencies." }, status: :unprocessable_entity
   
@@ -122,6 +120,26 @@ class CbscExaminationsController < ApplicationController
     end
     # redirect_to action: "index"
   end
+
+
+  def delete
+    @exam_type = MgCbscExamType.find(params[:id])
+    boolVal = MgDependancyClass.examType_dependancy("mg_cbsc_exam_type_id", params[:id])
+    
+    if boolVal == true
+      render json: { error: "Cannot delete this Exam Type as it has dependencies." }, status: :unprocessable_entity
+    else
+      @exam_type.update(is_deleted: 1)
+      
+      @exam_type_association = MgCbscExamTypeAssociation.where(mg_cbsc_exam_type_id: @exam_type.id)
+      @exam_type_association.each do |exam_type_association|
+        exam_type_association.update(is_deleted: 1)
+      end
+      
+      render json: { message: "Deleted successfully." }, status: :ok
+    end
+  end
+  
 
   private
 

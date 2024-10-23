@@ -1,6 +1,6 @@
  get '/cbsc_examinations', to:'cbsc_examinations#index'
  post '/cbsc_examinations/create', to: 'cbsc_examinations#create'
  patch '/cbsc_examinations/:id', to: 'cbsc_examinations#update'
- delete  '/cbsc_examinations/:id', to: 'cbsc_examinations#destroy'
+ delete  '/cbsc_examinations/:id', to: 'cbsc_examinations#delete'
  resources :cbsc_examinations
   
