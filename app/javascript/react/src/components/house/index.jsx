@@ -23,9 +23,10 @@ const HouseManagement = ({ userData }) => {
       description="Manage House ."
       initialData={userData}
       columns={columns}
-      apiEndpoint="houses"
+      apiEndpoint="category/house_details"
       validationSchema={validationSchema}
       formFields={formFields}
+      payloadKey="house"
     />
   );
 };

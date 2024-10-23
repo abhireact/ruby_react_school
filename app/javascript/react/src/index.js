@@ -11,11 +11,19 @@ import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
-import ExamType from "./components/Examination/ExamType"
+import ExamType from "./components/Examination/ExamType";
 
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
+import CategoryManagement from "./components/category";
+import SubjectsManagement from "./components/subjects";
+import CasteManagement from "./components/caste";
+import SportsManagement from "./components/sports";
+import StudentHobbyManagement from "./components/student_hobby";
+import HouseManagement from "./components/house";
+import ExtraCurrIndex from "./components/extra_curricular";
+import StudentCategoryIndex from "./components/student_category";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -29,6 +37,14 @@ const componentMapping = {
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
+  CategoryIndex: CategoryManagement,
+  CasteIndex: CasteManagement,
+  SubjectsIndex: SubjectsManagement,
+  SportsIndex: SportsManagement,
+  StudentHobbyIndex: StudentHobbyManagement,
+  HouseIndex: HouseManagement,
+  ExtraCurrIndex: ExtraCurrIndex,
+  StudentCategoryIndex: StudentCategoryIndex,
 };
 
 // Function to render a component
