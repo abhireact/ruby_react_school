@@ -1,0 +1,32 @@
+<button class="new-event-type-btn mg-btn-bottom-margin mg-custom-form-btn"><%= t('create_new_weekdays')%></button>  
+<h4 class="mg-h4"><%= t('weekdays')%></h4>
+<%if @employee_weekdays.present?%>
+<div class="mg_pagination">
+<table class="batch-tbl mg-tbl-margin">   <!-- border="2" --> 
+ <tr >
+  	<th><%=t('name')%></th>
+    <th><%=t('actions')%></th>
+     
+
+  </tr>
+  <% @employee_weekdays.each do |e| %>
+    <tr>
+      <td><%= e.name %></td>
+     </td>
+      <td>
+        <button title="Show" id="<%=raw e.id %>-showEmployeeWeekdaysBTNID" class="show-employee-weekdays-btn mg-icon-btn"><i class="fa fa-eye"></i></button>
+        <button title="Edit" id="<%=raw e.id %>-editEmployeeWeekdaysBTNID" class="edit-employee-weekdays-btn mg-icon-btn"><i class="fa fa-pencil-square-o"></i></button>
+        <button title="Delete" id="<%=raw e.id %>-deleteEmployeeWeekdaysBTNID" class="delete-employee-weekdays-btn mg-icon-btn"><i class="fa fa-trash"></i></button></td>
+    </tr>
+  <% end %>
+</table>
+ <%#= will_paginate @employee_weekdays, :container => false %>
+  </div>
+<%else%>
+<h5>Please create some weekdays... </h5>
+<%end%>
+
+<div id="editEmployeeWeekdaysDIVID"></div>
+<div id="showEmployeeWeekdaysDIVID"></div>
+<div id="deleteEmployeeWeekdaysDIVID"></div>
+<div id="newEmployeeWeekdaysDIVID"></div>
