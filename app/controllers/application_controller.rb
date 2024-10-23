@@ -22,5 +22,16 @@ class ApplicationController < ActionController::Base
     courses = MgCourse.where(mg_wing_id:params[:mg_wing_id],mg_time_table_id:params[:mg_time_table_id],is_deleted:0,mg_school_id:session[:current_user_school_id]).pluck(:course_name,:id) if params[:mg_wing_id].present?
     render :json => {:courses => courses}
   end
+
+  def login_required
+    user = MgUser.find_by(id: session[:user_id], is_deleted: 0)
+    # if session[:user_id].present? && MgUser.find_by(:id=>session[:user_id], :is_deleted=>0).try(:mg_school_id).to_s==session[:current_user_school_id].to_s
+    if session[:user_id].present? && user&.mg_school_id.to_s == session[:current_user_school_id].to_s
+      # Allow access
+    else
+      redirect_to root_url, alert: 'You need to log in to access this page.'
+    end
+  end
+
   
 end
