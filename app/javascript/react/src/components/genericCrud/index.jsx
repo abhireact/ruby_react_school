@@ -1466,6 +1466,7 @@ const GenericCRUD = ({
   apiEndpoint,
   validationSchema,
   formFields,
+  payloadKey,
   needinbuilticon,
   additionalActions = [],
 }) => {
@@ -1542,7 +1543,8 @@ const GenericCRUD = ({
           "Content-Type": "application/json",
         };
 
-        const payload = { [apiEndpoint]: values };
+        const key = payloadKey || apiEndpoint.split("/")[0];
+        const payload = { [key]: values };
 
         if (editData) {
           response = await axios.patch(

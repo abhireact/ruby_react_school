@@ -30,7 +30,7 @@ const componentMapping = {
   DashboardIndex: Dashboard,
   ClassesIndex: Classes,
   AddmissionsIndex: AddmissionDates,
-  ManageAddmissionsIndex:ManageAdmissionSettings,
+  ManageAddmissionsIndex: ManageAdmissionSettings,
   ExamType: ExamType,
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,

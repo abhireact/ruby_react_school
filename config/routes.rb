@@ -8,11 +8,7 @@ Rails.application.routes.draw do
   draw :wings
   draw :schools
   draw :academics
-  draw :houses
-  draw :sports
-  draw :castes
   draw :category
-  draw :student_hobbies
   draw :subjects
   draw :dashboards
   draw :addmissions
@@ -22,6 +18,7 @@ Rails.application.routes.draw do
 
   draw :cbsc_examinations
   draw :classes
+  draw :student_categories
   draw :mg_employee_departments
   draw :mg_employee_positions
   draw :mg_employee_weekdays

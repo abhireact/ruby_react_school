@@ -1,10 +1,10 @@
 import React from "react";
 import * as Yup from "yup";
 import GenericCRUD from "../genericCrud";
-const StudentHobbyManagement = ({ userData }) => {
+const StudentCategoryIndex = ({ userData }) => {
   console.log(userData, "userrdata in wings");
   const columns = [
-    { key: "name", label: "Name" },
+    { key: "name", label: "Category Name" },
     { key: "description", label: "Description" },
   ];
 
@@ -13,21 +13,21 @@ const StudentHobbyManagement = ({ userData }) => {
   });
 
   const formFields = [
-    { name: "name", label: "Name", type: "text" },
+    { name: "name", label: "Category Name", type: "text" },
     { name: "description", label: "Description", type: "text" },
   ];
 
   return (
     <GenericCRUD
-      title="Student Hobby Management"
-      description="Manage Student Hobby ."
+      title="Category Management"
+      description="Manage Category ."
       initialData={userData}
       columns={columns}
-      apiEndpoint="category/student_hobbies"
+      apiEndpoint="student_categories"
       validationSchema={validationSchema}
       formFields={formFields}
-      payloadKey="student_hobbies"
+      payloadKey="category"
     />
   );
 };
-export default StudentHobbyManagement;
+export default StudentCategoryIndex;
