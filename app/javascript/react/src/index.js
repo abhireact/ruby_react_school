@@ -11,6 +11,8 @@ import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
+import AddmissionDates from "./components/Addmission/dates";
+import ManageAdmissionSettings from "./components/Addmission/dates/manage";
 import ExamType from "./components/Examination/ExamType";
 import SectionIndex from "./components/Section/SectionIndex";
 
@@ -26,6 +28,8 @@ const componentMapping = {
   EmployeesIndex: Employees,
   DashboardIndex: Dashboard,
   ClassesIndex: Classes,
+  AddmissionsIndex: AddmissionDates,
+  ManageAddmissionsIndex:ManageAdmissionSettings,
   ExamType: ExamType,
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
@@ -43,6 +47,7 @@ const renderComponent = (elementId, Component) => {
     let userData;
     try {
       userData = JSON.parse(rootElement.dataset.user || "{}");
+      // console.log(userData, "efsdfasdjkl");
     } catch (error) {
       console.error(`Error parsing user data for ${elementId}:`, error);
       userData = {};

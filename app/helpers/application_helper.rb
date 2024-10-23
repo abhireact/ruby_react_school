@@ -73,16 +73,15 @@ module ApplicationHelper
 		MgBatch.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")
 	end
   
-def get_class_section(time_table_id)
+def get_class_section
   current_date = Date.today
   MgBatch.where(
     is_deleted: 0,
     mg_school_id: session[:current_user_school_id]
-  ).joins(:mg_course).where(
-    mg_courses: { mg_time_table_id: time_table_id }
-  ).pluck(
+  ).joins(:mg_course).pluck(
     Arel.sql("CONCAT(mg_courses.course_name, '-', mg_batches.name)"),
-    Arel.sql("CONCAT(mg_courses.id, '-', mg_batches.id)")
+    Arel.sql("CONCAT(mg_courses.id, '-', mg_batches.id)"),
+	Arel.sql("mg_courses.mg_time_table_id")
   )
 end
 	def get_course_batch_name_all

@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   draw :student_hobbies
   draw :subjects
   draw :dashboards
+  draw :addmissions
+  draw :mg_admission_settings
+
+
+
   draw :cbsc_examinations
   draw :classes
   draw :mg_employee_departments
@@ -36,6 +41,12 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
+  # Defines the root path route ("/")
+  # root "posts#index"
+  #-------------------------------------#
+  # get 'mg_admission_settings/admission_setting_detail'
+  # get 'mg_admission_settings/admission_setting_detail_create'
+  # resources :mg_admission_settings
 
   resources :mg_greeting_messages
   resources :demos
