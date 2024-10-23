@@ -11,7 +11,8 @@ import WingManagement from "./components/school/wings";
 import Employees from "./components/Employee/EmployeesIndex";
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
-import ExamType from "./components/Examination/ExamType"
+import ExamType from "./components/Examination/ExamType";
+import SectionIndex from "./components/Section/SectionIndex";
 
 // Mapping of element IDs to components
 const componentMapping = {
@@ -23,6 +24,7 @@ const componentMapping = {
   DashboardIndex: Dashboard,
   ClassesIndex: Classes,
   ExamType: ExamType,
+  SectionIndex:SectionIndex
 };
 
 // Function to render a component
