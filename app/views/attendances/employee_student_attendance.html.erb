@@ -1,0 +1,229 @@
+<!-- #version 1.1(25/09/18/Mamatha FOR student sort based on admission number and user id)  -->
+<!-- #version 1.2(25/09/18/Mamatha FOR student sort based on roll number)  -->
+
+<!--  -->
+<% navigation_add '  Student Attendances',employee_student_attendance_path %>
+<%#= render partial: 'dashboards/employee_left' %>
+<%mg_school_id_for_start_date=MgSchool.find_by(:is_deleted=>0, :id=>session[:current_user_school_id])%>
+<% if !flash[:notice].blank? %>
+  <div class="alert alert-info mg-success-msg">
+  <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if !params[:notice].blank? %>
+  <div class="alert alert-info mg-success-msg">
+  <%= params[:notice] %>
+  </div>
+<% end %>
+<h4 class="form-section-heading">Student Attendance</h4>
+	<label class="mg-label mg-label-width ">Quick Attendance</label>
+	    
+	<%=check_box_tag :is_resion%><br>
+    <div class="row mc-padding-20 form-section-box">
+      <div class ="row">
+        <%= hidden_field_tag "user_id", @userID%>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+          <label for="mg-label mg-leave-width">Select Academic Year<span class="required-field"> *</span></label>
+          <%= select_tag :mg_time_table_id, options_for_select(get_academic_year,:selected=>get_current_academic_year(session[:current_user_school_id])), :class=>"form-control", :prompt=>"Select"%><br>
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+          <label>Select Section</label>
+          <%=select_tag :batch,options_for_select([]),:prompt=>"Select",:onchange=>"addClassBatches()" ,:class=>"filtered_class_section form-control"%>
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+          <label>Select Date</label>
+             <%#= form_tag attendance_import_path, :id => 'employeeReportAttendancesFormID', :class=>"mg-button-align", multipart: true do %>
+            <%=text_field_tag :date ,Date.today.strftime(mg_school_id_for_start_date.try(:date_format)),value:@date,:class=>"mg-text-field date_validation_for_student_attendance form-control",:onchange=>"addClassBatches()"%>
+        <%#end%>
+       </div>
+    </div>
+    <div class ="row">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+        <label>Sort On</label>
+        <%=select_tag :sort,options_for_select([["student name","first_name"],["admission number","class_roll_number"],["user id","admission_number"],["roll number","roll_number"]]),:prompt=>"Select",:class=>"mg-button-align form-control",:onchange=>"addClassBatches()" %>      
+      </div>
+    </div>
+  </div>
+  <div style="clear: both"></div>
+<div id="classTimingListForStudentAttendaceDIVID" class="mg-tbl-size-width"></div>
+<div id="newEventDIVID"></div>
+<div id="studentPeriodWiseTimeTableDIVID"></div>
+
+
+
+
+<%if @batches.present?%>
+<h4 class="form-section-heading">Attendance Import</h4>
+  <div>
+  <%= form_tag attendance_import_path, :id => 'studentAttendancesFormID', multipart: true do %>
+  <label class="mg-label mg-tt-width ">Day wise Attendance</label>
+  <%=check_box_tag :is_day_attendance%><br>
+    <%= file_field_tag :file ,:onchange =>"validateFiles(this);"%><br>
+    <%= submit_tag "Import" ,:class=>"mg-small-form-btn mg-tbl-margin mc-margin-bottom-20 flat-button"%>
+  <% end %>
+  </div>
+<%end%>
+<%= render partial: 'application/common_left_close' %>
+<div id="spinner" style="display: none;">
+    <img src="/assets/ajax-loader.gif" alt="Loading..."/>
+  </div>
+  <div id="overlay" ></div>
+<script type="text/javascript">
+  function spin(){
+    $("#overlay").show();
+    $("#spinner").show();
+  };
+
+  function stopSpin(){
+    $("#overlay").hide();
+    $("#spinner").hide();
+  };
+ var dateFormatStr =  getJsDateFormat();
+$(document).on("change", "#date", function(e){
+  if($("#employeeReportAttendancesFormID").valid()){
+    addClassBatches();
+  }
+
+});
+
+$(document).ready(function(){
+
+	$("#studentAttendancesFormID").validate({
+          rules: {
+            "file": {required: true}
+          }
+    });
+  $(".content-tab").tabs();
+        
+        focusCurrentTab("viewEmployeeStudentAttendancesAID","viewEmployeeStudentAttendancesLiID");
+
+        focusAttendance();
+
+  $('#date').val($.datepicker.formatDate(dateFormatStr,new Date()));
+    var date= $('#date').val();
+ $( "#date" ).datepicker({dateFormat: dateFormatStr,minDate:0,maxDate:0});  
+
+
+});
+
+function validateFiles(inputFile) {
+  var maxExceededMessage = "This file exceeds the maximum allowed file size (5 MB)";
+  var extErrorMessage = "Only file with extension: .xls, .xlsx is allowed";
+  var allowedExtension = ["xls", "xlsx"];
+  var extName;
+  var extError = false;
+  $.each(inputFile.files, function() {
+    extName = this.name.split('.').pop();
+    if ($.inArray(extName, allowedExtension) == -1) {extError=true;};
+  });
+  if (extError) {
+   window.alert(extErrorMessage);
+   $(inputFile).val('');
+  };
+}
+
+
+
+$(function () {
+    $.validator.addMethod('dateFormat',
+    function (value, element) {
+      dateFormatStr =  getJsDateFormat();
+        if (this.optional(element)) {
+            return true;
+        }
+        var ok = true;
+        try {
+            $.datepicker.parseDate(dateFormatStr, value);
+        }
+        catch (err) {
+            ok = false;
+        }
+        return ok;
+    },
+      "Please enter a date in the format "+ getDateFormat(dateFormatStr) +".");
+      dateFormatStr =  getJsDateFormat();
+
+    $(".datefield").datepicker({ dateFormat: dateFormatStr, changeYear: true });
+});
+
+
+
+   $("#employeeReportAttendancesFormID").validate({
+
+        rules: {  
+        "date": {dateFormat: true, required: true}
+      }
+});
+// $("#employeeReportAttendancesFormID").valid();
+setTimeout(function(){
+$("#mg_time_table_id").change(function(e){
+  var timetableid = $(this).val();
+  var urlLink = "/attendances/get_batch_of_employee/";
+  $.ajax({
+    url: urlLink ,
+    data:{"mg_time_table_id":timetableid},
+    cache: false,
+    success: function(response){
+      var courses_batches = response["courses_batches"]
+      var course_sections  = "<option value=''>Select</option>";
+      for(i=0;i<courses_batches.length;i++){
+        course_sections += "<option value='" +courses_batches[i][1] + "'>"  +courses_batches[i][0] + "</option>";
+      }
+      $(".filtered_class_section").empty();
+      $(".filtered_class_section").append(course_sections)
+    }
+  });
+}).trigger('change');
+}, 200);
+// },500);
+
+// $(function() {
+  var timetableid = $("#mg_time_table_id").val();
+  var batch = $("#batch").val();
+  var date = $("#date").val();
+  if (timetableid != "" && batch != "" && date != ""){
+    addClassBatches();
+  }
+// });
+
+
+ </script>
+
+ <style>
+.ui-dialog-titlebar-close {
+    visibility: hidden;
+}
+.ui-dialog{
+  overflow:scroll;
+  height:250px;
+  max-height:300px;
+  border-radius: 3px;
+  overflow-x: hidden;
+}
+
+#spinner{
+    /*width:150px;
+    height: 150px;*/
+    position: relative;
+    /*top: 80%;*/
+    /*left: 33%;*/
+    text-align:center;
+    margin-left: -12em;
+    margin-top: 70px;
+    z-index:2;
+    overflow: auto;
+    display: none;
+  }   
+
+#overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 999;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+</style>

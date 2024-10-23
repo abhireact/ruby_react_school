@@ -1,0 +1,11 @@
+<div id="replace_data">
+    	
+	    <label class="mg-label" for="holiday"><%= t('select_holiday') %><span class="required-field"> *</span></label>
+	    <div class="input-container">
+	    <%=select_tag 'mg_holiday_id', options_for_select(@holiday),prompt: "Select",:class=>"mg-select-btn",:onchange => "getStartDateEndDate(this.value)"%>
+  		</div>
+  		<label class="mg-label" for="employee_department"><%= t('select_employee_department') %><span class="required-field"> *</span></label>
+	     <div class="input-container">
+	    <%=select_tag 'mg_employee_department_id', options_for_select(@employeeDepartment),prompt: "Select",:class=>"mg-select-btn"%>
+  		</div>
+    </div>

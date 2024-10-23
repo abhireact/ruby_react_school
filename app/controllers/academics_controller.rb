@@ -43,7 +43,7 @@ else
 end
 end
 
-  get /wings
+
 
 
 private

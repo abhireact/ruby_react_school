@@ -1,0 +1,302 @@
+<!-- Sec --><!-- student and employee page will be same -->
+<!-- For student period entry will also come for user view
+    when click on perticular date then dialog will going to open for the
+    current student and current date
+-->
+<!-- Dependancy on student and employee module-->
+<!-- student shoud have two base process -->
+<!-- 1. according to monthly details-->
+<!-- 2. according to date details here period detail will come in the picture-->
+
+<!-- breadcrumbs Work -->
+<%# navigation_add 'Students Attendance', attendances_path %>
+<!-- breadcrumbs Work -->
+
+<%= render partial: 'attendance_left' %>
+
+
+    <%= form_for :attendances, url: attendances_path do |f| %>
+         <td valign="top" class="mg-table-td-main-2">
+             <div class="rightBodyContent">
+               <article class="mailContentRight">
+                    <div class="bodyContent">
+                      <div class="content-tab">
+                       <ul class="tabs" data-persist="true">
+                            
+                            <li><a href="#s-report">Attendance Chart</a></li> 
+                            <li><a href="#b-report">Batch Report</a></li>
+                       </ul>
+                       <div class="content-header">
+                             <div id="b-report">
+                                <table>
+                                   <tr>
+                                      <td>
+                                        <div class="content-box">
+
+
+             <% 
+                          @batchList =   MgBatch.where(:is_deleted => 0)
+
+                          @batchList.each do |batchObj|
+
+                              @courseObj = MgCourse.find_by_id(batchObj.mg_course_id)
+
+                              batchObj.name = (@courseObj.course_name) +"-"+ batchObj.name
+                          end
+                     %>
+                     <%=f.collection_select(:mg_batch_id, @batchList , :id, :name, {:include_blank => 'Select'} ,:class=>"mg-select-btn") %>
+
+                                                
+                                        </div>
+                                     </td>
+                                     <td>
+                                        <!-- date picker -->
+                                        <input class="attendance-month" type="text" placeholder="Select Month" />
+                                     </td>
+                                   </tr>
+                                </table>
+                                    <div style="display:none">
+                                         <ul>
+                                            <li><span>BATCH 1</span></li>
+                                            <li><span>NOVEMBER 2014</span></li>
+                                            <li><span>Generate PDF<input type="image" src="/assets/adobe.png/"
+                                            /></span></li>
+                                         <ul>
+                                     </div><br/>
+                                
+
+                                <table class="att-calendar">
+                               
+                                 </table>
+                            </div>
+                            <div id="s-report">
+                                 <div class="content-box">
+                                     <table>
+                                   <tr>
+                                      <td>
+                                        <div>
+                                            
+                                         <!-- pie charts starts -->
+                                            <%@batchList=MgBatch.where(:is_deleted=>0)
+
+                                             @chart_dataHash=Hash.new
+                                             @current_month=Date.today.strftime("%m")
+                                             @current_Year=Date.today.strftime("%Y")
+                                             @days = Time.days_in_month(@current_month.to_i,@current_Year.to_i)
+                                              
+                                              @batchList.each do |batch|
+                                                 @absent_student_count=MgStudentAttendance.where(:mg_batch_id=>batch.id).where('extract(MONTH from absent_date )=MONTH(now())').count
+                                                 @present_day_count=@days-@absent_student_count
+                                                  array=Array.new
+                                                 array.push("Present",batch.name)
+                                                   @chart_dataHash[array]=@present_day_count
+                                                  array=Array.new
+                                                  array.push("Absent",batch.name)
+                                                  @chart_dataHash[array]=-@absent_student_count
+                                              end
+                                            %>
+                                            <%= column_chart(@chart_dataHash)%>
+                                          <!-- pie charts ends -->
+                                        </div>
+                                     </td>
+                                     
+                                   </tr>
+                                </table>
+                                    <div style="display:none">
+                                         <ul>
+                                            <li><span>BATCH 1</span></li>
+                                            <li><span>NOVEMBER 2014</span></li>
+                                            <li><span>Generate PDF<input type="image" src="/assets/adobe.png/"/></span></li>
+                                         <ul>
+                                     </div>
+                              
+                                </div>             
+                            </div>
+                          </div>
+                       </div>
+                    </div>
+                </article>
+              </div>
+          </td>
+    <% end %>
+     
+<%= render partial: 'application/common_left_close' %>
+
+
+<style> 
+.ui-datepicker-calendar {
+   display: none; 
+    }
+</style>
+
+<script >
+
+
+    $(document).ready(function () {
+        $(".content-tab").tabs();
+        
+        focusCurrentTab("studentAttendanceAID","studentAttendanceLiID");
+
+        focusAttendance();
+
+
+    });
+
+     $(document).ready(function(){
+
+              $(".content-tab").tabs();
+           //    $( ".attendance-month" ).datepicker({ dateFormat: 'dd-mm-yy' });
+
+              /// test
+                $('.attendance-month').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'MM yy',
+                    showButtonPanel: true,
+                    beforeShow: function (){
+                        setTimeout(function() {
+                         $(".ui-datepicker-buttonpane")
+                            .html('')
+                            .append("<button class='done-button-click-student'>Done</button>");
+                        }, 1)
+                    },
+                    onChangeMonthYear: function (){
+                        setTimeout(function() {
+                        
+                         $(".ui-datepicker-buttonpane")
+                            .html('')
+                            .append("<button class='done-button-click-student'>Done</button>");
+
+                   //         $(this).datepicker( "setDate", month + '/1/' + year );
+                        }, 1)
+                    }, 
+                    dateFormat: 'MM yy',
+                    onClose: function(dateText, inst) { 
+                        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                        // mon=parseInt("month");
+                        // month1=mon
+
+                        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                     // year1=year;
+                        $('.attendance-month').datepicker('setDate', new Date(year, month, 1));
+                    }
+                });
+
+
+  $(document).on("click",".done-button-click-student",function(e){
+                  e.preventDefault();
+                   var SelectValueIs = $( "#attendances_mg_batch_id option:selected" ).val();
+                    $( ".attendance-month" ).datepicker("hide");
+
+                     var month = parseInt($("#ui-datepicker-div .ui-datepicker-month :selected").val()) + 1;
+                        var year = parseInt($("#ui-datepicker-div .ui-datepicker-year :selected").val());
+                    var days = new Array(7);
+                    days[0]=  "Sun";
+                    days[1] = "Mon";
+                    days[2] = "Tues";
+                    days[3] = "Wed";
+                    days[4] = "Thur";
+                    days[5] = "Fri";
+                    days[6] = "Sat";
+
+
+
+                    Date.prototype.getDayName = function() {
+                            return days[ this.getDay() ];
+                        };
+                    //  generate dynamic calendr here
+                    var totalDays = parseInt(daysInMonth(month, year));
+             
+                    var strDates = "<tr><th>Name</th>"
+                    for(var index=1; index <= totalDays;index++){
+                               var now = new Date(year,month-1,index);
+                    
+                               strDates +="<th>"+index+"<br/>"+now.getDayName()+"</th>";
+                                 
+                                
+                    }
+                  //  console.log(strDates);
+                  $('.header-row-data').empty();
+                    $('.header-row-data').prepend( strDates );
+
+
+                    // Making Ajax Call to find the student name  
+                     var urlLink = "/attendances/studentsHash/"+SelectValueIs;  
+                   $.ajax({
+               
+                        url: urlLink,
+                        cache: false, 
+                        success: function(data) {
+                    
+                                var strName = "";
+
+                        var month = parseInt($("#ui-datepicker-div .ui-datepicker-month :selected").val()) + 1;
+                        var year = parseInt($("#ui-datepicker-div .ui-datepicker-year :selected").val());
+                                     
+
+                                for(var outerIndex = 0;outerIndex < data[0].length;outerIndex++){
+                                    strName += "<tr><td>"+data[0][outerIndex].first_name+"</td>"
+                                    for(var index=1; index <= totalDays;index++){
+                                    
+                                      var value=0;
+                                      if(data[1].length >0){
+                                       for(var dbindex=0;dbindex< data[1].length;dbindex++){
+                                                var checkDate=month+'/'+index+'/'+year
+                      
+                                                d = new Date(checkDate); //This returns Wed Apr 02 2014 17:28:55 GMT+0800 (Malay Peninsula Standard Time)
+                                                x = d.getDay(); //This returns a number, starting with 0 for Sunday
+                                                if(x==0){
+                                                  value = 2;
+                                                }
+                                            
+                                                if(data[1][dbindex].year ==year && data[1][dbindex].month ==month && data[1][dbindex].day== index && data[1][dbindex].mg_student_id==data[0][outerIndex].id && x !=0){
+                                                   
+                                                   value = 1;
+
+                                                }
+
+                                     }
+                                     }else{
+                                            var checkDate=month+'/'+index+'/'+year;
+                                            x = new Date(checkDate).getDay();
+                                            if(x==0){
+                                              value = 2;
+                                            }
+                                      }
+                                     if(value == 2){
+                                        strName +="<td><i class='fa fa-ellipsis-h'></i></td>"
+                                      }
+                                     if(value ==1){
+
+                                        strName +="<td><a href='#', id="+index+","+data[0][outerIndex].id +" class='atts-class-student'><i class='fa fa-circle' > </i></a></td>"
+                                      }else{
+                                            if(value != 2){
+                                            strName +="<td><a href='#', id="+index+","+data[0][outerIndex].id +" class='atts-class-student'><i class='fa fa-check' > </i></a></td>"
+                                            }
+                                      }
+
+                                    }
+                                    strName +="</tr>"
+                                }
+                                $('.att-calendar').empty();
+                                $('.att-calendar').append( strDates+"</tr>"+strName );
+                                console.log(strName);
+
+
+
+                              },
+                        error: function() {
+                                 alert("Please Select Batch");
+                              }
+                });
+
+             
+                });
+
+              function daysInMonth(iMonth, iYear){
+                    return new Date(iYear, iMonth, 0).getDate();
+                }  
+        });  
+
+
+</script >

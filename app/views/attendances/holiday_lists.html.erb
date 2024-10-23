@@ -1,0 +1,43 @@
+<% navigation_add t('holiday_list'), :controller=>'attendances', :action=>'holiday_lists' %>
+<%#= render  partial: 'hostel_management_left' %>
+<%#= render  partial: 'master_settings/master_settings_left' %>
+  
+  <div class ="row">
+  	<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
+      <label for="mg-label mg-leave-width">Select Academic Year<span class="required-field"> *</span></label>
+      <%= select_tag :mg_time_table_id, options_for_select(get_academic_year, :selected => get_current_academic_year(session[:current_user_school_id])) ,:class=>"form-control", :prompt=>"Select"%>
+  	</div>
+      <br>
+      <%if session[:user_type]=="admin" ||session[:user_type]=="school_incharge"|| session[:user_type]=="sub_admin"%>
+      	<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
+				<%= button_to 'Add Holiday', {:controller=>'attendances',:action=>'holiday_new'}, :class=> 'submit mc-margin-bottom-20 flat-button' %><br/>
+				</div>
+			<%end%>
+  </div>
+
+<div id="holiday">
+	<%= render 'holiday_lists' if @mg_holiday.present? %>
+</div>
+
+<%#= render  partial: 'application/common_left_close' %>
+<script>
+$( document ).ready(function() {
+    focusCurrentTab("HolidayListAID","HolidayListLiID");
+    $("#holiday").empty();
+  });
+	setTimeout(function(){
+		$("#mg_time_table_id").on("change",function(e){ 
+			$("#holiday").empty();
+	    var data = $(this).val();
+	    urllink = '/attendances/holiday_lists';
+	    $.ajax({
+	      url : urllink,
+	      type : 'GET',
+	      data : {"mg_time_table_id":data },
+	      success: function(html)
+	      { }
+	    });
+		}).trigger('change');
+   },500);
+
+</script>

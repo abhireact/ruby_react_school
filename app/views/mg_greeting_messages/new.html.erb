@@ -1,0 +1,79 @@
+
+
+
+<h4 class="form-section-heading mc-margin-bottom-20"><%= t('greeting_message') %></h4>
+<%= render :partial => 'form'%>
+
+
+<script>
+
+	$(document).ready(function(){
+
+		$("#greeting_site").validate({
+	    rules: {
+	      "mg_greeting_message[start_time]": {required: true},
+	      "mg_greeting_message[end_time]": {required: true},
+	      "mg_greeting_message[message]": {required: true}
+	    }
+	  });
+
+	  focusCurrentTab("MaintenanceAID","MaintenanceLiID");
+	    $('.datetimepicker1').datetimepicker({
+
+		    // format: 'MM-DD-YYYY hh:mm A',
+		    useCurrent: false 
+		}).on('dp.show', function() {
+		  return $(this).data('DateTimePicker').date(new Date(new Date().setHours(00, 00, 00)));
+		});
+
+		 $('.datetimepicker2').datetimepicker({
+		     // format: 'MM-DD-YYYY hh:mm A',
+		     useCurrent: false
+		}).on('dp.show', function() {
+		  return $(this).data('DateTimePicker').date(new Date(new Date().setHours(23, 59, 59)));
+		});
+
+		
+	});
+
+		$(document).on("focusout","input", function(e){ 
+			check_date(this)
+		});
+
+	
+		function check_date(this_elem){
+			var start_time = $("#mg_greeting_message_start_time").val();
+			var end_time = $("#mg_greeting_message_end_time").val();
+			var start_end_present = (start_time != '' && end_time!= '');
+			var st = moment(start_time).format("hh:mm A");
+			var et = moment(end_time).format("hh:mm A");
+			var sd= moment(start_time).format("MM/DD/YY")
+		    var ed=  moment(end_time).format("MM/DD/YY")
+		    var stt = moment(st, 'h:mma');
+		    var ett = moment(et, 'h:mma');
+           
+			if((sd == ed) && start_end_present)
+            {
+            	
+				if(stt.isBefore(ett)) {
+               
+               } else {
+                  alert("Error. Start Time is more than End Time");
+                   $(this_elem).val('');
+               } 
+
+            }else if((Date.parse(sd) > Date.parse(ed))) {
+            	   
+
+                  alert("error. Start date is below End date");
+                   $(this_elem).val('');
+			}
+			else{
+                   		
+                   }
+
+			
+		}
+
+
+</script>

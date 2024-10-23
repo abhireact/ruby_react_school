@@ -1,0 +1,127 @@
+  <!-- Sec --><%= form_for :attendances , url: attendances_path, :html => {
+                            :id => 'attendancesFormID'} do |f| %>
+
+
+      <p> 
+          <%= f.label :is_halfday, t('ishalfday') ,:class=> "mg-label"%>    
+      <%= f.hidden_field :is_halfday, :value => false ,:id=>"halfdayfield"%>
+         <input id="attendances_halfday" type="checkbox"  onclick="toggleAll();" name="attendances[halfday]"> 
+      </p> 
+       <%= f.hidden_field :is_afternoon, :value => false ,:id=>"afternoonfield"%>
+      <p>
+      <div id="whatever" style="display:none">
+          <%= f.label :morning, t('morning')  ,:class=> "mg-label"%>
+          <%= f.radio_button :is_afternoon, false%>
+          <%= f.label :afternoon, t('afternoon'),:class=> "mg-label"%>
+          <%= f.radio_button :is_afternoon, true%>
+      </div>
+
+      <div class="no-of-days-attendence">
+        <p>
+          <%= f.label :No_of_days , t('noofdays'),:class=> "mg-label",:class=> "mg-label"%></br>
+          <%= f.text_field :no_of_days ,:class=>"mg-text-field"%>
+        </p>
+      </div>
+      <p>
+        <%= f.label :reason , t('reason'),:class=> "mg-label"%><br>
+        <%= f.text_area :reason ,:class=>"mg-text-field"%>
+      </p>
+
+
+        <%= f.hidden_field :mg_batch_id, :value => @batchId %>
+        <%= f.hidden_field :mg_student_id, :value => @student_id %>
+        <%= f.hidden_field :absent_date, :value => @final_date %>
+
+        <%= f.hidden_field :is_deleted, :value => 0 %>
+
+      <% end %>
+        <button id="mg-student-leave-save-btn" class="mg-small-form-btn"><%=t("save")%></button>
+ <%= link_to t('cancel'), :back, {:class=>"btn btn-default cancel-form-dialog"} %>
+<script>
+$(document).ready(function () {
+$("#attendancesFormID").validate({
+
+rules: {
+"attendances[reason]": {required: true},
+"attendances[is_deleted]": {required: true}
+}
+});
+});
+var flagDialog = true;
+$(document).on("click","#mg-student-leave-save-btn",function(e){
+    e.preventDefault();
+
+    if(flagDialog){
+      flagDialog = false;
+        var dayNum=0;
+        //alert("before="+dayNum);
+        var tableData=0;
+        //alert("before"+tableData);
+        var halfday=$("#halfdayfield").val();
+        var time=$("#afternoonfield").val();
+        var no_of_days=$("#attendances_no_of_days").val();
+        var reason=$("#attendances_reason").val();
+        var isDeleted=$("#attendances_is_deleted_false").val();
+        var batch_id=$("#attendances_mg_batch_id").val();
+        var student_id=$("#attendances_mg_student_id").val();
+        var absent_date=$("#attendances_absent_date").val();
+        var day="<%=@day%>";
+         $.ajax({
+            url: "attendances/create" ,
+            type: "POST",
+            cache: false,
+            data: {"is_halfday":halfday,"is_afternoon":time,"no_of_days":no_of_days,"reason":reason,"is_deleted":isDeleted,"mg_batch_id":batch_id,"mg_student_id":student_id,"absent_date":absent_date,"mg_period_table_entry_id":""},
+            success:function(data){
+
+              if(no_of_days<=0){
+                var dayNum =  parseInt(day);
+                var tableData =dayNum+","+student_id;
+                $(document.getElementById(tableData)).html('<i class="fa fa-circle"> </i>');
+              }else{
+                  var absent_date=$("#attendances_absent_date").val();
+                
+                var spldate = absent_date.split("-");
+                var dayNum = spldate[0] ;
+                for(var i = 0;i<no_of_days;i++){
+                 var checkDate=spldate[1]+'/'+dayNum+'/'+spldate[2];
+                      x = new Date(checkDate).getDay();
+                      if(x==0){
+                        dayNum++;
+                        var tableData =dayNum+","+student_id;
+                        $(document.getElementById(tableData)).html('<i class="fa fa-circle"> </i>');
+                      }else{
+                      var tableData =dayNum+","+student_id;
+                      $(document.getElementById(tableData)).html('<i class="fa fa-circle"> </i>');
+                      }
+                   dayNum++;                         
+                }
+              }
+              // tableData.empty();
+              delete tableData;
+              delete dayNum;
+              delete day;
+              $(this).empty();
+
+
+             $(".ui-dialog-titlebar-close").click();
+              
+               // $('.ui-dialog-titlebar-close .close').click();
+                   // $(this).dialog("close");
+              dayNum=0;
+              tableData=0;
+            },
+
+            error: function(){
+              alert("Error: Please try again.");
+            }
+        
+        }); 
+      }
+});
+
+function toggleAll()
+{
+ $("#whatever").toggle();
+ $(".no-of-days-attendence").toggle();
+}
+</script>

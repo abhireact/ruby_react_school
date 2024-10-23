@@ -1,0 +1,130 @@
+
+
+
+<% if @greeting.errors.any? %>
+    <div class="panel panel-warning errors">
+      <div class="panel-heading">
+        <h5><i class="glyphicon glyphicon-exclamation-sign"></i> Found errors while saving</h5>
+      </div>
+
+      <ul class="panel-body">
+        <% @greeting.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+<% end %>
+
+<%= form_for @greeting, :html => {:id => 'greeting_site'} do |f| %>
+	
+
+	  <%= f.hidden_field :is_deleted, :value=>0%>
+	  <%= f.hidden_field :mg_school_id, :value=>session[:current_user_school_id]%>
+	  <%= f.hidden_field :created_by, :value=>session[:user_id]%>
+	  <%= f.hidden_field :updated_by, :value=>session[:user_id]%>
+
+	<div class="row mc-padding-20 form-section-box">
+		   
+		<div class="form-group col-lg-4">
+			<label><%= t('start_time') %><span class="required-field">&nbsp;*</span></label>
+			<%= f.text_field :start_time, :value=>f.object.start_time.present? ? f.object.start_time.strftime("%d/%m/%Y %l:%M %p") :nil, :class=>"datetimepicker1 form-control ends_times_pickers_texts_field_cls"%>
+		</div>
+
+		<div class="form-group col-lg-4">
+			<label><%=t('end_time')%><span class="required-field">&nbsp;*</span></label>
+			<%= f.text_field :end_time, :value=>f.object.end_time.present? ? f.object.end_time.strftime("%d/%m/%Y %l:%M %p") :nil,:class=>"datetimepicker2 form-control ends_times_pickers_texts_field_cls"%>
+		</div>
+	
+		<div class="form-group col-lg-4">
+			<label><%=t('message')%><span class="required-field">&nbsp;*</span></label>
+			<%= f.text_area :message, :class=>"form-control ends_times_pickers_texts_field_cls"%>
+		</div>
+
+	</div>
+
+	<div class="row mc-padding-20">
+		<div class="form-group col-lg-4">
+			<%= f.submit "Submit", :class=>"btn btn-primary" %>
+			<%= link_to "Cancel", mg_greeting_messages_path, class: "btn btn-primary" %> 
+		</div>
+	</div>
+<% end %>
+
+
+
+<script>
+
+	$(document).ready(function(){
+
+		$("#greeting_site").validate({
+	    rules: {
+	      "mg_greeting_message[start_time]": {required: true},
+	      "mg_greeting_message[end_time]": {required: true},
+	      "mg_greeting_message[message]": {required: true}
+	    }
+	  });
+
+	  focusCurrentTab("MaintenanceAID","MaintenanceLiID");
+	    $('.datetimepicker1').datetimepicker({
+
+		    // format: 'MM-DD-YYYY hh:mm A',
+		    useCurrent: false 
+		}).on('dp.show', function() {
+		  return $(this).data('DateTimePicker').date(new Date(new Date().setHours(00, 00, 00)));
+		});
+
+		 $('.datetimepicker2').datetimepicker({
+		     // format: 'MM-DD-YYYY hh:mm A',
+		     useCurrent: false
+		}).on('dp.show', function() {
+		  return $(this).data('DateTimePicker').date(new Date(new Date().setHours(23, 59, 59)));
+		});
+
+		
+	});
+
+		$(document).on("focusout","input", function(e){ 
+			check_date(this)
+		});
+
+	
+		function check_date(this_elem){
+			var start_time = $("#mg_greeting_message_start_time").val();
+			var end_time = $("#mg_greeting_message_end_time").val();
+			var start_end_present = (start_time != '' && end_time!= '');
+			var st = moment(start_time).format("hh:mm A");
+			var et = moment(end_time).format("hh:mm A");
+			var sd= moment(start_time).format("MM/DD/YY")
+		    var ed=  moment(end_time).format("MM/DD/YY")
+		    var stt = moment(st, 'h:mma');
+		    var ett = moment(et, 'h:mma');
+           
+			if((sd == ed) && start_end_present) 
+            {
+            	
+				if(stt.isBefore(ett)) {
+               
+               } else {
+                  alert("Error. Start Time is more than End Time");
+                   $(this_elem).val('');
+               } 
+
+            }else if((Date.parse(sd) > Date.parse(ed))) {
+               
+              
+
+                  alert("error. Start date is below End date");
+                   $(this_elem).val('');
+			}
+			else{
+                   		
+                   }
+
+			
+		}
+
+
+</script>
+
+
+

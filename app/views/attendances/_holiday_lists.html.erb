@@ -1,0 +1,39 @@
+<%if @mg_holiday.present?%>
+<h4 class="form-section-heading mc-margin-bottom-20"><%= t('holiday_list')%></h4>
+<table class="table table-bordered table-striped">
+  <thead>
+	<tr>
+		<th>Name</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th class="mg-label-text-transform-none">Applicable for</th>
+		<th>Actions</th>
+	</tr>
+	</thead>
+	<tbody>
+	<%@mg_holiday.each do |mg_holiday| %>
+		<tr>
+			<td><%=mg_holiday.holiday_name%></td>
+			<td><%=mg_holiday.holiday_start_date.strftime(@dateFormat)%></td>
+			<td><%=mg_holiday.holiday_end_date.strftime(@dateFormat)%></td>
+			<td><%=mg_holiday.applicable_for%></td>
+			<td>	
+		      	<button title="Show" id="<%=mg_holiday.id%>-showjobUploadBTNID" class="show-job-upload-fom-btn mg-icon-btn" onclick="window.location='/attendances/holiday_detail/<%=mg_holiday.id%>'"><i class="fa fa-eye"></i></button>
+
+		        <%if session[:user_type]=="admin" ||session[:user_type]=="school_incharge" || session[:user_type]=="sub_admin"  %>
+
+		            <button title="Edit" id="<%=%>-editholidayListBTNID" class="edit-job-upload-fom-btn mg-icon-btn" onclick="window.location='/attendances/holiday_edit/<%=mg_holiday.id%>'"><i class="fa fa-pencil-square-o"></i></button>
+
+
+		             <button title="Delete" id="<%=%>-deletejobUploadBTNID" class="delete-hostel-cls mg-icon-btn" onclick="confirm('Are you sure to delete?') ? window.location='/attendances/holiday_delete/<%=mg_holiday.id%>': ''"><i class="fa fa-trash" ></i></button>   
+		        <%end%>
+		    </td>
+		</tr>
+	<%end%>
+		</tbody>
+</table>
+<br/>
+<%= link_to "<i class=\"fa fa-file-pdf-o\"> Generate PDF</i>".html_safe,{:controller => "attendances", :action => "holidays_pdf",:id =>'1',:mg_time_table_id=>@timeTableId},:title=>"Generate pdf", :target=>"_blank",:class=>"hall_ticket_pdf submit mc-margin-bottom-20 flat-button",:style=>"margin-left: 6px" %>
+<%else%>
+	No Holidays.
+<%end%>
