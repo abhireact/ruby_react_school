@@ -1,0 +1,2 @@
+class ExtraCurricularController < ApplicationController
+end

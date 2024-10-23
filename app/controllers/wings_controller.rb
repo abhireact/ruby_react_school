@@ -73,6 +73,7 @@ class WingsController < ApplicationController
     @wings = MgWing.find(params[:id])
   end
 
+<<<<<<< HEAD
   def wing_delete
     @wings = MgWing.find(params[:id])
     boolVal = MgDependancyClass.wing_dependancy("mg_wing_id", params[:id])
@@ -106,3 +107,33 @@ class WingsController < ApplicationController
     params.require(:wings).permit(:wing_name, :status, :created_by, :updated_by, :is_deleted, :mg_school_id)
   end
 end
+=======
+     # PATCH/PUT /wings/:id
+        def update
+          # binding.pry
+          @wings = MgWing.find(params[:id])
+          if @wings.update(wing_params)
+            render json: { message: "Academic year updated"}, status: :created
+          end
+        end
+        # DELETE /wings/:id
+     
+
+
+
+        def destroy
+          @wings = MgWing.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
+          if @wings.present?
+            @wings.update(is_deleted: 1) # Soft delete by updating the is_deleted flag
+            render json: { message: 'Academic year deleted successfully' }, status: :ok
+          else
+            render json: { errors: 'Academic year not found or already deleted' }, status: :not_found
+          end
+        end
+        private
+        def wing_params
+          params.require(:wings).permit(:wing_name, :status, :created_by, :updated_by, :is_deleted, :mg_school_id)
+        end
+      
+end
+>>>>>>> main

@@ -13,7 +13,12 @@ import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
 import AddmissionDates from "./components/Addmission/dates";
 import ManageAdmissionSettings from "./components/Addmission/dates/manage";
+import ExamType from "./components/Examination/ExamType";
+import SectionIndex from "./components/Section/SectionIndex";
 
+import EmpListManagement from "./components/emp_subjects/list";
+import EmpSybIndex from "./components/emp_subjects";
+import BatchSubjectManagement from "./components/subjects/batch";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -25,7 +30,11 @@ const componentMapping = {
   ClassesIndex: Classes,
   AddmissionsIndex: AddmissionDates,
   ManageAddmissionsIndex:ManageAdmissionSettings,
-
+  ExamType: ExamType,
+  EmpListManagement: EmpListManagement,
+  EmpSybIndex: EmpSybIndex,
+  BatchSubjectManagement: BatchSubjectManagement,
+  SectionIndex:SectionIndex
 };
 
 // Function to render a component

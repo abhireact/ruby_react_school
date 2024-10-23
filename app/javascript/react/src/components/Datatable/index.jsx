@@ -419,7 +419,8 @@ const DataTable = ({
                 <tr key={index}>
                   {columns.map((col) => (
                     <td key={col.key} className="align-middle text-sm ps-3">
-                      {item[col.key]}
+                      {/* {item[col.key]} */}
+                      {col.render ? col.render(item) : item[col.key]}
                     </td>
                   ))}
                   {needinbuilticon && additionalActions.length > 0 ? (

@@ -119,23 +119,26 @@ class ClassesController < ApplicationController
   def addBatch
     logger.info 'Batch will going to create'
   end
-
   def delete
     puts 'inside delete'
     @course = MgCourse.find(params[:id])
     table_array = @course.can_destroy?
+    
     if table_array.present?
       session[:class_table] = table_array
       session[:table_array_class_id] = params[:id]
-      redirect_to action: 'index'
-
+      
+      # Render JSON for the scenario when the course cannot be deleted
+      render json: { message: 'Cannot delete course', class_table: table_array }, status: :unprocessable_entity
     else
       @course.update(is_deleted: 1)
       @notice = 'Deleted Successfully'
-      flash[:notice] = @notice
-      redirect_to action: 'index'
+      
+      # Render JSON for successful deletion
+      render json: { message: @notice }, status: :ok
     end
   end
+  
 
   def grouped_batches
     @course = MgCourse.find(params[:id])
