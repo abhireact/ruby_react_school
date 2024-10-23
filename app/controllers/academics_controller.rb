@@ -5,10 +5,7 @@ class AcademicsController < ApplicationController
 def index
   @academic_years= MgTimeTable.where(mg_school_id:session[:current_user_school_id],is_deleted:0)
  end
-
-
-  # POST /academic_years
-def create
+ def create
   @academic_year = MgTimeTable.new(academic_params)
   @academic_year.mg_school_id = session[:current_user_school_id] # Assuming this links it to the current school
   @academic_year.is_deleted= 0
@@ -43,11 +40,8 @@ else
 end
 end
 
-  get /wings
-
-
 private
 def academic_params
-  params.require(:academic_years).permit! #(:name, :start_date, :end_date, :is_deleted)
+  params.require(:academic_years).permit(:name, :start_date, :end_date, :is_deleted)
 end
 end

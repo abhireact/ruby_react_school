@@ -72,6 +72,9 @@ module ApplicationHelper
 		#MgBatch.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).where("'#{current_date}' BETWEEN start_date AND end_date").joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")
 		MgBatch.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")
 	end
+<<<<<<< HEAD
+
+=======
   
 def get_class_section
   current_date = Date.today
@@ -84,6 +87,7 @@ def get_class_section
 	Arel.sql("mg_courses.mg_time_table_id")
   )
 end
+>>>>>>> main
 	def get_course_batch_name_all
 		#current_date =  Date.today
 		MgBatch.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")
@@ -722,6 +726,8 @@ def get_course_batch_id_of_employee(user_id,time_table_id)
       def get_student_list_by_batch_for_library(batch_id)
                         MgStudent.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id],:mg_batch_id=>batch_id,:is_archive => 0).order(:first_name).pluck(:first_name,:id)#pluck("CONCAT(mg_students.first_name,' ',mg_students.middle_name,' ',mg_students.last_name)","id")   
                 end
+<<<<<<< HEAD
+=======
 
   def get_course
     user = MgUser.find_by(:is_deleted=>0, :mg_school_id=>session[:current_user_school_id], :id=>session[:user_id])
@@ -743,4 +749,5 @@ def get_course_batch_id_of_employee(user_id,time_table_id)
     courses = MgCourse.where(mg_wing_id:params[:mg_wing_id],mg_time_table_id:params[:mg_time_table_id],is_deleted:0,mg_school_id:session[:current_user_school_id]).pluck(:course_name,:id) if params[:mg_wing_id].present?
     render :json => {:courses => courses}
   end
+>>>>>>> main
 end	
