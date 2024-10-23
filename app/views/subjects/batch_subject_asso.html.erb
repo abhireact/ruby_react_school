@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <!-- Academic Year Selection -->
+  <div class="row mb-4">
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+      <label for="mg_time_table_id" class="form-label">
+        <%= t('select_academic_year') %><span class="required-field">*</span>
+      </label>
+      <%= select_tag :mg_time_table_id,
+                     options_for_select(get_academic_year, selected: @current_academic_year_id),
+                     class: "form-control",
+                     prompt: t('select') %>
+    </div>
+  </div>
+
+  <!-- Batch List Section -->
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title"><%= t("batchlist") %></h4>
+    </div>
+    
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th><%= t("coursebatchname") %></th>
+              <th class="text-center" width="150"><%= t("actions") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @batches.each do |batch| %>
+              <tr>
+                <td>
+                  <%= "#{batch.mg_course.course_name}-#{batch.name}" %>
+                </td>
+                <td class="text-center">
+                  <%= link_to select_subject_batch_path(batch),
+                            class: "btn btn-icon btn-sm btn-primary",
+                            title: t('manage_subject') do %>
+                    <i class="fa fa-wrench"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="d-flex justify-content-center mt-4">
+        <%= will_paginate @batches,
+                         class: 'pagination',
+                         inner_window: 2,
+                         outer_window: 1,
+                         container: false %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+  <script>
+    $(document).ready(function() {
+      // Initialize active menu items
+      initializeMenu();
+      
+      // Handle academic year selection
+      $("#mg_time_table_id").change(function() {
+        const academicYearId = $(this).val();
+        window.location.href = `/subjects/batch_subject_asso?mg_time_table_id=${academicYearId}`;
+      });
+    });
+
+    function initializeMenu() {
+      $("li").removeClass("active");
+      $("a").removeClass("activeMenu");
+      
+      $("#viewSubjectListLiID")
+        .parent()
+        .parent()
+        .parent()
+        .show()
+        .children()
+        .first()
+        .css({
+          "background": "#dde0e3",
+          "color": "#333333"
+        })
+        .focus();
+
+      $("#batchSubjectAssoLiID").addClass("active");
+      $("#batchSubjectAssoID").addClass("activeMenu");
+    }
+  </script>
+<% end %>

@@ -5,6 +5,8 @@ get 'subject_archives/destroy'
 get 'subject_archives/create', to: 'subject_archives#create'
 
 get 'subject_archives_list', to: 'subject_archives#archived_subject_list'
+
+
 post 'subject_archives/:id/unarchive', to: 'subject_archives#subject_unarchive'
 
 get 'subject_archives/index', to: 'subject_archives#index'
