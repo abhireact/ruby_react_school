@@ -5,6 +5,7 @@ class MgGreetingMessagesController < ApplicationController
 
   def index
     @greetings = MgGreetingMessage.where(mg_school_id: session[:current_user_school_id], is_deleted: false)
+  binding
   end
 
   def new

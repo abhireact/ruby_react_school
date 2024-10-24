@@ -1435,6 +1435,15 @@ const FormField = ({ field, isViewMode, ...props }) => {
           placeholder={field.label}
         />
       );
+      case "datetime":
+        return (
+          <Field
+            name={field.name}
+            component={CustomDateTimeInput}
+            disabled={isViewMode}
+            placeholder={field.label}
+          />
+        );
     default:
       return (
         <Field
