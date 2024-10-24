@@ -1,0 +1,62 @@
+<%#=@timeings.inspect%>
+<%@students.each do |student|%>
+<%@batch=MgBatch.find(student.mg_batch_id)%>
+<%= @course=MgCourse.find(@batch.mg_course_id)%>
+<%=@course.mg_wing_id%>
+<%@timeings=MgClassTiming.where(:is_deleted=>0, :mg_wing_id=> @course.mg_wing_id,:mg_weekday_id=>@weekdayID[0], :mg_school_id=>session[:current_user_school_id] )%>
+<%#  @absentDate=MgStudentAttendance.where(:mg_batch_id=>params[:mg_batch_id], :is_deleted=>0, :absent_date=>absent_date, :mg_school_id=>session[:current_user_school_id], :is_deleted=>0)%>
+<table class="batch-tbl">   
+ <tr >
+  	<th>Student Name</th>
+     <%if @timeings.present?%>
+          	<% @timeings.each do |commonClassTiming| %>
+        			<td><%=commonClassTiming.start_time.strftime("%k:%M%p")%>-
+        			<%=commonClassTiming.end_time.strftime("%k:%M%p")%>
+        		</td>
+            <%end%>
+    <%end%>
+    </tr>
+ <%# @students.each do |student| %> 
+	 <tr >
+	  	<td><%=student.first_name%>
+	  		
+	  	</td>
+        <%if @timeings.present?%>
+                	  	<%@timeings.each do |t| %>
+                            <%count=0%>
+                            <%if t.is_break%>
+                                    <%count=2%>
+                            <%end%>
+                            <%@absentDate.each do |check|%>
+                                    <%if t.is_break%>
+                                    <%count=2%>
+                                    <%else%>
+                                        <%if check.mg_student_id==student.id && check.mg_class_timing_id==t.id%>
+                                            <%count=1%>
+                                           
+                                        <%end %>
+                                    <%end %>
+                            <%end%>
+                             <%if count==1%>
+                                        <td><i class="fa fa-circle"></i></td>
+                                        <%count=0%>
+                                    <%elsif count==0%>
+                                        <td><i class="fa fa-check"> </i></td>
+                                        <%count=0%>
+                                      <%else%>
+                                     <td>Break</td>
+                                      <%count=0%>
+                                    <%end%>
+                    	<%end%>
+        <%end%>
+	</tr>
+    <%#end%>
+ </table>
+
+<%end%>
+
+
+ 
+ </script>
+
+

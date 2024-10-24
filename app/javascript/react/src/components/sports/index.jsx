@@ -3,14 +3,17 @@ import * as Yup from "yup";
 import GenericCRUD from "../genericCrud";
 const SportsManagement = ({ userData }) => {
   console.log(userData, "userrdata in wings");
-  const columns = [{ key: "name", label: "Caste Name" }];
+  const columns = [
+    { key: "name", label: "Sport Name" },
+    { key: "description", label: "Description" },
+  ];
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
   });
 
   const formFields = [
-    { name: "name", label: "Caste Name", type: "text" },
+    { name: "name", label: "Sport Name", type: "text" },
     { name: "description", label: "Description", type: "text" },
   ];
 
@@ -20,9 +23,11 @@ const SportsManagement = ({ userData }) => {
       description="Manage Sports"
       initialData={userData}
       columns={columns}
-      apiEndpoint="sports"
+      apiEndpoint="category/sports"
       validationSchema={validationSchema}
       formFields={formFields}
+      payloadKey="sports"
+      needinbuilticon={true}
     />
   );
 };

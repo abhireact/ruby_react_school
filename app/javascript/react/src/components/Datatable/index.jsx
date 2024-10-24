@@ -407,7 +407,7 @@ const DataTable = ({
                     {col.label}
                   </th>
                 ))}
-                {needinbuilticon && additionalActions.length > 0 ? (
+                {needinbuilticon || additionalActions.length > 0 ? (
                   <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                     Action
                   </th>
@@ -423,7 +423,7 @@ const DataTable = ({
                       {col.render ? col.render(item) : item[col.key]}
                     </td>
                   ))}
-                  {needinbuilticon && additionalActions.length > 0 ? (
+                  {needinbuilticon || additionalActions.length > 0 ? (
                     <td className="align-middle ps-3">
                       {needinbuilticon ? (
                         <>

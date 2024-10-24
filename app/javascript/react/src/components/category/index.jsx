@@ -3,7 +3,10 @@ import * as Yup from "yup";
 import GenericCRUD from "../genericCrud";
 const CategoryManagement = ({ userData }) => {
   console.log(userData, "userrdata in wings");
-  const columns = [{ key: "name", label: "Category Name" }];
+  const columns = [
+    { key: "name", label: "Category Name" },
+    { key: "description", label: "Description" },
+  ];
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
@@ -20,9 +23,11 @@ const CategoryManagement = ({ userData }) => {
       description="Manage Category ."
       initialData={userData}
       columns={columns}
-      apiEndpoint="category"
+      apiEndpoint="category/castecategory"
       validationSchema={validationSchema}
       formFields={formFields}
+      payloadKey="category"
+      needinbuilticon={true}
     />
   );
 };

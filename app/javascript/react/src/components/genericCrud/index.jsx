@@ -1435,6 +1435,15 @@ const FormField = ({ field, isViewMode, ...props }) => {
           placeholder={field.label}
         />
       );
+      case "datetime":
+        return (
+          <Field
+            name={field.name}
+            component={CustomDateTimeInput}
+            disabled={isViewMode}
+            placeholder={field.label}
+          />
+        );
     default:
       return (
         <Field
@@ -1457,6 +1466,7 @@ const GenericCRUD = ({
   apiEndpoint,
   validationSchema,
   formFields,
+  payloadKey,
   needinbuilticon,
   additionalActions = [],
 }) => {
@@ -1466,7 +1476,7 @@ const GenericCRUD = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isViewMode, setIsViewMode] = useState(false);
   // const formikRef = useRef(null);
-  console.log(additionalActions,needinbuilticon, "debhcdewj");
+  console.log(additionalActions, needinbuilticon, "debhcdewj");
 
   useEffect(() => {
     setItems(initialData);
@@ -1533,7 +1543,8 @@ const GenericCRUD = ({
           "Content-Type": "application/json",
         };
 
-        const payload = { [apiEndpoint]: values };
+        const key = payloadKey || apiEndpoint.split("/")[0];
+        const payload = { [key]: values };
 
         if (editData) {
           response = await axios.patch(

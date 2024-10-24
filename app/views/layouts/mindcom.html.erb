@@ -59,13 +59,24 @@
     <ul class="navbar-nav">
       <% modules = [
         {name: "Master Settings",icon: "image",link: "/category/caste",
-          submodules: [{name: "Student Settings",
+          submodules: [{name: "School Setting",
+          submodules: [
+            { name: "School Information", link: "/schools" },
+            { name: "Account", link: "/account" },
+            { name: "Academic", link: "/academics" },
+            { name: "Wings", link: "/wings" },
+            { name: "Greeting Messages", link: "/mg_greeting_messages" },
+            { name: "Holiday List", link: "/attendances/holiday_lists" }
+          ]
+        },{name: "Student Settings",
             submodules: [
-              { name: "Caste", link: "/castes" },
-              { name: "Caste Category", link: "/category"},
-              { name: "Hobby", link: "/student_hobbies"},
-              { name: "House", link: "/houses"},
-              { name: "Sports", link: "/sports"},
+              { name: "Caste", link: "/category/caste" },
+              { name: "Caste Category", link: "/category/castecategory"},
+              { name: "Hobby", link: "/category/student_hobbies"},
+              { name: "House", link: "/category/house_details"},
+              { name: "Sports", link: "/category/sports"},
+              { name: "Extra Curricular", link: "/category/extra_curricular_index"},
+              { name: "Student Category", link: "/student_categories"},
             ]
           },{name: "Employee Settings",
             submodules: [
@@ -96,46 +107,22 @@
 
             ]
           }]},
-          {name: "Students",icon: "image",link: "/students",
-          submodules: [{name: "About Students",
-            submodules: [
-              { name: "Student Details ", link: "/students" },
-              { name: "Caste", link: "/students/caste"}
-            ]
-          }]},
+         
 
           {name: "Subjects",icon: "image",link: "/subjects",
           submodules: [{name: "Manage Subject",
             submodules: [
               { name: "Subject Details ", link: "/subjects" },
-              { name: "Subject Archive", link: "/subject_archives"},
-              { name: "Subject Archive List", link: "/subject_archives_list"},
+              # { name: "Subject Archive", link: "/subject_archives"},
+              { name: "Subject Archive List", link: "/subjects/archived_subject_list"},
               { name: "Employee Subject", link: "/emp_subjects"},
             ]
           }]},
-          
-          {name: "School",icon: "image",link: "/schools",
-          submodules: [{name: "School Information",
-            submodules: [
-              { name: "School Information", link: "/schools" },
-              { name: "Account", link: "/account" },
-              { name: "Academic", link: "/academics" },
-              { name: "Wings", link: "/wings" },
-              { name: "Class", link: "/classes/index" },
-
-
-            ]
-          }]},
+   
           {name: "Addmision",icon: "image",link: "/addmissions",
           submodules: [{name: "Admission Setting",
             submodules: [
               { name: "Addmission Date", link: "/addmissions" },
-              # { name: "Account", link: "/account" },
-              # { name: "Academic", link: "/academics" },
-              # { name: "Wings", link: "/wings" },
-              # { name: "Class", link: "/classes/index" },
-
-
             ]
           }]}] %>
             <% modules.each do |module_item| %>

@@ -40,6 +40,9 @@ else
 end
 end
 
+
+
+
 private
 def academic_params
   params.require(:academic_years).permit(:name, :start_date, :end_date, :is_deleted)

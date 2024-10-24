@@ -69,7 +69,7 @@ const SubjectArchiveManager = () => {
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
 
-      const response = await axios.get("/subject_archives/get_subject", {
+      const response = await axios.get("/subjects/get_subject", {
         headers: {
           "X-CSRF-Token": token,
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const SubjectArchiveManager = () => {
 
       // Ensure you're sending the correct request structure
       await axios.post(
-        "/subject_archives/subject_archive_create",
+        "/subjects/subject_archive_create",
         {
           selectedemployees: values.selectedSubjects,
           // api_request: true, // Ensure this is included if backend expects it in body
@@ -133,7 +133,7 @@ const SubjectArchiveManager = () => {
         }
       );
 
-      window.location.href = "/subject_archives_list";
+      window.location.href = "/subjects/archived_subject_list";
     } catch (error) {
       setErrorMessage("Failed to archive subjects");
       console.error(error);

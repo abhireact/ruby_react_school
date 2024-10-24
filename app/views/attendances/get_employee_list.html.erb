@@ -1,0 +1,93 @@
+<!-- <div id="employeeTable"  > -->
+<% eIds = Array.new%>
+<%if @holiday_emp_list.present?%>
+<% eIds = @holiday_emp_list %>
+<% end %>
+<%if  @employee.present? %>
+<!-- <div  style='overflow:scroll; width:200px;height:400px;'> -->
+<div>
+	<table id="empHolidayTableID" class="batch-tbl mg-tbl-margin table-striped">
+  <thead>
+      <tr >
+        <th>Employee Name</th>
+        <th>       
+	        <label class="mg-label"><%=t('select')%></label><br />
+	        <a href="#" id="checkAllCheckBoxInEmployeeHoliday" class="mg-pop-link">All</a>
+	        <a href="#" id="unCheckAllCheckBoxInEmployeeHoliday" class="mg-pop-link">None</a>
+        </th>
+      </tr></thead>
+    <%  @employee.each_with_index do |employee,i| %>
+      <tr>
+      	<td><%= employee.employee_name %></td>
+      	<%if @holiday_emp_list.include?(employee.id) %>
+      		<td><%=check_box_tag 'present_data[]',employee.id,true,:id=>"present_data_#{employee.id}",class: "is_present_check_box",:style=>"margin: 0px auto; width:100%;"%></td>
+  		<%else%>
+      		<td><%=check_box_tag 'present_data[]',employee.id,false,:id=>"present_data_#{employee.id}",class: "is_present_check_box",:style=>"margin: 0px auto; width:100%;"%></td>
+  		<%end%>
+      </tr>
+    <% end %>
+
+    </table>
+   </div>
+   <br />
+    <div>
+	    <a onclick="$(this).closest('form').submit()" class="mg-small-form-btn submit mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+	    <%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn flat-button cancel-form-dialog margin-left-10"} %>
+	</div>
+<% else %>
+
+<h5>No Employees are present</h5>
+<%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn flat-button cancel-form-dialog margin-left-10"} %>
+<% end %>
+	
+
+<!-- </div> -->
+
+
+<script type="text/javascript">
+// $(document).ready(function(){
+
+// 	var empArr = <%= eIds%>
+// 	for (var i = 0; i < empArr.length; i++) {
+// 		$('#present_data_'+empArr[i]).prop('checked',true);
+// 		$('#present_data_'+empArr[i]).val(empArr[i])
+// 	}
+
+	
+// });
+
+	$(document).on("click","#checkAllCheckBoxInEmployeeHoliday",function(){
+ 
+    $('.is_present_check_box').prop('checked',true);
+    $('.is_present_check_box').each(function(e){
+    	var getId = $(this).attr('id')
+    	var employee_id = getId.split("_");
+    	$(this).val(parseInt(employee_id[2]))
+    });
+
+});
+$(document).on("click","#unCheckAllCheckBoxInEmployeeHoliday",function(){
+ 
+    $('.is_present_check_box').prop('checked',false);
+    $('.is_present_check_box').each(function(e){
+    	// var getId = $(this).attr('id')
+    	// var employee_id = getId.split("_");
+    	$(this).val('')
+    })
+});
+// $(document).on("click",".is_present_check_box",function(){
+// 	if ($(this).is(':checked')) 
+//     {
+//     	var getId = $(this).attr('id')
+//     	var employee_id = getId.split("_");
+//     	$(this).val(parseInt(employee_id[2]))
+
+//     } else 
+//     {
+
+//     	$(this).val('');
+//     };
+    
+    
+// });
+</script>
