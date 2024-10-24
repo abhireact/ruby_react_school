@@ -1,0 +1,35 @@
+<%#if @students.present?%>
+<table class="table table-bordered table-striped  scrollingdialog">
+	<thead>
+	<tr>
+		<th>
+			Admission Number
+		</th>
+		<th> Student Name </th>
+	</tr>
+	</thead>
+	<tbody>
+	<%@students.each do |student|%>
+		<tr>
+			<td> <%=student.admission_number%> </td>
+			<td>
+			<%=student.student_name%>
+			</td>
+		</tr>
+	<%end%>
+	</tbody>
+</table>
+<%#end%>
+
+ <button class="mc-margin-left-20 flat-button submtbt" onclick = "update_student()" id="submitid">SUBMIT</button>
+ <button id="cancelPeriodWiseAttendanceBTNID" class="mg-small-form-btn cancel-form-dialog flat-button  margin-left-10"><%=t('cancel')%></button>
+
+<style >
+/*employee_st	*/
+</style>
+<script type="text/javascript">
+		 $(document).on("click", "#submitid ,#cancelPeriodWiseAttendanceBTNID", function(e){
+	 	   $('.disabling').removeAttr('disabled');
+		 });
+
+</script>

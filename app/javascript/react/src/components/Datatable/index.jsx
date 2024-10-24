@@ -343,7 +343,15 @@ const usePagination = (items, itemsPerPage) => {
   };
 };
 
-const DataTable = ({ columns, data, onView, onEdit, onDelete }) => {
+const DataTable = ({
+  columns,
+  data,
+  onView,
+  onEdit,
+  onDelete,
+  needinbuilticon,
+  additionalActions = [],
+}) => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
   const { searchTerm, setSearchTerm, filteredItems } = useSearch(
@@ -355,7 +363,7 @@ const DataTable = ({ columns, data, onView, onEdit, onDelete }) => {
     filteredItems,
     entriesPerPage
   );
-
+  console.log(needinbuilticon, "needinbuilticon");
   return (
     <div className="card">
       <div className="card-body px-0 pb-0">
@@ -399,9 +407,11 @@ const DataTable = ({ columns, data, onView, onEdit, onDelete }) => {
                     {col.label}
                   </th>
                 ))}
-                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
-                  Action
-                </th>
+                {needinbuilticon || additionalActions.length > 0 ? (
+                  <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
+                    Action
+                  </th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
@@ -413,29 +423,45 @@ const DataTable = ({ columns, data, onView, onEdit, onDelete }) => {
                       {col.render ? col.render(item) : item[col.key]}
                     </td>
                   ))}
-                  <td className="align-middle ps-3">
-                    <Button
-                      variant="link"
-                      className="text-secondary p-0 me-2"
-                      onClick={() => onView(item)}
-                    >
-                      <Eye size={18} />
-                    </Button>
-                    <Button
-                      variant="link"
-                      className="text-secondary p-0 me-2"
-                      onClick={() => onEdit(item)}
-                    >
-                      <Edit size={18} />
-                    </Button>
-                    <Button
-                      variant="link"
-                      className="text-secondary p-0"
-                      onClick={() => onDelete(item.id)}
-                    >
-                      <Trash size={18} />
-                    </Button>
-                  </td>
+                  {needinbuilticon || additionalActions.length > 0 ? (
+                    <td className="align-middle ps-3">
+                      {needinbuilticon ? (
+                        <>
+                          <Button
+                            variant="link"
+                            className="text-secondary p-0 me-2"
+                            onClick={() => onView(item)}
+                          >
+                            <Eye size={18} />
+                          </Button>
+                          <Button
+                            variant="link"
+                            className="text-secondary p-0 me-2"
+                            onClick={() => onEdit(item)}
+                          >
+                            <Edit size={18} />
+                          </Button>
+                          <Button
+                            variant="link"
+                            className="text-secondary p-0 me-2"
+                            onClick={() => onDelete(item.id)}
+                          >
+                            <Trash size={18} />
+                          </Button>
+                        </>
+                      ) : null}
+                      {additionalActions?.map((action, actionIndex) => (
+                        <Button
+                          key={actionIndex}
+                          variant="link"
+                          className="text-secondary p-0  me-2"
+                          onClick={() => action.onClick(item)}
+                        >
+                          {action.icon}
+                        </Button>
+                      ))}
+                    </td>
+                  ) : null}
                 </tr>
               ))}
             </tbody>

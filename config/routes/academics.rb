@@ -1,5 +1,5 @@
-get 'schools/academic'
-post '/academic_years', to: 'schools#create'
-patch '/academic_years/:id', to: 'schools#update'
-delete '/academic_years/:id', to: 'schools#destroy'
+get 'academics/index'
+post '/academic_years', to: 'academics#create'
+patch '/academic_years/:id', to: 'academics#update'
+delete '/academic_years/:id', to: 'academics#destroy'
 resources :academics

@@ -38,10 +38,6 @@ class WingsController < ApplicationController
           end
         end
         # DELETE /wings/:id
-     
-
-
-
         def destroy
           @wings = MgWing.find_by(id: params[:id], mg_school_id: session[:current_user_school_id], is_deleted: 0)
           if @wings.present?
@@ -57,3 +53,56 @@ class WingsController < ApplicationController
         end
       
 end
+
+
+# class WingsController < ApplicationController
+#   layout "mindcom"
+
+#   def index
+#     @wings = MgWing.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
+#   end
+
+#   def create
+#     @wings = MgWing.new(wing_params)
+#     if @wings.save
+#       redirect_to action: "index"
+#     end
+#   end
+
+#   def wing_edit
+#     @wings = MgWing.find(params[:id])
+#   end
+
+#   def wing_delete
+#     @wings = MgWing.find(params[:id])
+#     boolVal = MgDependancyClass.wing_dependancy("mg_wing_id", params[:id])
+    
+#     if boolVal
+#       flash[:error] = "Cannot Delete this Wing is Having Dependencies"
+#     else
+#       @wings.update(is_deleted: 1)
+#       flash[:notice] = "Deleted Successfully"
+#     end
+
+#     redirect_to action: "index"
+#   end
+
+#   def new
+#   end
+
+#   def wing_update
+#     @wings = MgWing.find(params[:id])
+#     if @wings.update(wing_params)
+#       redirect_to action: "index"
+#     end
+#   end
+
+#   def show
+#   end
+
+#   private
+
+#   def wing_params
+#     params.require(:wings).permit(:wing_name, :status, :created_by, :updated_by, :is_deleted, :mg_school_id)
+#   end
+# end

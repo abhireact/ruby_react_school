@@ -1,0 +1,37 @@
+<div id="hideAndShowReasonDivID">
+<%= form_for :attendances , url: attendances_path, :html => {
+                            :id => 'attendancesFormID'} do |f| %>
+      <p>
+        <%= f.label :reason , t('reason'),:class=> "mg-label"%><br>
+        <%= f.text_area :reason ,:class=>"mg-text-field"%>
+      </p>
+
+        <%= f.hidden_field :mg_class_timing_id, :value => @mg_class_timing_id %>
+        <%= f.hidden_field :mg_batch_id, :value => @batchId %>
+        <%= f.hidden_field :mg_student_id, :value => @student_id %>
+        <%= f.hidden_field :absent_date, :value => @final_date %>
+        <%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+        <%= f.hidden_field :created_by, :value => session[:user_id]%>
+        <%= f.hidden_field :updated_by, :value => session[:user_id]%>
+        <%= f.hidden_field :is_deleted, :value => 0 %>
+        
+        <%#=f.submit%>
+
+      <% end %>
+<p class="mg-p-mgtop">
+<button  id="studentAttendancePeriodWiseSaveBTNID" class="btn btn-delete"><%=t('save')%></button>&nbsp;<button id="cancelPeriodWiseStudentAttendanceBTNID" class="btn btn-delete"><%=t('cancel')%></button>
+</p>
+ </div>
+  <script type="text/javascript">
+
+  $(document).ready(function(){
+  var reason_check=$("#is_resion").is(':checked');
+  if(reason_check){
+    $("#hideAndShowReasonDivID").hide();
+  }
+});
+
+$(document).on("click", "#cancelPeriodWiseStudentAttendanceBTNID", function(e){
+  $(".ui-dialog-titlebar-close").click();
+});
+  </script>

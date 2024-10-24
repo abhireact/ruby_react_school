@@ -1,7 +1,7 @@
 class MgTimeTable < ApplicationRecord
   # validates(:start_date, :end_date, { overlap: { scope: "mg_school_id", query_options: { active: nil } } })
   scope(:active, lambda {
-    where({ is_deleted: false })
+    where({ is_deleted: 0 })
   })
   belongs_to(:mg_school)
   has_many :mg_booster_dose_details,  dependent: :destroy 

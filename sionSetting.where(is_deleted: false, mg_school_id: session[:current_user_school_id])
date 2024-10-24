@@ -1,0 +1,20 @@
+
+[1mFrom:[0m /home/mindcom/Music/ruby_react_school/app/controllers/addmissions_controller.rb:5 AddmissionsController#index:
+
+     [1;34m3[0m: [32mdef[0m [1;34mindex[0m
+     [1;34m4[0m:     [1;34m# @dateformat = view_context.date_format(session[:current_user_school_id])[0m
+ =>  [1;34m5[0m:     binding.pry
+     [1;34m6[0m:     @admission = [1;34;4mMgAdmissionSetting[0m.where([35mis_deleted[0m: [1;36mfalse[0m, [35mmg_school_id[0m: session[[33m:current_user_school_id[0m])
+     [1;34m7[0m:     [1;34m# @admission_array = [][0m
+     [1;34m8[0m:     [1;34m# @admission.each do |admission|[0m
+     [1;34m9[0m:     [1;34m#   admission_hash = {}[0m
+    [1;34m10[0m:     [1;34m#   admission_hash[:id] = admission.id[0m
+    [1;34m11[0m:     [1;34m#   @academicYear = MgTimeTable.find_by(id: admission.mg_time_table_id, is_deleted: false)[0m
+    [1;34m12[0m:     [1;34m#   admission_hash[:mg_time_table_id] = @academicYear.name if @academicYear[0m
+    [1;34m13[0m:     [1;34m#   admission_hash[:start_date] = admission.start_date[0m
+    [1;34m14[0m:     [1;34m#   admission_hash[:end_date] = admission.end_date[0m
+    [1;34m15[0m:     [1;34m#   @admission_array << admission_hash[0m
+    [1;34m16[0m:     [1;34m# end[0m
+    [1;34m17[0m: 
+    [1;34m18[0m: [32mend[0m
+

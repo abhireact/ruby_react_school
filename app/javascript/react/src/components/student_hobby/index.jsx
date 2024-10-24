@@ -3,7 +3,10 @@ import * as Yup from "yup";
 import GenericCRUD from "../genericCrud";
 const StudentHobbyManagement = ({ userData }) => {
   console.log(userData, "userrdata in wings");
-  const columns = [{ key: "name", label: "Name" }];
+  const columns = [
+    { key: "name", label: "Name" },
+    { key: "description", label: "Description" },
+  ];
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Required"),
@@ -20,9 +23,10 @@ const StudentHobbyManagement = ({ userData }) => {
       description="Manage Student Hobby ."
       initialData={userData}
       columns={columns}
-      apiEndpoint="student_hobbies"
+      apiEndpoint="category/student_hobbies"
       validationSchema={validationSchema}
       formFields={formFields}
+      payloadKey="student_hobbies"
     />
   );
 };

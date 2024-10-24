@@ -1,0 +1,61 @@
+<%#=@timeings.inspect%>
+
+
+   <h4 class="form-section-heading mc-margin-bottom-20">Attendance</h4>
+ 
+<%if @timeings.present?%>
+    <table class="table table-bordered table-striped">   
+     <tr >
+      	<th>Student Name</th>
+         <%if @timeings.present?%>
+              	<% @timeings.each do |commonClassTiming| %>
+            			<th><%=commonClassTiming.start_time.strftime("%k:%M%p")%>-
+            			<%=commonClassTiming.end_time.strftime("%k:%M%p")%>
+            		</th>
+                <%end%>
+        <%end%>
+        </tr>
+     <% @students.each do |student| %> 
+    	 <tr >
+    	  	<td><%=student.first_name%>
+    	  		
+    	  	</td>
+            <%if @timeings.present?%>
+                    	  	<%@timeings.each do |t| %>
+                                <%count=0%>
+                                <%if t.is_break%>
+                                        <%count=2%>
+                                <%end%>
+                                <%@absentDate.each do |check|%>
+                                        <%if t.is_break%>
+                                        <%count=2%>
+                                        <%else%>
+                                            <%if check.mg_student_id==student.id && check.mg_class_timing_id==t.id && check.mg_batch_id==student.mg_batch_id%>
+                                                <%count=1%>
+                                               
+                                            <%end %>
+                                        <%end %>
+                                <%end%>
+                                 <%if count==1%>
+                                            <td class="mg-align-center"><i class="fa fa-circle"></i></td>
+                                            <%count=0%>
+                                        <%elsif count==0%>
+                                            <td class="mg-align-center"><i class="fa fa-check"> </i></td>
+                                            <%count=0%>
+                                          <%else%>
+                                         <td>Break</td>
+                                          <%count=0%>
+                                        <%end%>
+                        	<%end%>
+            <%end%>
+    	</tr>
+        <%end%>
+     </table>
+<%else%>
+<div class="mg-custom-labels">
+<h5>Time Table Not Yet Assigned.</h5>
+</div>
+ <%end%>
+ </script>
+
+

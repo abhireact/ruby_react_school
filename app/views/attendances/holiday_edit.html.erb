@@ -1,0 +1,176 @@
+<%#= render  partial: 'master_settings/master_settings_left' %>
+<% navigation_add t('Holiday'), :controller=>'attendances', :action=>'holiday_lists' %>
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+    <h3 class="form-section-heading ">
+      <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%=t('edit_holiday')%></b>
+    </h3>
+  </div>
+</div>
+<% navigation_add t('edit'),:controller=>'attendances',:action=>'holiday_edit' %>
+
+<%=form_for :holiday,:url=>{:controller=>"attendances",:action=>"holiday_update"},:html => { :id => "holidayFormID"} do |f|%>
+	<%= f.hidden_field :is_deleted, :value => 0 %>
+	<%= f.hidden_field :id, :value => @mg_holiday.id %>
+	<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+	<%= f.hidden_field :created_by, :value => session[:user_id] %>
+	<%= f.hidden_field :updated_by, :value => session[:user_id] %>
+  <div class="row mc-padding-20 form-section-box">
+	<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+		<label for="mg-label mg-tt-width"><%=t('holiday_name')%><span class="required-field"> *</span></label>
+		<%= f.text_field :holiday_name,:value => @mg_holiday.holiday_name,:class=>"mg-select-btn form-control"%>
+	</div>
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+		<label for="mg-label mg-tt-width"><%=t('holiday_start_date')%><span class="required-field"> *</span></label>
+		<%= f.text_field :holiday_start_date,:value => @mg_holiday.holiday_start_date.strftime(@dateFormat),:class=>"holiday-date form-control mg-select-btn"%>
+	</div>
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+		<label for="mg-label mg-tt-width"><%=t('holiday_end_date')%><!-- <span class="required-field"> *</span> --></label>
+	
+		<%= f.text_field :holiday_end_date,:value => @mg_holiday.holiday_end_date.strftime(@dateFormat),:class=>"holiday-end-date form-control mg-select-btn"%>
+	</div>
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+		<label for="mg-label mg-tt-width mg-label-text-transform-none"><%=t('applicable_for')%><span class="required-field"> *</span></label>
+		<%if @mg_holiday.is_for_student == true %>
+		 <%=select_tag :applicable_for,options_for_select(@applicable,:selected => "student"),prompt: "Select",:class=>"mg-select-btn form-control"%>
+		 <% elsif @mg_holiday.is_for_employee == true && @mg_holiday.mg_employee_category_id.present?%>
+		 <%=select_tag :applicable_for,options_for_select(@applicable,:selected => @mg_holiday.mg_employee_category_id),prompt: "Select",:class=>"mg-select-btn form-control"%>
+		 <% elsif @mg_holiday.applicable_for == "All"%>
+		 <%=select_tag :applicable_for,options_for_select(@applicable,:selected => "all"),prompt: "Select",:class=>"mg-select-btn form-control"%>
+		 <% else %>
+		 <%=select_tag :applicable_for,options_for_select(@applicable),prompt: "Select",:class=>"mg-select-btn form-control"%>
+		 <%end%>
+	</div>
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+       <label for="mg-label mg-tt-width"><%= t('description') %></label>
+       <%= f.text_area :description,:value => @mg_holiday.description,:class=>"form-control mg-select-btn" %>
+    </div>
+
+    </div>
+    <br>
+	<div>
+	    <a onclick="$(this).closest('form').submit()" class="mg-small-form-btn submit mc-margin-bottom-20 flat-button"><%=t("submit")%></a>
+	    <%= link_to t('cancel'), {:controller=>'attendances',:action=>'holiday_lists'}, {:class=>"mg-small-form-btn cancel-form-dialog flat-button cancel-form-dialog margin-left-10"} %>
+	</div>
+<%end%>
+
+<%#= render  partial: 'application/common_left_close' %>
+
+<script>
+$( document ).ready(function() {
+  focusCurrentTab("HolidayListAID","HolidayListLiID");
+
+	
+	
+	dateFormatStr =  getJsDateFormat();
+
+	$( ".holiday-date" ).datepicker({ 
+            changeMonth: true,
+            changeYear: true,
+            minDate: '<%= @startDate %>',
+          	maxDate: '<%= @endDate %>',
+            dateFormat: dateFormatStr
+        });
+
+	$(".holiday-end-date").datepicker({ 
+	            changeMonth: true,
+	            changeYear: true,
+	            minDate: '<%= @startDate %>',
+          		maxDate: '<%= @endDate %>',
+	            dateFormat: dateFormatStr,
+	            
+	        });
+});
+
+
+$(document).on("change","#holiday_holiday_end_date",function(){
+	var dateFormatStr =  getJsDateFormat();
+	var startDate = $("#holiday_holiday_start_date").val()
+	var endDate = $(this).val();
+	var startArr = startDate.split("/");
+	var endArr = endDate.split("/");
+	if (startArr[2] < endArr[2]) {}
+	else if (startArr[2] == endArr[2]) {
+		if (startArr[1] < endArr[1]) 
+		{
+
+		
+
+		}
+		else if (startArr[1] == endArr[1]) {
+
+			if (startArr[0] > endArr[0]) 
+			{
+			alert("End Date Should Be Greater Than Start Date");
+			$(this).val('');
+			}
+
+		}
+		else
+		{
+		alert("End Date Should Be Greater Than Start Date");
+		$(this).val('');
+		};
+	}
+	else
+	{
+		alert("End Date Should Be Greater Than Start Date");
+		$(this).val('');
+	};
+	
+});
+
+$(document).on("change","#holiday_holiday_start_date",function(){
+	var dateFormatStr =  getJsDateFormat();
+	var startDate = $("#holiday_holiday_start_date").val()
+	var endDate = $("#holiday_holiday_end_date").val();
+	var startArr = startDate.split("/");
+	var endArr = endDate.split("/");
+	if (endDate) {
+		if (startArr[2] < endArr[2]) {}
+	else if (startArr[2] <= endArr[2]) {
+		if (startArr[1] < endArr[1]) 
+		{
+
+		
+
+		}
+		else if (startArr[1] == endArr[1]) {
+
+			if (startArr[0] > endArr[0]) 
+			{
+			alert("End Date Should Be Greater Than Start Date");
+			$("#holiday_holiday_end_date").val('');
+			}
+
+		}
+		else
+		{
+		alert("End Date Should Be Greater Than Start Date");
+		$("#holiday_holiday_end_date").val('');
+		};
+	}
+	else
+	{
+		alert("End Date Should Be Greater Than Start Date");
+		$("#holiday_holiday_end_date").val('');
+	};
+}
+	
+});
+
+
+
+
+	$("#holidayFormID").validate({
+          //debug: true,
+            rules: {
+                      "holiday[holiday_name]": {required: true},
+                      "holiday[holiday_start_date]": {required: true},
+                      "applicable_for": {required: true}
+              }
+        });
+
+	
+</script>

@@ -16,15 +16,18 @@ class CbscExaminationsController < ApplicationController
                               mg_time_table_id: @current_academic_year_id).order(:id)
     @batches = MgBatch.find_by(mg_school_id: session[:current_user_school_id], is_deleted: 0)
 
-    @exam_types = MgCbscExamType.where(is_deleted: false, mg_school_id: session[:current_user_school_id],
-                                       mg_time_table_id: @current_academic_year_id)
-    @classSection = view_context.get_class_section(@current_academic_year_id)
+    @exam_types = MgCbscExamType.where(is_deleted: false, mg_school_id: session[:current_user_school_id], mg_time_table_id: @current_academic_year_id)
+    @classSection = view_context.get_class_section
+    @academicYearsData= MgTimeTable.where(mg_school_id:session[:current_user_school_id],is_deleted:0)
+    @examtypes_associations = MgCbscExamTypeAssociation.where(is_deleted: false, mg_school_id: session[:current_user_school_id]).order(:mg_course_id)
     @react_data = {
       academic_year_data: @current_academic_year,
       examtype_data: @exam_types,
       classes: @classes,
       batches: @batches,
-      class_section: @classSection
+      class_section:@classSection,
+      academicYearsData:@academicYearsData,
+      exam_associationData:@examtypes_associations
     }
   end
 
@@ -107,11 +110,10 @@ class CbscExaminationsController < ApplicationController
   def update
     if @exam_type.update(exam_params)
       update_exam_type_associations(params[:selected_class], params[:delete_class])
-      flash[:notice] = 'Exam Type updated successfully!'
+      render json: { message: "Exam Type updated successfully!" }, status: :ok
     else
-      flash[:error] = 'Failed to update Exam Type.'
+      render json: { error: "Failed to update Exam Type." }, status: :unprocessable_entity
     end
-    redirect_to action: 'index'
   end
 
   def destroy
@@ -125,6 +127,26 @@ class CbscExaminationsController < ApplicationController
     end
     # redirect_to action: "index"
   end
+
+
+  def delete
+    @exam_type = MgCbscExamType.find(params[:id])
+    boolVal = MgDependancyClass.examType_dependancy("mg_cbsc_exam_type_id", params[:id])
+    
+    if boolVal == true
+      render json: { error: "Cannot delete this Exam Type as it has dependencies." }, status: :unprocessable_entity
+    else
+      @exam_type.update(is_deleted: 1)
+      
+      @exam_type_association = MgCbscExamTypeAssociation.where(mg_cbsc_exam_type_id: @exam_type.id)
+      @exam_type_association.each do |exam_type_association|
+        exam_type_association.update(is_deleted: 1)
+      end
+      
+      render json: { message: "Deleted successfully." }, status: :ok
+    end
+  end
+  
 
   private
 

@@ -1,0 +1,54 @@
+<!-- Sec -->
+ 
+
+                <li class="myAccountMenu sms-has-menu dropdown-submenu">
+                                <a href="#" >
+                                    <span class="menu-text"><%= t('attendances') %></span>
+                                    
+                                </a>
+                      <ul class="mg-left-sub-menu-title sms-sub-menu dropdown-menu">
+
+                        <li id="studentAttendanceLiID" >
+
+                            <a id="studentAttendanceAID" href="/attendances"><div><i class="fa fa-check-square-o">&nbsp;&nbsp;</i><%=t('studentsattendance')%></div></a>
+
+                        </li>
+                        <li id="employeeAttendanceLiID" >
+
+                            <a id="employeeAttendanceAID" href="/employees_attendances"><div><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('employeeattendance')%></div></a>
+
+                        </li>
+
+                         <li id="viewEmployeetListLiID">
+                            <a class="menuItemsActivities" href="/mg_employee_leave_types/" id="viewEmployeetList">
+
+                                <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%=t('leavetypelist')%></div>
+                            </a>
+                        </li>
+
+                        <li id="EmployeeLeaveTypesLiID">
+                            <a class="menuItemsActivities1" href="/mg_employee_leave_types/new/" id="EmployeeLeaveTypes">
+
+                                <div class="setMenu"><i class="fa fa-tag">&nbsp;&nbsp;</i><%=t('createleavetypes')%>
+                                </div>
+                            </a>
+                        </li>
+                        <li id="employeeLeaveResetqLiID">
+                            <a class="menuItemsActivities2" href="/mg_employee_leave_types/emp_attendances/" id="employeeLeaveResetq">
+
+                                <div class="setMenu"><i class="fa fa-tags">&nbsp;&nbsp;</i><%=t('resetleave')%>
+                                </div>
+                            </a>
+                        </li>
+
+                      
+
+                    </ul>
+                    </li>
+         
+
+<script>
+$(document).ready(function(){
+    focusAttendance();
+});
+</script>
