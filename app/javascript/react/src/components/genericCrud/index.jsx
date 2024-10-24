@@ -1467,7 +1467,7 @@ const GenericCRUD = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isViewMode, setIsViewMode] = useState(false);
   // const formikRef = useRef(null);
-  console.log(additionalActions,needinbuilticon, "debhcdewj");
+  console.log(additionalActions, needinbuilticon, "debhcdewj");
 
   useEffect(() => {
     setItems(initialData);

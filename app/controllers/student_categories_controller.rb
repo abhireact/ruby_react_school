@@ -5,10 +5,16 @@ class StudentCategoriesController < ApplicationController
   
   
     def index
-      @mg_student_categories = MgStudentCategory.where(is_deleted: false, mg_school_id: session[:current_user_school_id])
-      if request.xhr?
-        @index = params[:data]
-        render layout: false
+      @student_category = MgStudentCategory.where(is_deleted: false, mg_school_id: session[:current_user_school_id])
+      respond_to do |format|
+        format.html # renders the default index.html.erb
+        format.json do
+          if params[:api_request].present?
+            render json: @student_category, status: :created
+          else
+            render json: { error: "API request parameter missing" }, status: :bad_request
+          end
+        end
       end
     end
   
@@ -16,7 +22,7 @@ class StudentCategoriesController < ApplicationController
     # end
   
     def new
-      @mg_student_category = MgStudentCategory.new
+      @student_category = MgStudentCategory.new
     end
   
   
@@ -25,25 +31,26 @@ class StudentCategoriesController < ApplicationController
     end
   
     def create
-      @mg_student_category = MgStudentCategory.new(mg_create_student_category_params)
+      @student_category = MgStudentCategory.new(mg_create_student_category_params)
       
-      if @mg_student_category.save
-        flash[:notice] = "Student category created successfully"
-        redirect_to student_categories_path
-      else
-        flash[:error] = "Error creating student category"
-        render :new
-      end
+      @student_category.mg_school_id = session[:current_user_school_id]
+        @student_category.is_deleted= 0
+        @student_category.created_by= session[:user_id]
+        @student_category.updated_by= session[:user_id]
+        if @student_category.save
+          render json: { message: "Academic year Created"}, status: :created
+        end
     end
   
     def update
+
+
+
+      @student_category = MgStudentCategory.find(params[:id])
       if @student_category.update(mg_student_category_params)
-        flash[:notice] = "Student category updated successfully"
-        redirect_to student_categories_path
-      else
-        flash[:error] = "Error updating student category"
-        render :edit
+        render json: { message: "Category Updated"}, status: :created
       end
+      
     end
   
     def destroy
@@ -55,14 +62,16 @@ class StudentCategoriesController < ApplicationController
     def delete
       @student_category = MgStudentCategory.find(params[:id])
       
-      if MgDependancyClass.studentCategory_dependancy("mg_student_category_id", params[:id])
-        flash[:error] = "Cannot delete this category, as it has dependencies"
+      boolVal = MgDependancyClass.studentCategory_dependancy("mg_student_category_id",params[:id])
+      if boolVal == true
+        flash[:error]  = "Cannot Delete this Caste is Having Dependencies"
       else
-        @student_category.update(is_deleted: true)
-        flash[:notice] = "Category deleted successfully"
-      end
+         @student_category.update(:is_deleted=>1)
+          flash[:notice] = "Deleted Successfully"
+       end
+
       
-      redirect_to student_categories_path
+      render json: { message: "Category Deleted Successfully" }, status: :ok
     end
   
     private
@@ -72,7 +81,7 @@ class StudentCategoriesController < ApplicationController
     end
   
     def mg_student_category_params
-      params.require(:mg_student_category).permit(:name, :is_deleted, :mg_school_id)
+      params.require(:student_category).permit(:name, :is_deleted, :mg_school_id)
     end
   
     def mg_create_student_category_params

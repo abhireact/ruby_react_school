@@ -27,6 +27,8 @@ import StudentHobbyManagement from "./components/student_hobby";
 import HouseManagement from "./components/house";
 import ExtraCurrIndex from "./components/extra_curricular";
 import StudentCategoryIndex from "./components/student_category";
+import SubjectArchiveManager from "./components/subject_archive";
+import ListManagement from "./components/subject_archive/list";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -51,6 +53,8 @@ const componentMapping = {
   HouseIndex: HouseManagement,
   ExtraCurrIndex: ExtraCurrIndex,
   StudentCategoryIndex: StudentCategoryIndex,
+  SubjectArchiveIndex: SubjectArchiveManager,
+  ListManagement: ListManagement,
 };
 
 // Function to render a component

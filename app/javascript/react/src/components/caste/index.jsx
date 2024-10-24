@@ -32,6 +32,7 @@ const CasteManagement = ({ userData }) => {
       validationSchema={validationSchema}
       formFields={formFields}
       payloadKey="caste"
+      needinbuilticon={true}
     />
   );
 };

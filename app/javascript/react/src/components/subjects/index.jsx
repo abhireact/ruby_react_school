@@ -76,6 +76,7 @@ const SubjectsManagement = ({ userData }) => {
                 apiEndpoint="subjects"
                 validationSchema={validationSchema}
                 formFields={formFields}
+                needinbuilticon={true}
               />
             </div>
           </div>

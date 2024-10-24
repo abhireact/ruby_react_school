@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   draw :schools
   draw :academics
   draw :category
+  draw :student_categories
   draw :subjects
   draw :dashboards
   draw :addmissions
@@ -18,7 +19,7 @@ Rails.application.routes.draw do
 
   draw :cbsc_examinations
   draw :classes
-  draw :student_categories
+  
   draw :mg_employee_departments
   draw :mg_employee_positions
   draw :mg_employee_weekdays
@@ -28,7 +29,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  draw :subject_archives
+
   draw :application
   draw :emp_subjects
 

@@ -27,6 +27,7 @@ const ExtraCurrIndex = ({ userData }) => {
       validationSchema={validationSchema}
       formFields={formFields}
       payloadKey="mg_extra_curricular"
+      needinbuilticon={true}
     />
   );
 };
