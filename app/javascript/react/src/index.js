@@ -19,6 +19,9 @@ import SectionIndex from "./components/Section/SectionIndex";
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
+import Department from "./components/EmployeeDepartment";
+import Profile from "./components/EmployeeProfile"
+import WeekDayIndex from "./components/Weekdays"
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -34,7 +37,10 @@ const componentMapping = {
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
-  SectionIndex:SectionIndex
+  SectionIndex:SectionIndex,
+  DepartmentIndex:Department,
+  ProfileIndex:Profile,
+  WeekDayIndex:WeekDayIndex
 };
 
 // Function to render a component

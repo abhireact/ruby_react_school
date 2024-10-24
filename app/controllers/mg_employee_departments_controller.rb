@@ -12,10 +12,12 @@ class MgEmployeeDepartmentsController < ApplicationController
 
   def create
     @emp_dep = MgEmployeeDepartment.new(employee_department_params)
+    @emp_dep.mg_school_id = session[:current_user_school_id]
+    @emp_dep.is_deleted = 0
     if @emp_dep.save
-      redirect_to mg_employee_departments_path, notice: 'Department created successfully.'
+      render json: { message: 'Department created successfully.', department: @emp_dep }, status: :created
     else
-      render :new
+      render json: { errors: @emp_dep.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -31,27 +33,32 @@ class MgEmployeeDepartmentsController < ApplicationController
   def update
     @employee_department = MgEmployeeDepartment.find(params[:id])
     if @employee_department.update(employee_department_params)
-      redirect_to mg_employee_departments_path, notice: 'Department updated successfully.'
+      render json: { message: 'Department updated successfully.', department: @employee_department }, status: :ok
     else
-      render :edit
+      render json: { errors: @employee_department.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def delete
     @employee_department = MgEmployeeDepartment.find(params[:id])
-    if MgDependancyClass.employeeDepartment_dependancy("mg_employee_department_id", params[:id])
-      flash[:error] = "Cannot delete, this department has dependencies."
+    boolvalue = MgDependancyClass.employeeDepartment_dependancy("mg_employee_department_id", params[:id])
+    if  boolvalue[0].present?
+      render json: { error: "Cannot delete, this department has dependencies." }, status: :forbidden
     else
       @employee_department.update(is_deleted: 1)
-      flash[:notice] = "Deleted successfully."
+      render json: { message: "Deleted successfully." }, status: :ok
     end
-    redirect_to mg_employee_departments_path
+    # redirect_to mg_employee_departments_path
   end
 
   def destroy
     @employee_department = MgEmployeeDepartment.find(params[:id])
-    @employee_department.destroy
-    redirect_to mg_employee_departments_show_path, notice: 'Department deleted successfully.'
+    
+    if @employee_department.destroy
+      render json: { message: 'Department deleted successfully.' }, status: :ok
+    else
+      render json: { error: 'Failed to delete department.' }, status: :unprocessable_entity
+    end
   end
 
   private

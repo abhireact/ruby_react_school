@@ -4,6 +4,11 @@ class MgEmployeePositionsController < ApplicationController
   
   def index
     @employee_positions = MgEmployeePosition.where(is_deleted: '0', mg_school_id: session[:current_user_school_id])
+    #react data 
+    @employee_categories=MgEmployeeCategory.where(:is_deleted=>0).pluck(:category_name,:id)
+    @react_data={positionData:@employee_positions,
+  categoryData:@employee_categories}
+
   end
 
   def new
@@ -12,10 +17,12 @@ class MgEmployeePositionsController < ApplicationController
 
   def create
     @emp_pos = MgEmployeePosition.new(employee_position_params)
+    @emp_pos.mg_school_id = session[:current_user_school_id]
+    @emp_pos.is_deleted = 0
     if @emp_pos.save
-      redirect_to mg_employee_positions_path, notice: 'Position created successfully.'
+      render json: { message: 'Position created successfully.', position: @emp_pos }, status: :created
     else
-      render :new
+      render json: { errors: @emp_pos.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -27,9 +34,9 @@ class MgEmployeePositionsController < ApplicationController
   def update
     @employee_position = MgEmployeePosition.find(params[:id])
     if @employee_position.update(employee_position_params)
-      redirect_to mg_employee_positions_path, notice: 'Position updated successfully.'
+      render json: { message: 'Position updated successfully.', position: @employee_position }, status: :ok
     else
-      render :edit
+    render json: { errors: @employee_position.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -37,20 +44,25 @@ class MgEmployeePositionsController < ApplicationController
     @employee_position = MgEmployeePosition.find(params[:id])
     @employees = MgEmployee.where(is_deleted: 0, mg_school_id: session[:current_user_school_id], mg_employee_position_id: params[:id])
     boolVal = MgDependancyClass.employeePosition_dependancy("mg_employee_position_id", params[:id])
-    if boolVal
-      flash[:notice] = "Cannot delete, this employee profile has dependencies."
+    if boolVal[0].present?
+      render json: { message: "Cannot delete, this employee profile has dependencies." }, status: :forbidden
     else
       @employee_position.update(is_deleted: 1)
-      flash[:notice] = "Deleted successfully."
+      render json: { message: "Deleted successfully." }, status: :ok
     end
-    redirect_to mg_employee_positions_path
+    #redirect_to mg_employee_positions_path
   end
 
   def destroy
     @employee_position = MgEmployeePosition.find(params[:id])
-    @employee_position.destroy
-    redirect_to mg_employee_positions_path, notice: 'Position deleted successfully.'
+    
+    if @employee_position.destroy
+      render json: { message: 'Position deleted successfully.' }, status: :ok
+    else
+      render json: { errors: 'Failed to delete the position.' }, status: :unprocessable_entity
+    end
   end
+  
 
   private
 
