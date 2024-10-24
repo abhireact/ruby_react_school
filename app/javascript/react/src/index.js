@@ -19,6 +19,9 @@ import SectionIndex from "./components/Section/SectionIndex";
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
+import Department from "./components/EmployeeDepartment";
+import Profile from "./components/EmployeeProfile"
+import WeekDayIndex from "./components/Weekdays"
 import GreetingMessageManagement from "./components/school/greetingmessage";
 import SubjectArchiveManager from "./components/subject_archive";
 import ListManagement from "./components/subject_archive/list";
@@ -38,6 +41,9 @@ const componentMapping = {
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
   SectionIndex:SectionIndex,
+  DepartmentIndex:Department,
+  ProfileIndex:Profile,
+  WeekDayIndex:WeekDayIndex,
   GreetingMessageIndex:GreetingMessageManagement,
   SubjectArchiveIndex: SubjectArchiveManager,
   ListManagement: ListManagement,

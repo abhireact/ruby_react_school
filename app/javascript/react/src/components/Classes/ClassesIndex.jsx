@@ -128,6 +128,7 @@ const ClassesIndex = ({ userData }) => {
       .then((data) => {
         setClasses([...classes, data]);
         setShowCreateForm(false);
+        window.location.reload()
       })
       .catch((error) => console.error("Error:", error))
       .finally(() => setSubmitting(false));
@@ -265,6 +266,7 @@ const [showNewSectionForm, setShowNewSectionForm] = useState(false);
       .then((data) => {
         setClasses(classes.map((c) => (c.id === editingClass.id ? data : c)));
         setShowEditForm(false);
+        window.location.reload()
       })
       .catch((error) => console.error("Error:", error))
       .finally(() => setSubmitting(false));
