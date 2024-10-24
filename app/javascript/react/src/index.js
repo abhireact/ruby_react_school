@@ -20,6 +20,8 @@ import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
 import GreetingMessageManagement from "./components/school/greetingmessage";
+import SubjectArchiveManager from "./components/subject_archive";
+import ListManagement from "./components/subject_archive/list";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -36,7 +38,9 @@ const componentMapping = {
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
   SectionIndex:SectionIndex,
-  GreetingMessageIndex:GreetingMessageManagement
+  GreetingMessageIndex:GreetingMessageManagement,
+  SubjectArchiveIndex: SubjectArchiveManager,
+  ListManagement: ListManagement,
 };
 
 // Function to render a component

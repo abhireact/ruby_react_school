@@ -27,6 +27,7 @@ const SportsManagement = ({ userData }) => {
       validationSchema={validationSchema}
       formFields={formFields}
       payloadKey="sports"
+      needinbuilticon={true}
     />
   );
 };

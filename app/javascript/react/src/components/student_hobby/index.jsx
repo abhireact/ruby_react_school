@@ -27,6 +27,7 @@ const StudentHobbyManagement = ({ userData }) => {
       validationSchema={validationSchema}
       formFields={formFields}
       payloadKey="student_hobbies"
+      needinbuilticon={true}
     />
   );
 };
