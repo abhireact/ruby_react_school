@@ -10,26 +10,31 @@ class MgEmployeeWeekdaysController < ApplicationController
   def index
     @employee_weekdays = MgEmployeeWeekday.where(is_deleted: 0, mg_school_id: session[:current_user_school_id])
     @weekdaychecked = MgEmployeeWeekday.where(is_deleted: 0, mg_school_id: session[:current_user_school_id]).pluck(:weekday)
+    @react_data ={employeeWeekdays:@employee_weekdays,
+    checkedWeekdays:@weekdaychecked}
   end
 
   def create
     mg_school_id = session[:current_user_school_id]
     user_id = session[:user_id]
-
+  
     puts params[:weekdays].inspect
     obj = MgEmployeeWeekday.where(is_deleted: 0, mg_school_id: mg_school_id)
     obj.update_all(is_deleted: 1) if obj.present?
+  
     if params[:weekdays].present?
       params[:weekdays].each do |weekday|
         employee_weekday = MgEmployeeWeekday.find_or_initialize_by(mg_school_id: mg_school_id, weekday: weekday)
         employee_weekday.is_deleted = 0
         employee_weekday.updated_by = user_id
         employee_weekday.save
-      end 
+      end
+      render json: { message: "Weekdays updated successfully" }, status: :ok
+    else
+      render json: { message: "No weekdays provided" }, status: :unprocessable_entity
     end
-    flash[:notice] = "Weekdays updated successfully"
-    redirect_to action: "index"
   end
+  
 
   def show
     @employee_weekdays = MgEmployeeWeekday.find(params[:id])
@@ -43,12 +48,14 @@ class MgEmployeeWeekdaysController < ApplicationController
 
   def update
     @employee_weekdays = MgEmployeeWeekday.find(params[:id])
+    
     if @employee_weekdays.update(employee_weekdays_params)
-      redirect_back(fallback_location: employee_weekdays_path)
+      render json: { message: 'Employee weekday updated successfully.', employee_weekday: @employee_weekdays }, status: :ok
     else
-      render 'edit'
+      render json: { errors: @employee_weekdays.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  
 
   def delete
     @notice = ''

@@ -27,6 +27,7 @@ const HouseManagement = ({ userData }) => {
       validationSchema={validationSchema}
       formFields={formFields}
       payloadKey="house"
+      needinbuilticon={true}
     />
   );
 };

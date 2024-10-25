@@ -27,6 +27,7 @@ const CategoryManagement = ({ userData }) => {
       validationSchema={validationSchema}
       formFields={formFields}
       payloadKey="category"
+      needinbuilticon={true}
     />
   );
 };

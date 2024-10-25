@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../Datatable";
 import { Button } from "react-bootstrap";
-import { Edit } from "lucide-react";
+import { Edit, Archive } from "lucide-react";
 
 const ListManagement = () => {
   const [items, setItems] = useState([]);
@@ -20,7 +20,7 @@ const ListManagement = () => {
         "Content-Type": "application/json",
       };
 
-      const response = await axios.get(`/subject_archives_list`, {
+      const response = await axios.get(`/subjects/archived_subject_list`, {
         headers,
         params: { api_request: true, format: "json" },
       });
@@ -42,10 +42,10 @@ const ListManagement = () => {
       const token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
-      await axios.post(`/subject_archives/${id}/unarchive`, null, {
+      await axios.post(`/subjects/${id}/unarchive`, null, {
         headers: { "X-CSRF-Token": token, "Content-Type": "application/json" },
       });
-      fetchItems(); // Refresh the data after unarchiving
+      fetchItems();
     } catch (error) {
       console.error("Error unarchiving subject:", error);
       setErrorMessage("Failed to unarchive subject. Please try again.");
@@ -89,11 +89,21 @@ const ListManagement = () => {
 
   return (
     <div className="p-2">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Subject Archive Management
-        </h1>
-        <p className="text-gray-600">View and manage archived subjects</p>
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Subject Archive Management
+          </h1>
+          <p className="text-gray-600">View and manage archived subjects</p>
+        </div>
+        <a
+          href="/subjects/subject_archive"
+          className="btn btn-primary d-flex align-items-center gap-2"
+          style={{ textDecoration: "none" }}
+        >
+          <Archive size={18} />
+          Create Subject Archive
+        </a>
       </div>
 
       {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}

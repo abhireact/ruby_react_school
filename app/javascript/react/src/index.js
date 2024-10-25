@@ -19,7 +19,12 @@ import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
 import SubjectsManagement from "./components/subjects";
+import Department from "./components/EmployeeDepartment";
+import Profile from "./components/EmployeeProfile"
+import WeekDayIndex from "./components/Weekdays"
 import GreetingMessageManagement from "./components/school/greetingmessage";
+import SubjectArchiveManager from "./components/subject_archive";
+import ListManagement from "./components/subject_archive/list";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -37,6 +42,13 @@ const componentMapping = {
   BatchSubjectManagement: BatchSubjectManagement,
   SubjectsIndex: SubjectsManagement,
   GreetingMessageIndex: GreetingMessageManagement,
+  SectionIndex:SectionIndex,
+  DepartmentIndex:Department,
+  ProfileIndex:Profile,
+  WeekDayIndex:WeekDayIndex,
+  GreetingMessageIndex:GreetingMessageManagement,
+  SubjectArchiveIndex: SubjectArchiveManager,
+  ListManagement: ListManagement,
 };
 
 // Function to render a component
