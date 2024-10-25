@@ -1,1 +1,155 @@
-<div id="WeekDayIndex" data-user="<%= @react_data.to_json %>"></div>
+<% navigation_add t('week_day'), mg_employee_weekdays_path %>
+
+<div class="card-container" style="padding: 2rem;">
+  <div class="card">
+    <h4 class="card-title">Employee Week Days</h4>
+    
+    <div class="card-content">
+      <p class="selection-label">SELECT WORKING DAYS</p>
+      
+      <%= form_for :employee_weekdays, url: mg_employee_weekdays_path, method: :post do |f| %>
+        <div class="button-group">
+          <% weekdays = [
+            { value: 0, label: 'Sun' },
+            { value: 1, label: 'Mon' },
+            { value: 2, label: 'Tue' },
+            { value: 3, label: 'Wed' },
+            { value: 4, label: 'Thu' },
+            { value: 5, label: 'Fri' },
+            { value: 6, label: 'Sat' }
+          ] %>
+          
+          <% weekdays.each do |day| %>
+            <%= hidden_field_tag "weekdays[]", day[:value], 
+                id: "weekday_#{day[:value]}", 
+                class: "weekday-input",
+                disabled: !@weekdaychecked.include?(day[:value]) %>
+            
+            <button type="button"
+                    data-value="<%= day[:value] %>"
+                    class="weekday-btn <%= 'active' if @weekdaychecked.include?(day[:value]) %>"
+                    onclick="toggleDay(this)">
+              <%= day[:label] %>
+            </button>
+          <% end %>
+        </div>
+
+        <button type="submit" class="save-btn" id="weekdaySavebtn">
+          SAVE
+     
+        </button>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.card-content {
+  margin-bottom: 1rem;
+}
+
+.selection-label {
+  font-size: 0.875rem;
+  color: #718096;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.weekday-btn {
+  transition: all 0.2s ease-in-out;
+  min-width: 70px;
+  font-size: 14px;
+  background-color: #60c916;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+}
+
+.weekday-btn:hover {
+  background-color: #2c5282;
+}
+
+.weekday-btn.active {
+  background-color: white !important;
+  color: #4a5568 !important;
+  border: 1px solid #e2e8f0;
+}
+
+.save-btn {
+  transition: all 0.2s ease-in-out;
+  min-width: 70px;
+  font-size: 14px;
+  background-color:  #3182ce;
+  color: white;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.save-btn:hover {
+  background-color: #f7fafc;
+  color: #4a5568;
+}
+
+
+</style>
+
+<script>
+  function toggleDay(button) {
+    const value = button.dataset.value;
+    const input = document.getElementById(`weekday_${value}`);
+    
+    // Toggle button appearance
+    button.classList.toggle('active');
+    
+    // Toggle hidden input
+    input.disabled = !input.disabled;
+  }
+
+  // Initialize any pre-selected days
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.weekday-btn');
+    buttons.forEach(button => {
+      const value = button.dataset.value;
+      const input = document.getElementById(`weekday_${value}`);
+      if (!input.disabled) {
+        button.classList.add('active');
+      }
+    });
+  });
+
+  $(document).ready(function () {
+    focusCurrentTab("manageEmployeeWeekdaysAID","createEmployeeWeekdaysLiID");
+    focusMasterSettings();
+  });
+</script>
