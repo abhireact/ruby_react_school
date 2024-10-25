@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { getClassSection } from "../../utils/utils.js";
 import {
   Table,
   Button,
@@ -16,11 +17,10 @@ const validationSchema = Yup.object().shape({
   exam_type_name: Yup.string().required("Exam type name is required"),
   description: Yup.string().required("Description is required"),
   mg_time_table_id: Yup.string().required("Academic Year is required"),
-
 });
 
 const ExamType = ({ userData }) => {
-  console.log(userData, "ruby controller data");
+  console.log(getClassSection(153), "calling utilfunction");
   const [examTypes, setExamTypes] = useState(userData.examtype_data || []);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -30,8 +30,7 @@ const ExamType = ({ userData }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingExamType, setEditingExamType] = useState(null);
 
-  const [academicYearData, setAcademicYearData] = useState(userData.academicYearsData || [])
-
+  const [academicYearData, setAcademicYearData] = useState(userData.academicYearsData || []);
 
   const filteredExamTypes = useMemo(() => {
     return examTypes.filter((examType) =>
@@ -55,10 +54,7 @@ const ExamType = ({ userData }) => {
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = filteredExamTypes.slice(
-    indexOfFirstEntry,
-    indexOfLastEntry
-  );
+  const currentEntries = filteredExamTypes.slice(indexOfFirstEntry, indexOfLastEntry);
 
   const totalPages = Math.ceil(filteredExamTypes.length / entriesPerPage);
 
@@ -73,9 +69,7 @@ const ExamType = ({ userData }) => {
     const cleanedData = formattedData.filter((item) => item !== null);
 
     // Rest of the code remains the same
-    const token = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
     fetch("/cbsc_examinations/create", {
       method: "POST",
@@ -89,7 +83,7 @@ const ExamType = ({ userData }) => {
           description: values.description,
         },
         selected_class: cleanedData,
-        mg_time_table_id: values.mg_time_table_id
+        mg_time_table_id: values.mg_time_table_id,
       }),
     })
       .then((response) => response.json())
@@ -103,10 +97,8 @@ const ExamType = ({ userData }) => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this exam type?")) {
-      const csrfToken = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
-  
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
       axios
         .delete(`/cbsc_examinations/${id}`, {
           headers: {
@@ -114,11 +106,9 @@ const ExamType = ({ userData }) => {
           },
         })
         .then((response) => {
-          if (response.data.status === 'success') {
+          if (response.data.status === "success") {
             // Remove the deleted item from the state
-            setExamTypes(prevExamTypes => 
-              prevExamTypes.filter(examType => examType.id !== id)
-            );
+            setExamTypes((prevExamTypes) => prevExamTypes.filter((examType) => examType.id !== id));
             // Optional: Show success message
             alert(response.data.message);
           } else {
@@ -137,44 +127,42 @@ const ExamType = ({ userData }) => {
   const handleEditClick = (examType) => {
     // Set the academic year first
     setSelectedAcademicYear(examType.mg_time_table_id.toString());
-    
+
     // Find all exam associations for this exam type
     const examAssociations = userData.exam_associationData.filter(
-      association => association.mg_cbsc_exam_type_id === examType.id
+      (association) => association.mg_cbsc_exam_type_id === examType.id
     );
-    
+
     // Get the class-section IDs from the associations
-    const associatedClassSections = examAssociations.map(association => {
+    const associatedClassSections = examAssociations.map((association) => {
       return `${association.mg_course_id}-${association.mg_batch_id}`;
     });
-    
+
     // Set the pre-selected classes
     setSelectedClass(associatedClassSections);
-    
+
     // Set the exam type being edited
     setEditingExamType(examType);
-    
+
     // Show the edit form
     setShowEditForm(true);
   };
   const handleEditSubmit = (values, { setSubmitting }) => {
     // Get currently selected classes
     const currentlySelectedClasses = new Set(selectedClass);
-    
+
     // Find previously selected classes
     const examAssociations = userData.exam_associationData.filter(
-      association => association.mg_cbsc_exam_type_id === editingExamType.id
+      (association) => association.mg_cbsc_exam_type_id === editingExamType.id
     );
-    
+
     // Get classes that need to be deleted
     const deletedClasses = examAssociations
-      .map(association => `${association.mg_course_id}-${association.mg_batch_id}`)
-      .filter(classId => !currentlySelectedClasses.has(classId));
-  
-    const token = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
-  
+      .map((association) => `${association.mg_course_id}-${association.mg_batch_id}`)
+      .filter((classId) => !currentlySelectedClasses.has(classId));
+
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
     fetch(`/cbsc_examinations/${editingExamType.id}`, {
       method: "PATCH",
       headers: {
@@ -185,26 +173,26 @@ const ExamType = ({ userData }) => {
         mg_cbsc_exam_type: {
           exam_type_name: values.exam_type_name,
           description: values.description,
-          mg_time_table_id: values.mg_time_table_id
+          mg_time_table_id: values.mg_time_table_id,
         },
         selected_class: Array.from(currentlySelectedClasses),
-        delete_class: deletedClasses
+        delete_class: deletedClasses,
       }),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      setShowEditForm(false);
-     // window.location.reload();
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Failed to update exam type. Please try again.");
-    })
-    .finally(() => {
-      setSubmitting(false);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        setShowEditForm(false);
+        // window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Failed to update exam type. Please try again.");
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
   const [selectedAcademicYear, setSelectedAcademicYear] = useState("");
   const [filteredClassSections, setFilteredClassSections] = useState([]);
@@ -316,8 +304,8 @@ const ExamType = ({ userData }) => {
           <div className="d-flex justify-content-between align-items-center px-3 mt-3">
             <span>
               Showing {indexOfFirstEntry + 1} to{" "}
-              {Math.min(indexOfLastEntry, filteredExamTypes.length)} of{" "}
-              {filteredExamTypes.length} entries
+              {Math.min(indexOfLastEntry, filteredExamTypes.length)} of {filteredExamTypes.length}{" "}
+              entries
             </span>
             <Pagination>
               <Pagination.Prev
@@ -356,7 +344,6 @@ const ExamType = ({ userData }) => {
               exam_type_name: "",
               description: "",
               mg_time_table_id: "",
-
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
@@ -370,8 +357,9 @@ const ExamType = ({ userData }) => {
                       <Field
                         as="select"
                         name="mg_time_table_id"
-                        className={`form-control ${touched.mg_time_table_id && errors.mg_time_table_id ? "is-invalid" : ""
-                          }`}
+                        className={`form-control ${
+                          touched.mg_time_table_id && errors.mg_time_table_id ? "is-invalid" : ""
+                        }`}
                         onChange={(e) => {
                           handleAcademicYearChange(e);
                           // Make sure to trigger Formik's onChange as well
@@ -394,16 +382,14 @@ const ExamType = ({ userData }) => {
                     </div>
                   </div>
 
-
                   <div className="col-md-6">
                     <label>Exam Type Name</label>
                     <div className="input-group input-group-outline my-1">
                       <Field
                         name="exam_type_name"
-                        className={`form-control ${touched.exam_type_name && errors.exam_type_name
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          touched.exam_type_name && errors.exam_type_name ? "is-invalid" : ""
+                        }`}
                       />
                       <ErrorMessage
                         name="exam_type_name"
@@ -420,10 +406,9 @@ const ExamType = ({ userData }) => {
                       <Field
                         name="description"
                         as="textarea"
-                        className={`form-control ${touched.description && errors.description
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          touched.description && errors.description ? "is-invalid" : ""
+                        }`}
                       />
                       <ErrorMessage
                         name="description"
@@ -465,11 +450,7 @@ const ExamType = ({ userData }) => {
                 )}
                 <div className="row">
                   <div className="col-md-12 d-flex justify-content-end">
-                    <button
-                      type="submit"
-                      className="btn btn-info my-4"
-                      disabled={isSubmitting}
-                    >
+                    <button type="submit" className="btn btn-info my-4" disabled={isSubmitting}>
                       {isSubmitting ? "Submiting..." : "Submit"}
                     </button>
                   </div>
@@ -489,128 +470,124 @@ const ExamType = ({ userData }) => {
           <Offcanvas.Title>Edit Exam Type</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-        {editingExamType && (
-  <Formik
-    initialValues={{
-      exam_type_name: editingExamType.exam_type_name,
-      description: editingExamType.description,
-      mg_time_table_id: editingExamType.mg_time_table_id,
-    }}
-    validationSchema={validationSchema}
-    onSubmit={handleEditSubmit}
-  >
-    {({ errors, touched, isSubmitting, setFieldValue }) => (
-      <Form>
-        <div className="row">
-          <div className="col-md-6">
-            <label>Academic Year</label>
-            <div className="input-group input-group-outline my-1">
-              <Field
-                as="select"
-                name="mg_time_table_id"
-                className={`form-control ${
-                  touched.mg_time_table_id && errors.mg_time_table_id ? "is-invalid" : ""
-                }`}
-                onChange={(e) => {
-                  handleAcademicYearChange(e);
-                  setFieldValue("mg_time_table_id", e.target.value);
-                }}
-              >
-                <option value="">Select Academic Year</option>
-                {academicYearData.map((year) => (
-                  <option key={year.id} value={year.id}>
-                    {year.name}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage
-                name="mg_time_table_id"
-                component="div"
-                className="invalid-feedback"
-              />
-            </div>
-          </div>
-          <div className="col-md-6">
-            <label>Exam Type Name</label>
-            <div className="input-group input-group-outline my-1">
-              <Field
-                name="exam_type_name"
-                className={`form-control ${
-                  touched.exam_type_name && errors.exam_type_name ? "is-invalid" : ""
-                }`}
-              />
-              <ErrorMessage
-                name="exam_type_name"
-                component="div"
-                className="invalid-feedback"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-6">
-            <label>Description</label>
-            <div className="input-group input-group-outline my-1">
-              <Field
-                name="description"
-                as="textarea"
-                className={`form-control ${
-                  touched.description && errors.description ? "is-invalid" : ""
-                }`}
-              />
-              <ErrorMessage
-                name="description"
-                component="div"
-                className="invalid-feedback"
-              />
-            </div>
-          </div>
-        </div>
-        {selectedAcademicYear && (
-          <div className="row">
-            <h3>Select Classes and Sections</h3>
-            <div
-              style={{
-                maxHeight: "300px",
-                overflowY: "scroll",
-                border: "1px solid #ccc",
-                padding: "10px",
+          {editingExamType && (
+            <Formik
+              initialValues={{
+                exam_type_name: editingExamType.exam_type_name,
+                description: editingExamType.description,
+                mg_time_table_id: editingExamType.mg_time_table_id,
               }}
+              validationSchema={validationSchema}
+              onSubmit={handleEditSubmit}
             >
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {filteredClassSections.map(([name, id], index) => (
-                  <div key={index} style={{ flex: "0 0 48%" }}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        value={id}
-                        onChange={handleSelectChange}
-                        checked={selectedClass.includes(id)}
-                      />
-                      &nbsp; &nbsp;
-                      {name}
-                    </label>
+              {({ errors, touched, isSubmitting, setFieldValue }) => (
+                <Form>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label>Academic Year</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          as="select"
+                          name="mg_time_table_id"
+                          className={`form-control ${
+                            touched.mg_time_table_id && errors.mg_time_table_id ? "is-invalid" : ""
+                          }`}
+                          onChange={(e) => {
+                            handleAcademicYearChange(e);
+                            setFieldValue("mg_time_table_id", e.target.value);
+                          }}
+                        >
+                          <option value="">Select Academic Year</option>
+                          {academicYearData.map((year) => (
+                            <option key={year.id} value={year.id}>
+                              {year.name}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="mg_time_table_id"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <label>Exam Type Name</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          name="exam_type_name"
+                          className={`form-control ${
+                            touched.exam_type_name && errors.exam_type_name ? "is-invalid" : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="exam_type_name"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="row">
-          <div className="col-md-12 d-flex justify-content-end">
-            <button
-              type="submit"
-              className="btn btn-info my-4"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Updating..." : "Update Exam Type"}
-            </button>
-          </div>
-        </div>
-      </Form>
-    )}
-  </Formik>
-)}
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label>Description</label>
+                      <div className="input-group input-group-outline my-1">
+                        <Field
+                          name="description"
+                          as="textarea"
+                          className={`form-control ${
+                            touched.description && errors.description ? "is-invalid" : ""
+                          }`}
+                        />
+                        <ErrorMessage
+                          name="description"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  {selectedAcademicYear && (
+                    <div className="row">
+                      <h3>Select Classes and Sections</h3>
+                      <div
+                        style={{
+                          maxHeight: "300px",
+                          overflowY: "scroll",
+                          border: "1px solid #ccc",
+                          padding: "10px",
+                        }}
+                      >
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                          {filteredClassSections.map(([name, id], index) => (
+                            <div key={index} style={{ flex: "0 0 48%" }}>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  value={id}
+                                  onChange={handleSelectChange}
+                                  checked={selectedClass.includes(id)}
+                                />
+                                &nbsp; &nbsp;
+                                {name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="row">
+                    <div className="col-md-12 d-flex justify-content-end">
+                      <button type="submit" className="btn btn-info my-4" disabled={isSubmitting}>
+                        {isSubmitting ? "Updating..." : "Update Exam Type"}
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          )}
         </Offcanvas.Body>
       </Offcanvas>
     </div>

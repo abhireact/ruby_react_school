@@ -19,15 +19,15 @@ class WingsController < ApplicationController
 
   # POST /wings
   def create
-        @wings = MgWing.new(wing_params)
-        @wings.mg_school_id = session[:current_user_school_id]
-        @wings.is_deleted= 0
-        @wings.created_by= session[:user_id]
-        @wings.updated_by= session[:user_id]
-        if @wings.save
-          render json: { message: "Academic year Created"}, status: :created
-        end
+      @wings = MgWing.new(wing_params)
+      @wings.mg_school_id = session[:current_user_school_id]
+      @wings.is_deleted= 0
+      @wings.created_by= session[:user_id]
+      @wings.updated_by= session[:user_id]
+      if @wings.save
+        render json: { message: "Academic year Created"}, status: :created
       end
+  end
 
      # PATCH/PUT /wings/:id
         def update

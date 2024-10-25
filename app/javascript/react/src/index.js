@@ -14,11 +14,11 @@ import Dashboard from "./components/Dashboard/index";
 import AddmissionDates from "./components/Addmission/dates";
 import ManageAdmissionSettings from "./components/Addmission/dates/manage";
 import ExamType from "./components/Examination/ExamType";
-import SectionIndex from "./components/Section/SectionIndex";
 
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
 import BatchSubjectManagement from "./components/subjects/batch";
+import SubjectsManagement from "./components/subjects";
 import Department from "./components/EmployeeDepartment";
 import Profile from "./components/EmployeeProfile"
 import WeekDayIndex from "./components/Weekdays"
@@ -40,6 +40,8 @@ const componentMapping = {
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
+  SubjectsIndex: SubjectsManagement,
+  GreetingMessageIndex: GreetingMessageManagement,
   SectionIndex:SectionIndex,
   DepartmentIndex:Department,
   ProfileIndex:Profile,
