@@ -36,8 +36,7 @@ const componentMapping = {
   EmpSybIndex: EmpSybIndex,
   BatchSubjectManagement: BatchSubjectManagement,
   SubjectsIndex: SubjectsManagement,
-  SectionIndex:SectionIndex,
-  GreetingMessageIndex:GreetingMessageManagement
+  GreetingMessageIndex: GreetingMessageManagement,
 };
 
 // Function to render a component
