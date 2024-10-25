@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"; // Add useEffect import
 import AnimatedChart from "./animatedChat";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Button } from "@mui/material";
 const Dashboard = ({ userData }) => {
   const { academicYear, classData, sectionData, wingsData } = useSelector((state) => ({
     academicYear: state.academicYear,
@@ -28,6 +28,9 @@ const Dashboard = ({ userData }) => {
   }, [redux_data, dispatch]);
   return (
     <>
+      <Button variant="contained" color="primary" onClick={() => (window.location.href = "/wings")}>
+        Submit and Navigate
+      </Button>
       <AnimatedChart />
     </>
   );

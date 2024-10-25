@@ -10,7 +10,6 @@ class EmployeesController < ApplicationController
 def create
  
     @employee = MgEmployee.new(employee_params)
-     puts(@employee,"lllllllllllllllllllllllllllllll")
     if @employee.save
       render json: @employee, status: :created
     else
