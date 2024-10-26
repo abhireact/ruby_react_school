@@ -14,17 +14,22 @@ import Dashboard from "./components/Dashboard/index";
 import AddmissionDates from "./components/Addmission/dates";
 import ManageAdmissionSettings from "./components/Addmission/dates/manage";
 import ExamType from "./components/Examination/ExamType";
-
+import SectionIndex from "./components/Section/SectionIndex";
 import EmpListManagement from "./components/emp_subjects/list";
 import EmpSybIndex from "./components/emp_subjects";
-import BatchSubjectManagement from "./components/subjects/batch";
-import SubjectsManagement from "./components/subjects";
-import Department from "./components/EmployeeDepartment";
-import Profile from "./components/EmployeeProfile"
-import WeekDayIndex from "./components/Weekdays"
 import GreetingMessageManagement from "./components/school/greetingmessage";
 import SubjectArchiveManager from "./components/subject_archive";
 import ListManagement from "./components/subject_archive/list";
+import SubjectsManagement from "./components/subjects";
+import CasteManagement from "./components/caste";
+import CategoryManagement from "./components/category";
+import StudentHobbyManagement from "./components/student_hobby";
+import HouseManagement from "./components/house";
+import SportsManagement from "./components/sports";
+import ExtraCurrIndex from "./components/extra_curricular";
+import StudentCategoryIndex from "./components/student_category";
+import BatchSubjectsIndex from "./components/batch_subject";
+import SelectSubject from "./components/batch_subject/create";
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -39,14 +44,20 @@ const componentMapping = {
   ExamType: ExamType,
   EmpListManagement: EmpListManagement,
   EmpSybIndex: EmpSybIndex,
-  BatchSubjectManagement: BatchSubjectManagement,
-  SubjectsIndex: SubjectsManagement,
-DepartmentIndex:Department,
-  ProfileIndex:Profile,
-  WeekDayIndex:WeekDayIndex,
-  GreetingMessageIndex:GreetingMessageManagement,
+  SectionIndex: SectionIndex,
+  GreetingMessageIndex: GreetingMessageManagement,
   SubjectArchiveIndex: SubjectArchiveManager,
   ListManagement: ListManagement,
+  SubjectsIndex: SubjectsManagement,
+  CasteIndex: CasteManagement,
+  CategoryIndex: CategoryManagement,
+  StudentHobbyIndex: StudentHobbyManagement,
+  HouseIndex: HouseManagement,
+  SportsIndex: SportsManagement,
+  ExtraCurrIndex: ExtraCurrIndex,
+  StudentCategoryIndex: StudentCategoryIndex,
+  BatchSubjectsIndex: BatchSubjectsIndex,
+  SelectSubject: SelectSubject,
 };
 
 // Function to render a component

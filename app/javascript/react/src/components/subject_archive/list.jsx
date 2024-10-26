@@ -2,12 +2,14 @@ import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../Datatable";
 import { Button } from "react-bootstrap";
-import { Edit, Archive } from "lucide-react";
+import { Edit, ArchiveRestore, Archive } from "lucide-react";
+import Create from "./index";
 
 const ListManagement = () => {
   const [items, setItems] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreate, setIsCreate] = useState(false); // Initialize with false to show the list first
 
   const fetchItems = useCallback(async () => {
     setIsLoading(true);
@@ -34,8 +36,10 @@ const ListManagement = () => {
   }, []);
 
   useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    if (!isCreate) {
+      fetchItems();
+    }
+  }, [fetchItems, isCreate]);
 
   const handleUnarchive = async (id) => {
     try {
@@ -81,37 +85,47 @@ const ListManagement = () => {
           className="text-secondary p-0"
           onClick={() => handleUnarchive(item.id)}
         >
-          <Edit size={18} />
+          <ArchiveRestore size={18} />
         </Button>
       ),
     },
   ];
 
   return (
-    <div className="p-2">
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Subject Archive Management
-          </h1>
-          <p className="text-gray-600">View and manage archived subjects</p>
+    <>
+      {isCreate ? (
+        <Create onBack={() => setIsCreate(false)} />
+      ) : (
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-12">
+              <div className="card">
+                <div className="p-2">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h4 className="card-title"> Subject Archive Management</h4>
+
+                    <Button
+                      onClick={() => setIsCreate(true)}
+                      className="btn btn-info d-flex align-items-center gap-2"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Archive size={18} />
+                      Create Subject Archive
+                    </Button>
+                  </div>
+                </div>
+
+                <DataTable
+                  columns={columns}
+                  data={items}
+                  isLoading={isLoading}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <a
-          href="/subjects/subject_archive"
-          className="btn btn-primary d-flex align-items-center gap-2"
-          style={{ textDecoration: "none" }}
-        >
-          <Archive size={18} />
-          Create Subject Archive
-        </a>
-      </div>
-
-      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
-
-      <div className="card-body px-0 pb-0">
-        <DataTable columns={columns} data={items} isLoading={isLoading} />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

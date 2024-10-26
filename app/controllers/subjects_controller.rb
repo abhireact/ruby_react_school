@@ -153,7 +153,7 @@ class SubjectsController < ApplicationController
       @current_academic_year_id = current_academic_year
       @current_academic_year_id = params[:mg_time_table_id] if params[:mg_time_table_id]
       courses = MgCourse.where(:mg_time_table_id => @current_academic_year_id, :is_deleted => 0, :mg_school_id => session[:current_user_school_id]).pluck(:id)
-      @batches = MgBatch.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id], :mg_course_id => courses).paginate(page: params[:page], per_page: 10)
+      @batches = MgBatch.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id], :mg_course_id => courses)
     end
   
     def emp_subject_asso
@@ -163,8 +163,54 @@ class SubjectsController < ApplicationController
   
     def select_subject
       @batches = MgBatch.find(params[:id])
-      @subjects = MgSubject.where(:is_deleted => 0, :mg_school_id => session[:current_user_school_id], :mg_course_id => @batches.mg_course_id)
-      @selected_subjects = MgBatchSubject.where(:mg_batch_id => "#{@batches.id}", :is_deleted => 0)
+      @subjects = MgSubject.where(
+        is_deleted: 0,
+        mg_school_id: session[:current_user_school_id],
+        mg_course_id: @batches.mg_course_id
+      )
+    
+      @selected_subjects = MgBatchSubject.where(
+        mg_batch_id: @batches.id,
+        is_deleted: 0
+      )
+    
+      # Get all teaching staff employees
+      employee_category = MgEmployeeCategory.find_by(category_name: "Teaching Staff", is_deleted: 0)
+      @employees = MgEmployee.where(
+        is_deleted: 0,
+        mg_employee_category_id: employee_category.id,
+        mg_school_id: session[:current_user_school_id],
+        is_archive: 0
+      )
+    
+      # Format the response data
+      response_data = {
+        subjects: @subjects.map { |subject|
+          {
+            id: subject.id,
+            subject_name: subject.subject_name,
+            subject_code: subject.subject_code
+          }
+        },
+        selectedSubjects: @selected_subjects.map { |selected|
+          {
+            id: selected.mg_subject_id,
+            employeeId: selected.mg_employee_id
+          }
+        },
+        employees: @employees.map { |employee|
+          {
+            id: employee.id,
+            first_name: employee.first_name,
+            last_name: employee.last_name || ''
+          }
+        }
+      }
+    
+      respond_to do |format|
+        format.html
+        format.json { render json: response_data }
+      end
     end
 
 
@@ -312,7 +358,7 @@ class SubjectsController < ApplicationController
         end
       end
   
-      redirect_to subjects_batch_subject_asso_path
+      # redirect_to subjects_batch_subject_asso_path
     end
   
     # Assign subjects to an employee

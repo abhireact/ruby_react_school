@@ -6,11 +6,11 @@
 // const Wing = (props) => {
 //   const user = JSON.parse(props.userData);
 //   //   const dispatch = useDispatch();
-  // const { academicYear, classData, sectionData } = useSelector((state) => ({
-  //   academicYear: state.academicYear,
-  //   classData: state.classData,
-  //   sectionData: state.sectionData,
-  // }));
+// const { academicYear, classData, sectionData } = useSelector((state) => ({
+//   academicYear: state.academicYear,
+//   classData: state.classData,
+//   sectionData: state.sectionData,
+// }));
 
 //   // Now you can use academicYear, classData, and sectionData
 //   console.log(academicYear,"academic"); // Logs academic year data
@@ -96,11 +96,11 @@
 //   //
 //   //   };
 
-    // useEffect(() => {
-    //   if (user.academic_year) {
-    //     dispatch({ type: "SET_ACADEMIC_YEAR", payload: user.academic_year });
-    //   }
-    // }, [dispatch]);
+// useEffect(() => {
+//   if (user.academic_year) {
+//     dispatch({ type: "SET_ACADEMIC_YEAR", payload: user.academic_year });
+//   }
+// }, [dispatch]);
 //     console.log(academicYear, "academicafeterupdate");
 //   return (
 //     <div className="card mb-4">
@@ -146,6 +146,10 @@ const Wing = ({ userData }) => {
     classData: state.classData,
     sectionData: state.sectionData,
   }));
+
+  console.log("classData", classData);
+  console.log("academicYear", academicYear);
+  console.log("sectionData", sectionData);
 
   const user = typeof userData === "string" ? JSON.parse(userData) : userData;
 
