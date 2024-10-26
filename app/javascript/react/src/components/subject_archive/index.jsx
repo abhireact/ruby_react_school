@@ -4,7 +4,9 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-const SubjectArchiveManager = () => {
+import CustomAutocomplete from "../Autocomplete";
+
+const SubjectArchiveManager = ({ onBack }) => {
   const [items, setItems] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
@@ -19,7 +21,12 @@ const SubjectArchiveManager = () => {
 
   const [selectedAcademicYear, setSelectedAcademicYear] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
+
+  // Convert academicYear array to options format for autocomplete
+  const academicYearOptions = academicYear.map((year) => ({
+    value: year.id,
+    label: year.name,
+  }));
 
   const fetchCoursesAndSections = useCallback(async () => {
     if (!selectedAcademicYear) return;
@@ -40,12 +47,11 @@ const SubjectArchiveManager = () => {
         },
       });
 
-      // Update class data based on response
       if (response.data.courses_batches) {
         setClasses(
           response.data.courses_batches.map((batch) => ({
-            id: batch[1], // Course ID
-            name: batch[0], // Course name
+            value: batch[1],
+            label: batch[0],
           }))
         );
       } else {
@@ -80,14 +86,13 @@ const SubjectArchiveManager = () => {
         },
       });
 
-      // Only extract arrays that actually contain subjects
       if (Array.isArray(response.data)) {
         const flattenedSubjects = response.data
-          .filter((item) => Array.isArray(item) && item.length > 0) // Filter out empty arrays
-          .map((item) => item[0]) // Extract subject info from each array
+          .filter((item) => Array.isArray(item) && item.length > 0)
+          .map((item) => item[0])
           .map((subject) => ({
-            name: subject[0], // Subject name
-            id: subject[1], // Subject ID
+            name: subject[0],
+            id: subject[1],
           }));
 
         setSubjects(flattenedSubjects);
@@ -118,12 +123,10 @@ const SubjectArchiveManager = () => {
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
 
-      // Ensure you're sending the correct request structure
       await axios.post(
         "/subjects/subject_archive_create",
         {
           selectedemployees: values.selectedSubjects,
-          // api_request: true, // Ensure this is included if backend expects it in body
         },
         {
           headers: {
@@ -151,9 +154,9 @@ const SubjectArchiveManager = () => {
       <div className="card">
         <div className="card-header pb-0">
           <h5 className="mb-0">Subject Archive Manager</h5>
-          <p className="text-sm mb-0">
+          {/* <p className="text-sm mb-0">
             Archive subjects by academic year and class section
-          </p>
+          </p> */}
         </div>
         <div className="card-body px-0 pb-0">
           {errorMessage && (
@@ -165,6 +168,8 @@ const SubjectArchiveManager = () => {
           <Formik
             initialValues={{
               selectedSubjects: [],
+              academicYear: "",
+              class: "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleFormSubmit}
@@ -173,48 +178,46 @@ const SubjectArchiveManager = () => {
               <Form className="mx-4">
                 <div className="row mb-4">
                   <div className="col-md-6">
-                    <div className="input-group input-group-outline">
-                      <label className="form-label">Academic Year</label>
-                      <select
-                        className="form-control"
-                        value={selectedAcademicYear}
-                        onChange={(e) => {
-                          setSelectedAcademicYear(e.target.value);
-                          setSelectedClass("");
-                          setSections([]);
-                          setSubjects([]); // Clear subjects when academic year changes
-                        }}
-                      >
-                        <option value="">Select Academic Year</option>
-                        {academicYear.map((year) => (
-                          <option key={year.id} value={year.id}>
-                            {year.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <label className="ms-0">Academic Year</label>
+                    <CustomAutocomplete
+                      field={{
+                        name: "academicYear",
+                        value: selectedAcademicYear,
+                        onChange: () => {},
+                      }}
+                      form={{
+                        setFieldValue: (name, value) => {
+                          setSelectedAcademicYear(value);
+                          setFieldValue(name, value);
+                        },
+                      }}
+                      options={academicYearOptions}
+                      label="Select Academic Year"
+                      width="100%"
+                      showClearButton={true}
+                    />
                   </div>
 
                   <div className="col-md-6">
-                    <div className="input-group input-group-outline">
-                      <label className="form-label">Class</label>
-                      <select
-                        className="form-control"
-                        value={selectedClass}
-                        onChange={(e) => {
-                          setSelectedClass(e.target.value);
-                          setSelectedSection("");
-                          setSubjects([]); // Clear subjects when class changes
-                        }}
-                      >
-                        <option value="">Select Class</option>
-                        {classes.map((cls) => (
-                          <option key={cls.id} value={cls.id}>
-                            {cls.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <label className="ms-0">Class</label>
+                    <CustomAutocomplete
+                      field={{
+                        name: "class",
+                        value: selectedClass,
+                        onChange: () => {},
+                      }}
+                      form={{
+                        setFieldValue: (name, value) => {
+                          setSelectedClass(value);
+                          setFieldValue(name, value);
+                        },
+                      }}
+                      options={classes}
+                      label="Select Class"
+                      width="100%"
+                      showClearButton={true}
+                      disabled={!selectedAcademicYear}
+                    />
                   </div>
                 </div>
 
@@ -232,7 +235,7 @@ const SubjectArchiveManager = () => {
                               onChange={(e) => {
                                 const allItemIds = subjects.map(
                                   (subject) => subject.id
-                                ); // Map to get all subject IDs
+                                );
                                 setFieldValue(
                                   "selectedSubjects",
                                   e.target.checked ? allItemIds : []
@@ -272,25 +275,34 @@ const SubjectArchiveManager = () => {
                                 className="form-check-label"
                                 htmlFor={`subject-${subject.id}`}
                               >
-                                {subject.name} {/* Display subject name */}
+                                {subject.name}
                               </label>
                             </div>
                           ))}
-                          {errors.selectedSubjects &&
-                            touched.selectedSubjects && (
-                              <div className="text-danger">
-                                {errors.selectedSubjects}
-                              </div>
-                            )}
                         </div>
                       </div>
                     </div>
                   )
                 )}
 
-                <div className="text-center">
-                  <Button type="submit" variant="primary">
-                    Archive Subjects
+                {errors.selectedSubjects && touched.selectedSubjects && (
+                  <div className="text-danger">{errors.selectedSubjects}</div>
+                )}
+
+                <div className="text-center d-flex justify-content-between gap-3">
+                  <Button
+                    variant="secondary"
+                    onClick={onBack}
+                    className="btn btn-dark mt-2 mb-2"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="btn btn-info mt-2 mb-2"
+                    disabled={loading}
+                  >
+                    Archive Selected Subjects
                   </Button>
                 </div>
               </Form>

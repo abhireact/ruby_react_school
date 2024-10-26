@@ -66,20 +66,16 @@ const SubjectsManagement = ({ userData }) => {
     <div className="container-fluid py-4">
       <div className="row">
         <div className="col-12">
-          <div className="card">
-            <div className="card-body px-0 pb-0">
-              <GenericCRUD
-                title="Subjects Management"
-                description="Manage Subjects"
-                initialData={userData}
-                columns={columns}
-                apiEndpoint="subjects"
-                validationSchema={validationSchema}
-                formFields={formFields}
-                needinbuilticon={true}
-              />
-            </div>
-          </div>
+            <GenericCRUD
+              title="Subjects Management"
+              description="Manage Subjects"
+              initialData={userData}
+              columns={columns}
+              apiEndpoint="subjects"
+              validationSchema={validationSchema}
+              formFields={formFields}
+              needinbuilticon={true}
+            />
         </div>
       </div>
     </div>

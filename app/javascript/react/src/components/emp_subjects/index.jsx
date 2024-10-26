@@ -95,23 +95,19 @@ const EmpSybIndex = () => {
       <div className="row">
         <div className="col-12">
           <div className="card">
-            <div className="card-header">
+            <div className="p-2">
               <h4 className="card-title">Employee Directory</h4>
               <p className="card-description">View employee information</p>
             </div>
-            <div className="card-body">
-              {errorMessage && (
-                <div className="alert alert-danger" role="alert">
-                  {errorMessage}
-                </div>
-              )}
-              <DataTable
-                columns={columns}
-                data={items}
-                isLoading={isLoading}
-                emptyMessage="No employees found"
-              />
-            </div>
+            {/* <div className="card-body"> */}
+
+            <DataTable
+              columns={columns}
+              data={items}
+              isLoading={isLoading}
+              emptyMessage="No employees found"
+            />
+            {/* </div> */}
           </div>
         </div>
       </div>
