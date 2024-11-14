@@ -1,0 +1,75 @@
+<!-- breadcrumbs Work -->
+<% navigation_add 'Student Custom Fields', '/students/custom_new' %>
+<% navigation_add 'Student New Custom Field', '/students/custom_index' %>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+    <h3 class="form-section-heading ">
+      <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= t('student_new_custom_field') %></b>
+    </h3>
+  </div>
+</div>
+<%= form_for :demo,  :url=>{:controller=> "students", :action=> "custom_create"},:html => { :id => "studentCustomFieldsFormID" ,:multipart => true }  do |f| %>
+  
+  <div class="row mc-padding-20 form-section-box">
+
+  <%= f.hidden_field :mg_school_id, :value =>session[:current_user_school_id]%>
+   
+  <%= f.hidden_field :model_name, :value => "student"%>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <label for="mg-label mg-leave-width"><%=t('fieldname')%><span class="required-field "> *</span></label><br>
+    <%= f.text_field :name ,:class=>"form-control mg-select-btn"%>
+  </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <label for="mg-label mg-leave-width"><%=t('fieldtype')%><span class="required-field "> *</span></label><br>
+    <%= f.select :data_type, options_for_select([["Check Box","check_box"], ["Radio Button","radio_button"],["Input Text","input_type"],["Drop Down","drop_down"]]),{:include_blank => 'Select'} ,:class=>"form-control mg-select-btn"%>
+ </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <label for="Default Value"><%=t('Values')%><span class="required-field "> *</span></label><br>
+    <%= f.text_area :text_data ,:class=> "form-control mg-select-btn"%>
+  </div>
+</div>
+<div style="display:none">
+    <p>
+      <label for="is_deleted" class="mg-label"><%=t('status')%></label><br />
+      <label for="is_deleted" class="mg-label-inner-form "><%=t('active')%></label>
+      <%= f.radio_button :is_deleted, false , :checked => true%>
+      <label for="is_deleted" class="mg-label-inner-form"><%=t('inactive')%></label>
+      <%= f.radio_button :is_deleted, true %>
+  </p>
+ </div>
+ <br>
+  <p class="actions">
+    <%#= f.submit t("save"),:class=>"mg-small-form-btn" %>
+    <a onclick="$(this).closest('form').submit()" class="mg-small-form-btn submit mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+    <%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog flat-button cancel-form-dialog margin-left-10"} %>
+  </p>
+<% end %>
+<!-- 
+<span class="mg-cncl-btn-align">
+ <%#= button_to t('cancel'), '/students/custom_new' ,:class=>"mg-small-form-btn"%>  
+ </span>  -->
+
+
+ <%#= button_to t('cancel'), '/students/custom_new' %>   
+
+<%#= render partial: 'student_left_close' %>
+<script >
+
+ $(document).ready(function () {
+  
+    focusCurrentTab("viewStudentCustomFieldAID","viewStudentCustomFieldLiID");
+    focusMasterSettings();
+
+    $("#studentCustomFieldsFormID").validate({
+      rules:{
+        "demo[name]":{required:true},
+        "demo[data_type]":{required:true},
+        "demo[text_data]":{required:true}
+      }
+    });
+
+  });
+</script>

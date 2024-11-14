@@ -1,0 +1,28 @@
+<!-- Sec --> 
+<%hidden_field_tag "user_type",session[:user_type]%>
+<%if session[:user_type]!="front_office_manager"%>
+<%#= render  partial: 'student_left' %>
+<%end%>
+
+<%= render  partial: 'show' %>
+
+<%#= render  partial: 'student_left_close' %>
+
+<script>
+      $(document).ready(function () {
+          var user_type=$("#user_type").val();
+          if(user_type=="front_office_manager"){
+          	focusCurrentTab("directory_searchAID","directory_searchLiID");
+          }
+          else{
+          	focusCurrentTab("viewStudentListAId","viewStudentListLiId");
+          }
+      });
+</script>  
+
+
+
+
+
+
+

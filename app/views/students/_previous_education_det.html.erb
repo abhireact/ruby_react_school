@@ -1,0 +1,148 @@
+<%= fields_for :previous_education do |f| %>
+
+<%= f.hidden_field :is_deleted, :value => 0%> 
+        <%#= f.hidden_field :mg_student_id,:value => @last_studentId %>
+        <%= f.hidden_field :mg_school_id,:value => session[:current_user_school_id] %>
+
+ <div class="form-content">
+          <div class="form-content-inner">
+           
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="student-form-cls mg-inner-table-form">
+              <tbody>
+                <tr>
+                  <td valign="top" class="mg-td-width-one-third">
+                    <label class="mg-label" for="school_name"><%= t('school_name') %></span> 
+                    </label>
+                  </td>
+
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+                   <label class="mg-label" for="course"><%= t('course') %></label>
+                  </td>
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+                    <label class="mg-label" for="year"><%= t('year') %>
+                    </label>
+                  </td>
+                </tr> 
+                <tr>
+                  <td valign="top" class="mg-td-width-one-third">
+                     <%= f.text_field :school_name,:class=>"mg-text-field" %>
+                  </td>
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+                    <%= f.text_field :course,:class=>"mg-text-field" %>
+                  </td>
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+                    <%= f.text_field :year,:class=>"mg-text-field"   %>
+                  </td>
+                </tr>
+<!--                 <tr>
+                  <td colspan="5"> </td>
+                </tr> -->
+              
+               <tr>
+
+                  <td valign="top" class="mg-td-width-one-third">
+                    <label class="mg-label" for="marks_obtained"><%= t('marks_obtained') %>
+                    </label>
+                  </td>
+
+
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+
+                    <label class="mg-label" for="total_marks"><%= t('total_marks') %>
+                    </label>
+                   
+                  </td>
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+                    <label class="mg-label" for="grade"><%= t('gradepercentage') %></label>
+                  </td>
+                </tr>
+                <tr> 
+                  <td valign="top" class="mg-td-width-one-third">
+                      <%= f.text_field :marks_obtained,:class=>"mg-text-field"%>
+                  </td>
+                  <td> </td>
+                  <td valign="top" class="mg-td-width-one-third">
+                    <%= f.text_field :total_marks,:class=>"mg-text-field" %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :grade,:class=>"mg-text-field" %>
+                  </td>
+                </tr>
+
+               
+<tr>
+
+                  <td valign="top" class="mg-td-width-one-third">
+                    <label class="mg-label" for="Is Transfer Certificate produced"><%= t('is_transfer_certificate_produced') %>
+                      <span class="required-field"></span>
+                    </label>
+                  </td>
+                  <td>
+                  </td>
+                  <td class="mg-td-width-one-third">
+                  <div id="uploadfile" class="previous-education-details" style="display: none; width: 220px;">
+                  <label class="mg-label" for="upload_file"><%= t('upload_file') %>
+                 
+                  </div>
+                  </td>
+
+
+                </tr>
+                <tr> 
+                  <td valign="top">
+                  
+                     <%=check_box_tag :is_transfer_certificate_produced
+                               
+                     #,if @previous_education.is_transfer_certificate_produced.nil? then false else true end
+                     %>
+                  </td>
+                  <td></td>
+                  <td class="mg-td-width-one-third">
+                   <div id="uploadfiles" class="previous-education-details" style="display: none; width: 220px;">
+                  <%= file_field_tag 'transferfiles[]'%>
+                  </div>
+                  </td>
+                  <tr>
+                        <td>
+                        <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"TransferCertificate")%>
+                   
+                    <%@document.each_with_index do |user,i|%>
+                    
+                    <li data-index="<%= i %>" class="mg-custom-labels">
+                    <div delete-index="<%= i %>">
+                        <label class="mg-file-clr mg-label-inner-form"><%= user.file_file_name %></label>
+                        
+                       <a title="Delete" class="delete-operation mg-icon-btn" style="cursor: pointer; text-decoration: none; color: #363131; font-size: 0.85em;" id="<%=user.id %>"><i class="fa fa-trash"></i></a>
+                       </div>
+                       </li>
+                   
+                     
+                   <%end%>
+                   </td>
+                   </tr>
+                 
+                </tr>
+
+               
+                  <tr>
+                  <td></td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+<%end%>
+
+<script>
+$("#is_transfer_certificate_produced").change(function(){
+ 
+$(".previous-education-details").toggle();
+});
+</script>

@@ -1,7 +1,6 @@
-<!-- #version 1.1(25/09/18/Mamatha FOR student sort based on admission number and user id)  -->
-<!-- #version 1.2(25/09/18/Mamatha FOR student sort based on roll number)  -->
+<div id="StudentAttendance" data-user="<%= @react_data.to_json %>"></div>
 
-<!--  -->
+
 <% navigation_add '  Student Attendances',employee_student_attendance_path %>
 <%#= render partial: 'dashboards/employee_left' %>
 <%mg_school_id_for_start_date=MgSchool.find_by(:is_deleted=>0, :id=>session[:current_user_school_id])%>
@@ -84,7 +83,6 @@ $(document).on("change", "#date", function(e){
   if($("#employeeReportAttendancesFormID").valid()){
     addClassBatches();
   }
-
 });
 
 $(document).ready(function(){
@@ -122,9 +120,6 @@ function validateFiles(inputFile) {
    $(inputFile).val('');
   };
 }
-
-
-
 $(function () {
     $.validator.addMethod('dateFormat',
     function (value, element) {
@@ -146,11 +141,7 @@ $(function () {
 
     $(".datefield").datepicker({ dateFormat: dateFormatStr, changeYear: true });
 });
-
-
-
    $("#employeeReportAttendancesFormID").validate({
-
         rules: {  
         "date": {dateFormat: true, required: true}
       }

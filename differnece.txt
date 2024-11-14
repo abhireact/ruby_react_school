@@ -1,0 +1,44 @@
+1. Modularization and Helper Module Use
+Old Code:- Each action directly handled rendering JSON responses without a helper, and error handling was minimal.
+
+New Code:- The new controller includes JsonResponseHelper, which provides helper methods for rendering JSON responses and handling errors. The render_json_response helper simplifies response handling, while handle_error provides a standardized way to log and return errors.
+
+
+2. Asynchronous Execution with async_action
+Old Code:- All actions were synchronous, which means the Rails server handled each action sequentially, potentially causing blocking if one action took a long time.
+
+New Code:- The new code introduces async_action to wrap actions in a Concurrent::Promise, making the code asynchronous. This approach helps prevent blocking by executing actions asynchronously, with error handling provided in case of exceptions.
+3. Standardized JSON Response Rendering
+Old Code:- Each action rendered JSON responses directly within the controller, with repeated logic.
+
+New Code:- The new code centralizes JSON response rendering by using the render_json_response method from JsonResponseHelper, which simplifies each action and makes the code more readable.
+
+
+4. Before Action Filter (set_wing)
+Old Code:- Actions like update and destroy manually fetched the wing record, repeating code in multiple actions.
+
+New Code:- The new code introduces before_action :set_wing, a filter that sets the @wing instance variable for update and destroy actions. If the wing is not found, it returns an error response, reducing redundancy and improving error handling.
+
+
+5. Parameter Handling and Strong Parameters
+Old Code:- The wing_params method permitted additional attributes (created_by, updated_by, is_deleted, and mg_school_id) that are better managed within the controller logic.
+
+New Code: The wing_params method has been refined to only permit wing_name and status, with other attributes set explicitly within the controller actions. This approach reduces the risk of unwanted data being passed in and increases code clarity.
+
+
+6. Current School ID and User ID Methods
+Old Code:- Used session[:current_user_school_id] and session[:user_id] directly in each action, making the code harder to read and maintain.
+
+New Code:- current_school_id and current_user_id methods have been introduced to encapsulate these session values, improving readability and making the code more maintainable.
+
+
+7. Error Handling Improvements
+Old Code:- Minimal error handling was present, and failed responses generally didn’t provide much information or logging.
+
+New Code:- The new controller uses handle_error to log error messages and return standardized JSON error responses, ensuring consistent error handling and better debugging information in production.
+
+
+8. Concise Logic in Actions
+Old Code:- Actions contained a lot of logic directly within them, making them harder to read and maintain.
+
+New Code:- With the introduction of helper methods and the before_action filter, the new controller has more concise logic within each action, making it easier to follow and maintain.

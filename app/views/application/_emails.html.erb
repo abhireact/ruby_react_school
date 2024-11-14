@@ -1,0 +1,26 @@
+<!-- Sec --> 
+
+<%= fields_for :email do |eml| %>
+
+  <%= eml.hidden_field :email_type,:value => "home"%>
+   <%= eml.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+  <%= eml.hidden_field :is_deleted, :value => 0 %>
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <%= eml.label t('emailid'),:class=>"mg-label"%><span class="required-field"></span>
+          <%= eml.text_field :mg_email_id ,:class=>"form-control"%>
+        </div >
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <%= eml.label t('notification')%>
+          <br>
+          <%=eml.check_box :notification %>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <%= eml.label t('subscription')%>
+          <br>
+          <%=eml.check_box :subscription %>
+        </div>
+ 
+
+ <% end %>        

@@ -1,0 +1,265 @@
+
+<%
+    @notifi = MgNotification.where(:to_user_id => session[:user_id],:status => false,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id] ).all
+    @noti_size = @notifi.size
+%>
+
+<div id="wrapperContainer">
+  <header id="wrapper" class="header-bg">
+    <div id="logo">
+      <!-- render logo Here -->
+      <%#= render :partial => 'logo' %>
+      <!-- <img src="/assets/open-school-logo.png" class="sms-logo-styling"/> -->
+    <%= image_tag  MgSchool.find(session[:current_user_school_id]).logo.url(:medium, timestamp: false),:class => 'shr-logo-styling-fixed'  %>
+
+
+
+    </div>
+     <label style="left: 11%; color: #ffffff; position: relative; top: 32px;"><%=MgSchool.find(session[:current_user_school_id]).school_name%>
+      </label> 
+
+    <div id="right-content" class="mg-right-header">
+      <div style="float: left;" class="mg-select-school">
+      <%user=MgUser.find(session[:user_id]) %>
+      <%if user.user_type=='superprincipal' %>
+      
+      <style type="text/css">
+       .mg-welcom-msg-align {
+        float: right;
+        position: relative;
+        right: -17.2em;
+        top: -1.3em;
+        }
+      </style>
+        <!-- <label class="mg-label" style="color: #ffffff;">Select School </label> -->
+        <%#@school_list=MgSchool.where(:is_deleted=>0, :id=>MgMultiSchoolAccess.where(:mg_user_id=>session[:user_id], :is_deleted=>0).pluck(:mg_school_id)).pluck(:school_name,:id)%>
+        <%#school_id=session[:current_user_school_id]%>
+          <%#= form_for :principal, url: change_school_path, :html => {
+                                :id => 'mgEmployeeLeaveTypesID', :class => 'mgEmployeeLeaveTypesClass' } do |f| %>
+          <%#=f.select :mg_school_id,options_for_select(@school_list, school_id   ),{},:onchange => 'this.form.submit();' %>
+          <%#end%>
+
+         <% 
+           multi_school_access_obj=MgMultiSchoolAccess.where(:mg_user_id=>session[:user_id], :is_deleted=>0).pluck(:mg_school_id) 
+             school_list=nil
+             if multi_school_access_obj.present?
+                school_list=MgSchool.where(:is_deleted=>0, :id=>multi_school_access_obj).pluck(:school_name,:id)
+             end
+             school_id=session[:current_user_school_id]
+         %>
+
+         <%= form_for :principal, url: change_school_path, :html => {
+                                :id => 'mgEmployeeLeaveTypesID', :class => 'mgEmployeeLeaveTypesClass' } do |f| %>
+
+            <label class="mg-label" style="color: #ffffff; font-size: 1.1em;"><%=t("select_school")%> </label>&nbsp;
+            <%if school_list.present? %>
+              <%=f.select :mg_school_id,options_for_select(school_list, school_id   ),{},:onchange => 'this.form.submit();' ,:class=>"mg-select-dropdown-width" %>
+            <% else %>
+              <%#=f.select :mg_school_id,options_for_select(''),:prompt=> ''%>
+              <select >
+              </select>
+            <%end%>
+
+         <%end%>
+
+      <%end%>
+      </div>
+    	<!-- render Right Content Here-->
+      <%#= render :partial => 'rightContent' %>
+      <div style="float: right;">
+      <span>
+
+        <% user=MgUser.find(session[:user_id])
+  @help_document=MgHelpDocument.where(:mg_school_id=>session[:current_user_school_id],:user_type=>user.user_type,:is_deleted=>0)%>
+        <%if @help_document[@help_document.length-1].present?%>
+
+        <%= link_to_if @help_document[@help_document.length-1].document.url, image_tag("help_icons.png" ,:style=>"width: 40px; height: 40px; position: relative; left: 10px;"), @help_document[@help_document.length-1].document.url ,:class=>"help-doc-style"%>
+        <%else%>
+              
+              <img src="<%=image_url('help_icons.png')%>" style="width: 35px; height: 35px; position: relative; left: 0px; top: -1px; cursor: pointer;" id="imageHelpDocumentId" title="Help Documentation" />
+
+
+        <%end%>
+      </span>
+
+      <span style="margin-right: -17px;"><a class="help-doc-style" href="/notifications/show_notification/"><i class="fa fa-envelope-o" ></i>
+        <span class="badge badge-notification"><%= @noti_size %></span></a>
+      </span>
+      <span><a href="/videos" target="_blank"> <img src="<%=image_url('faq.jpg')%>" style="width: 35px; height: 35px; position: relative; left: 0px; top: -1px; cursor: pointer;" id="" title="FAQ" ></a></span>
+
+      <span data-tip="Logout"><a class="help-doc-style" href="/log_out"><i class="fa fa-power-off"></i></a></span>&nbsp;&nbsp;
+      </div>
+  </div><br>
+
+  <div style="float: right; right: -14.2em; top: 2em; position: relative; ">
+      <%user_data=MgUser.find(session[:user_id])%>
+      <span class="mg-welcom-msg-align" style="color: #ffffff; margin: 20px; font-weight: bold;">Welcome <%=user_data.first_name%> !!!</span>
+  </div>
+
+
+    </div><br/>
+    <div class="blue-strip"></div>
+  </header>
+  <section id="navigation-bar">
+  <%userType=session[:user_type]%>
+  <% if userType == "admin" || userType == "principal" ||  userType == "cloudadmin" || userType == "superprincipal" || userType == "sub_admin" || session[:school_functional_incharge] == "school_users"%>
+      <div class="mg-scroll-header-nav-bar">
+  <%end%>
+    		<!-- render Header Boxes Here -->  
+        <%#= render :partial => 'headerBoxes' %> 
+      </div>
+  </section>
+  <section id="navList_mine">
+  		<!-- render breadCrumbs Here -->
+      <%#= render :partial => 'breadCrumbs' %>
+  </section>
+ </div>
+
+
+<a href="#" class="mg-scrollToTop">
+  <img src="/images/scroll-to-top.png" alt="Scroll To Top" class="mg-scroll-top"/> 
+</a>
+
+  <!-- - END HEADER SECTION - -->
+
+  <style type="text/css">
+
+.mg-msg-logout-icon {
+  margin: 15px 0px 15px 15px;
+}
+
+.mg-select-school {
+  font-size: 0.6em;
+  position: relative;
+  top: 10px;
+}
+
+#right-content{
+  float:right;
+  font-size: 1.5em; 
+  /*height:70px;*/
+  margin: 8px;
+  /* width: 440px; */
+}
+
+.mg-left-content {
+  display: inline-block; 
+  float: left; 
+  width: 450px; }
+
+.mg-form-header {
+  float: left;
+}
+
+.mg-welcom-msg-align {
+  right: 25px;
+  position: relative;
+ }
+
+.mg-scrollToTop{  
+    padding:10px; 
+    text-align:center; 
+    font-weight: bold;
+    color: #444;
+    text-decoration: none;
+    position:fixed;
+    bottom: 2px;
+    right:40px;
+    display:none;
+    /*background: url('../images/scroll-to-top.png') no-repeat;*/
+    z-index: 1;
+  }
+
+  .mg-scrollToTop:hover{
+    text-decoration:none;
+  }
+  
+  .mg-scrollToTop:focus {
+    outline: 0;
+  }
+
+  .mg-scroll-top {
+    width: 35px;
+    height: 35px;
+    font-size: 8px;
+  }
+  
+  .mg-scroll-header-nav-bar {
+    overflow-y: scroll;
+    height: 80px;
+    position: relative;
+    top: 10px;
+    box-shadow: 3px 10px 7px -8px #908a89
+  }
+
+  .shr-logo-styling-fixed {
+    height: 75px;
+    left: 5px;
+    position: relative;
+    top: 6px;
+    width: 100%;
+    height:100%;
+  }
+
+  #logo {
+    width: 150px;
+    height: 100px;
+    float: left;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 10%;
+    height:86%;
+}
+.badge-notification{
+    position: relative;
+    top: -12px;
+    right: 11px;
+    padding: 1px 4px !important;
+}
+
+  </style>
+
+  <script type="text/javascript">
+
+    $(document).ready(function(){
+
+      $( "div.mg-scroll-header-nav-bar" ).scrollTop( 0 );
+      // alert("dddd");
+        // $('.mg-scroll-header-nav-bar').scrollTop(70);
+       // $(".mg-scroll-header-nav-bar").animate({ scrollTop: 70 }, "slow");
+    });
+
+    $("#imageHelpDocumentId").click(function(){
+          alert("Help Documentation is not available.");
+      });
+
+     $(window).scroll(function(){
+      if ($(this).scrollTop() > 100) {
+        $('.mg-scrollToTop').fadeIn();
+      } else {
+        $('.mg-scrollToTop').fadeOut();
+      }
+    });
+    
+   
+    $('.mg-scrollToTop').click(function(){
+      $('html, body').animate({scrollTop : 0},800);
+      return false;
+    });
+
+    
+     $('.mg-scroll-header-nav-bar').scrollTop(70);
+
+    function scrollToTop(scrollDuration) {
+    var scrollStep = -window.scrollY / (scrollDuration / 15),
+        scrollInterval = setInterval(function(){
+        if ( window.scrollY != 0 ) {
+            window.scrollBy( 0, scrollStep );
+        }
+        else clearInterval(scrollInterval); 
+    },15);
+}
+
+
+  </script>

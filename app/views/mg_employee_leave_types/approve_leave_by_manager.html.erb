@@ -1,0 +1,90 @@
+<!-- Sec --> 
+<!-- @sql_created -->
+
+<table class="batch-tbl">
+  <tr>
+    
+    <td><%=t('applieddate')%></td>
+    <td><%=t('fromddate')%></td>
+    <td><%=t('todate')%> </td>
+    <td><%=t('leavetype')%></td>
+  </tr>
+
+
+<h4></h4>
+<% @sql_created.each do |sql|%>
+
+   <% sql="select mg_employee_id, mg_leave_type_id, absent_date , min(absent_date) min_date, max(absent_date) max_date from mg_employee_attendances where created_at='#{sql.created_at}' and mg_employee_id=#{@employeeID} and is_deleted=0"
+      @leave_apprve_from_to=MgEmployee.find_by_sql sql %>
+
+       <% @leave_apprve_from_to.each do |emp| %>
+          <tr>
+            <td><%=emp.absent_date %></td>
+            <td><%= emp.min_date %></td>
+            <td><%=emp.max_date %></td>
+            <%@category=MgEmployeeLeaveType.where(:id=>emp.mg_leave_type_id).pluck(:leave_name)%>
+            <%@category.each do |tt|%>
+            <td><%=tt%></td>
+          </tr>
+      <%end%>
+  <% end %>
+
+<% end %>
+
+
+<!-- @leave_apprve_from_to -->
+
+  
+
+</table>
+<input type="submit" id='<%=raw @employeeID %>' class="approveLeveClass" value="Approve" name="commit">
+<input type="submit" id='<%=raw @employeeID %>' class="rejectLeaveClass" value="Reject" name="commit">
+
+
+
+
+<!-- absent_date -->
+<!-- @leave_apprve -->
+<script type="text/javascript">
+$(document).on("click", ".approveLeveClass", function(e){
+// alert("abc");
+        var myID =$(this).attr('id');
+         // alert(myID);
+
+       var splString = myID.split("-");
+     //  alert(splString);
+        //var urlLink = "/student_categories/"+studentCategoryID+"/edit";
+        var urlLink = "/mg_employee_leave_types/is_approve/"+myID;
+    //    alert(urlLink);
+        $.ajax({
+            url: urlLink ,
+            cache: false,
+            success: function(html){
+                   window.location.reload();
+                               
+                }
+        });
+});
+
+
+$(document).on("click", ".rejectLeaveClass", function(e){
+// alert("abc");
+        var myID =$(this).attr('id');
+         // alert(myID);
+
+       var splString = myID.split("-");
+     //  alert(splString);
+        //var urlLink = "/student_categories/"+studentCategoryID+"/edit";
+        var urlLink = "/mg_employee_leave_types/is_not_approve/"+myID;
+    //    alert(urlLink);
+        $.ajax({
+            url: urlLink ,
+            cache: false,
+        success: function(html){
+                   window.location.reload();
+                               
+                }
+        });
+});
+
+</script>

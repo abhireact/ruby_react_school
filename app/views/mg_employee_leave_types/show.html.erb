@@ -1,0 +1,224 @@
+<!-- #version1.0(for adding late come deduction fields   03/08/2018/Mamatha) -->
+
+<% navigation_add 'Employee Leave Type', mg_employee_leave_types_path %>
+<% navigation_add 'Show', new_mg_employee_leave_type_path %>
+
+<%
+period=Hash.new
+period["1"]="Monthly"
+period["6"]="Quarterly"
+period["12"]="Yearly"
+%>
+ <table border="1" class="mg-showdata-bg mg-tbl-layout" cellspacing="1" cellpadding="1">
+   <tr>
+     <td class="mg-td-width-half" valign="top">
+     	 <label class="mg-label"> <%=t('leavename')%></label>
+     </td>
+     <td class="mg-td-width-half" valign="top">
+      <%= @mg_employee_leave_types.leave_name %>
+     </td>
+   </tr>
+  <tr>
+     <td class="mg-td-width-half" valign="top">
+ 	    <label class="mg-label">  <%=t('leavecode')%></label>
+     </td>
+     <td class="mg-td-width-half" valign="top">
+      <%= @mg_employee_leave_types.leave_code %>
+     </td>
+  </tr>
+
+  <tr>
+     <td class="mg-td-width-half" valign="top">
+      <label class="mg-label mg-rm-text-trans"> <%=t('maxleavecount')%></label>
+     </td>
+     <td class="mg-td-width-half" valign="top">
+      <%= @mg_employee_leave_types.max_leave_count %>
+     </td>
+  </tr>
+  <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%=t('minimumyearexperience')%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <%@remainder= @mg_employee_leave_types.minimum_month_experience%12 %>
+      <%=(@mg_employee_leave_types.minimum_month_experience-@remainder)/12 %>
+    </td>
+  </tr>
+   <tr>
+     <td class="mg-td-width-half" valign="top">
+      <label class="mg-label mg-rm-text-trans"> <%=t('monthly_limit')%></label>
+     </td>
+     <td class="mg-td-width-half" valign="top">
+      <%= @mg_employee_leave_types.monthly_limit %>
+     </td>
+  </tr>
+  <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%=t('minimummonthexperience')%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <%=@mg_employee_leave_types.minimum_month_experience%12 %>
+    </td>
+  </tr>
+  <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%=t('gender')%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <span class="mg-capitalize-text"><%=@mg_employee_leave_types.gender %></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%="Should Leave Not Be Deducted"%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <%=@mg_employee_leave_types.is_leave_should_not_be_deducted ? t('yes') : t('no') %>
+    </td>
+  </tr>
+
+   
+  <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%=t("accumulation")%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <%=@mg_employee_leave_types.is_accumilation ? t('yes') : t('no') %>
+    </td>
+  </tr>
+  <%if @mg_employee_leave_types.is_accumilation%>
+        <tr>
+          <td class="mg-td-width-half" valign="top">
+            <label class="mg-label"> <%=t("accumulation_period")%></label>
+          </td>
+          <td class="mg-td-width-half" valign="top">
+            <%=period[@mg_employee_leave_types.accumilation_period] %>
+          </td>
+        </tr>
+        <tr>
+          <td class="mg-td-width-half" valign="top">
+            <label class="mg-label"> <%=t("accumilation_count")%></label>
+          </td>
+          <td class="mg-td-width-half" valign="top">
+            <%=@mg_employee_leave_types.accumilation_count  %>
+          </td>
+        </tr>
+  <%end%>
+
+
+ <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%=t('enablecarryforward')%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <%=@mg_employee_leave_types.is_auto_reset ? t('yes') : t('no') %>
+    </td>
+  </tr>
+
+  <%if @mg_employee_leave_types.reset_period %>
+   
+      <tr>
+        <td class="mg-td-width-half" valign="top">
+          <label class="mg-label"> <%=t('reset_period')%></label>
+        </td>
+        <td class="mg-td-width-half" valign="top">
+          <%=period[@mg_employee_leave_types.reset_period.to_s]%>
+        </td>
+      </tr>
+
+       
+       <tr>
+          <td class="mg-td-width-half" valign="top">
+         	  <label class="mg-label"> <%=t('resetdate')%></label>
+          </td>
+          <td class="mg-td-width-half" valign="top">
+            <%= @mg_employee_leave_types.reset_date.present? ? @mg_employee_leave_types.reset_date.strftime(@school.date_format) : ""%>
+          </td>
+        </tr>
+  <%end%>
+
+      <td class="mg-td-width-half" valign="top">
+   	    <label class="mg-label"> <%=t('enablecarryforward')%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+        <%= @mg_employee_leave_types.is_carry_forward  ? t('yes') : t('no')%>
+      </td>
+    </tr>
+<%if  @mg_employee_leave_types.is_carry_forward %>
+    <td class="mg-td-width-half" valign="top">
+        <label class="mg-label"> <%=t('carry_forward_limit')%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+        <%= @mg_employee_leave_types.carry_forward_limit  %>
+      </td>
+    </tr>
+
+<%end%>
+
+
+
+
+
+<td class="mg-td-width-half" valign="top">
+        <label class="mg-label"> <%=t('is_showable')%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+        <%= @mg_employee_leave_types.is_showable ? t('yes') : t('no')%>
+      </td>
+</tr>
+
+
+    <tr>
+      <td class="mg-td-width-half" valign="top">
+   	    <label class="mg-label"> <%=t('status')%></label>
+      </td>
+      <td class="mg-td-width-half" valign="top">
+        <%= @mg_employee_leave_types.is_deleted ? t('yes') : t('no')%>
+      </td>
+    </tr>
+
+
+
+    <tr>
+    <td class="mg-td-width-half" valign="top">
+      <label class="mg-label"> <%=t("delay_deduction")%></label>
+    </td>
+    <td class="mg-td-width-half" valign="top">
+      <%=@mg_employee_leave_types.delay_deduction ? t('yes') : t('no') %>
+    </td>
+  </tr>
+  <%if @mg_employee_leave_types.delay_deduction%>
+        <tr>
+          <td class="mg-td-width-half" valign="top">
+            <label class="mg-label"> <%="delay_time(min.)"%></label>
+          </td>
+          <td class="mg-td-width-half" valign="top">
+            <%=@mg_employee_leave_types.delay_time %>
+          </td>
+        </tr>
+        <tr>
+          <td class="mg-td-width-half" valign="top">
+            <label class="mg-label"> <%=t("delay_days")%></label>
+          </td>
+          <td class="mg-td-width-half" valign="top">
+            <%=@mg_employee_leave_types.delay_days  %>
+          </td>
+        </tr>
+         <tr>
+          <td class="mg-td-width-half" valign="top">
+            <label class="mg-label"> <%=t("leave_deduction_count")%></label>
+          </td>
+          <td class="mg-td-width-half" valign="top">
+            <%=@mg_employee_leave_types.leave_deduction_count  %>
+          </td>
+        </tr>
+  <%end%>
+
+
+</table>
+
+
+<p class="mg-p-mgtop">
+<%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog flat-button  margin-left-10"} %>
+
+</p>

@@ -1,0 +1,95 @@
+
+<%= fields_for :scholarship do |f| %>
+<!-- <#%= fields_for (language) do |f| %> -->
+
+<%= f.hidden_field :is_deleted, :value => 0 %>
+<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+<%= f.hidden_field :mg_user_id, :value => @student.mg_user_id %>
+<%= f.hidden_field :created_by, :value => session[:user_id] %>
+<%= f.hidden_field :updated_by, :value => session[:user_id] %>
+
+            <div id="studentManagementDivId" class="Student-Management-Child-Div-Class">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="employee-form-cls mg-btn-bottom-margin">
+                <tbody>
+                        <tr>
+                          <td valign="top" class="mg-td-width-34">
+                         
+                            <label class="mg-label mg-label-text-transform-none" for="name" ><%= t('name_of_scholarship') %>
+                            <span class="required-field">*</span> 
+                            </label>
+                          </td>
+
+                          <td valign="top" class="mg-td-width-34">
+                            <label class="mg-label" for="amount" ><%= t("annual_scholarship_amount") %>
+                            <span class="required-field">*</span> 
+                            </label>
+                          </td>
+
+                          <td valign="top" class="mg-td-width-34">
+                            <label class="mg-label mg-label-text-transform-none" for="frequency" ><%= t("frequency_of_disbursement") %>
+                            <span class="required-field">*</span>
+                            </label>
+                          </td>
+                      </tr>
+                    <tr>
+                        <td valign="top">
+                        <%= f.text_field :name  ,:class => ' mg-text-field mg-scholarship-field'%>
+                        </td>
+                  
+                        <td valign="top">
+                          <%= f.text_field :amount  ,:class => ' mg-text-field mg-scholarship-field'%>
+                        </td>
+                          
+                        <td valign="top">
+                         <%= f.select :frequency, [ 'Monthly', 'Quarterly', 'Half-yearly', 'Annual' ], {:include_blank => 'Select'} ,:class=>"mg-text-field mg-select-btn mg-scholarship-field"%>
+                        </td>
+                    </tr>
+                    <tr>
+                     
+                        <td valign="top" class="mg-td-width-34">
+                            <label class="mg-label" for="start_date" ><%= t("start_date") %>
+                              <span class="required-field"></span> 
+                            </label>
+                        </td>
+                        <td valign="top" class="mg-td-width-34">
+                            <label class="mg-label" for="end_date" ><%= t("end_date") %>
+                              <span class="required-field"></span> 
+                            </label>
+                        </td>
+                    </tr>
+                      <tr>
+                          <td valign="top">
+                             <%= f.text_field :start_date  ,:class => ' mg-text-field scholarship_date mg-scholarship-field'%>
+                          </td>
+
+                          <td valign="top">
+                             <%= f.text_field :end_date  ,:class => ' mg-text-field scholarship_date mg-scholarship-field'%>
+                          </td>
+                          
+                        
+                          <td valign="top">
+                                
+                          </td>
+                        
+                          <td valign="top">
+                             
+                          </td>
+                      </tr>
+                    
+                    </tbody>
+                    </table>
+                    </div>
+
+
+      <%end%>
+<!-- </div> -->
+<script>
+$(document).ready(function(){
+
+
+
+  dateFormatSt =  getJsDateFormat();
+      $( ".scholarship_date" ).datepicker({ changeMonth: true,
+                changeYear: true,yearRange: "-50:+50",dateFormat: dateFormatSt });
+});
+</script>

@@ -1,0 +1,325 @@
+<div id="page-yield">
+  <div class="box">
+     <%= fields_for :guardian_details do |f| %>
+
+        <%= f.hidden_field :password, value: "" %>
+        <%= f.hidden_field :is_deleted, value: 0 %>
+        <%= f.hidden_field :user_type, value: "guardian" %>
+        <%#= f.hidden_field :user_name, value: "G-" %>
+
+        <div class="form-content">
+          <div class="form-content-inner">
+            <h4><b><span class="spacer">First Guardian</span></b></h4>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="student-form-cls">
+              <tbody>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="firstname"><%= t('firstname') %><span class="required-field">*</span></label>
+                <%= f.text_field :first_name, value: @guardian_details_1.present? ? @guardian_details_1.first_name : ""  ,:class=>"form-control"%>
+              </div>
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="middlename"><%= t('middlename') %><span class="required-field"></span></label>
+                 <%= f.text_field :middle_name, value: @guardian_details_1.present? ? @guardian_details_1.middle_name : ""  ,:class=>"form-control"%>
+              </div>
+
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="lastname"><%= t('lastname') %><span class="required-field"></span></label>
+                 <%= f.text_field :last_name, value: @guardian_details_1.present? ? @guardian_details_1.last_name : ""  ,:class=>"form-control"%>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="relation"><%= t('relation') %><span class="required-field">*</span></label>
+                 <%= f.text_field :relation, value: @guardian_details_1.present? ? @guardian_details_1.relation : "" ,:class=>"form-control"%>
+              </div>
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="emailid"><%= t('emailid') %><span class="required-field"></span></label>
+                 <%= f.text_field :mg_email_id, value: @guardian_email_1.present? ? @guardian_email_1.mg_email_id : "",:class=>"form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label  class="mg-rm-text-trans" for="dob" ><%= t('dateofbirth')%>
+                  <span class="required-field"></span>
+                </label>
+                <%#= f.text_field :dob , value: @guardian_details_1.present? ?  @guardian_details_1.dob.strftime("%d/%m/%Y") : ""  ,:class => 'dob form-control'%>
+                <%date_formate = MgSchool.find_by(id:session[:current_user_school_id]).date_format%>
+                <%#binding.pry%>
+                 <!-- @time_table ? @time_table.name : '' -->
+                <%#= f.text_field :dob , value: @guardian_details_1.present? ? @guardian_details_1.dob.strftime(date_formate) : ""  ,:class => 'dob form-control'%>
+                <%= f.text_field :dob, value: @guardian_details_1.present? && @guardian_details_1.dob.present? ? @guardian_details_1.dob.strftime(date_formate) : "", class: 'dob form-control' %>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="qualification"><%= t('Qualification') %><span class="required-field"></span></label>
+                 <%= f.text_field :education, value: @guardian_details_1.present? ? @guardian_details_1.education : "",:class=>"form-control" %>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="occupation"><%= t('occupation') %><span class="required-field"></span></label>
+                 <%= f.text_field :occupation, value: @guardian_details_1.present? ? @guardian_details_1.occupation : "",:class=>"form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="designation"><%= t('Designation') %><span class="required-field"></span></label>
+                 <%= f.text_field :occupation, value: @guardian_details_1.present? ? @guardian_details_1.occupation : "",:class=>"form-control" %>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="income"><%= t('income') %><span class="required-field"></span></label>
+                 <%= f.text_field :income, value: @guardian_details_1.present? ? @guardian_details_1.income : "",:class=>"form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="education"><%= t('education') %><span class="required-field"></span></label>
+                <%= f.text_field :education, value: @guardian_details_1.present? ? @guardian_details_1.education : "",:class=>"form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="aadhar_no"><%= t('Aadhar Number') %><span class="required-field"></span></label>
+                 <%= f.text_field :adharnumber, value: @guardian_details_1.present? ? @guardian_details_1.adharnumber : "",:class=>"form-control" , id: "aadhar_no" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="mobilenumber"><%= t('Mobile number *') %><span class="required-field"></span></label>
+               <%= f.text_field :phone_number, value: @guardian_phone_1.present? ? @guardian_phone_1.phone_number : "", minlength: "10", maxlength: "10", class: "form-control valid" %>
+              </div>
+
+             
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="notification" ><%= t('notification') %></label>
+                <br>
+                <%= f.check_box :notification , value: @guardian_phone_1.present? ? @guardian_phone_1.notification : ""%>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="subscription" ><%= t('subscription') %></label>
+                <br>
+                <%= f.check_box :subscription , value: @guardian_phone_1.present? ? @guardian_phone_1.subscription : ""%>
+              </div>
+
+               
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        
+      <% end %>
+      <!-- <button id="addGuardian">Add Guardian</button> -->
+      <div id="addGuardian" class="custom-button">Add Guardian</div>
+      <div id="second_guardian" style="display: none;">
+      <div class="box">
+        <%= fields_for :guardian_2_details do |f| %>
+
+        <%= f.hidden_field :password, value: "" %>
+        <%= f.hidden_field :is_deleted, value: 0 %>
+        <%= f.hidden_field :user_type, value: "guardian" %>
+        <%#= f.hidden_field :user_name, value: "G-" %>
+
+        <div class="form-content">
+          <div class="form-content-inner">
+            <!-- <h4><b><%#= "Second Guardian" %></b></h4> -->
+            <h4><b><span class="spacer">Second Guardian</span></b></h4>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="student-form-cls">
+              <tbody>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="first_name"><%= t('firstname') %><span class="required-field">*</span></label>
+                <%= f.text_field :first_name, value: @guardian_details_2.present? ? @guardian_details_2.first_name : "",:class=>"form-control"%>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="middle_name"><%= t('middlename') %><span class="required-field"></span></label>
+                <%= f.text_field :middle_name, value: @guardian_details_2.present? ? @guardian_details_2.middle_name : "",:class=>"form-control" %>
+              </div>
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="last_name"><%= t('lastname') %><span class="required-field"></span></label>
+                <%= f.text_field :last_name, value: @guardian_details_2.present? ? @guardian_details_2.last_name : "",:class=>"form-control" %>
+              </div>
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="relation"><%= t('relation') %><span class="required-field"></span>*</label>
+                 <%= f.text_field :relation, value: @guardian_details_2.present? ? @guardian_details_2.relation : "",:class=>"form-control" %>
+              </div>
+
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="emailid"><%= t('emailid') %><span class="required-field"></span></label>
+                 <%= f.text_field :mg_email_id, value: @guardian_email_2.present? ? @guardian_email_2.mg_email_id : "",:class=>"form-control" %>
+              </div>
+
+                <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label  class="mg-rm-text-trans" for="dob" ><%= t('dateofbirth')%>
+                  <span class="required-field"></span>
+                </label>
+                <%date_formate = MgSchool.find_by(id:session[:current_user_school_id]).date_format%>
+                <%#= f.text_field :dob , value: @guardian_details_2.present? ? @guardian_details_2.dob.strftime(date_formate) : ""  ,:class => 'dob form-control'%>
+                <%= f.text_field :dob, value: @guardian_details_2.present? && @guardian_details_2.dob.present? ? @guardian_details_2.dob.strftime(date_formate) : "", class: 'dob form-control' %>
+                
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="qualification"><%= t('Qualification') %><span class="required-field"></span></label>
+                 <%= f.text_field :adharnumber, value: @guardian_details_2.present? ? @guardian_details_2.adharnumber : "",:class=>"form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="occupation"><%= t('occupation') %><span class="required-field"></span></label>
+                 <%= f.text_field :occupation, value: @guardian_details_2.present? ? @guardian_details_2.occupation : "",:class=>"form-control" %>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="designation"><%= t('Designation') %><span class="required-field"></span></label>
+                 <%= f.text_field :occupation, value: @guardian_details_2.present? ? @guardian_details_2.occupation : "",:class=>"form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label   for="income"><%= t('income') %><span class="required-field"></span></label>
+                <%= f.text_field :income, value: @guardian_details_2.present? ? @guardian_details_2.income : "" ,:class=>"form-control"%>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="education"><%= t('education') %><span class="required-field"></span></label>
+                 <%= f.text_field :education, value: @guardian_details_2.present? ? @guardian_details_2.education : "",:class=>"form-control" %>
+              </div>
+
+               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="aadhar_no"><%= t('Aadhar Number') %><span class="required-field"></span></label>
+                 <%= f.text_field :adharnumber, value: @guardian_details_2.present? ? @guardian_details_2.adharnumber : "" ,:class=>"form-control" , id: "aadhar_number_field"%>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="phonenumber"><%= t('Mobile number *') %><span class="required-field"></span></label>
+                 <%= f.text_field :phone_number, value: @guardian_phone_2.present? ? @guardian_phone_2.phone_number : "", 
+                    minlength: "10", maxlength: "10",class: "form-control" %>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="notification"><%= t('notification') %><span class="required-field"></span></label>
+                <br>
+                 <%= f.check_box :notification, value: @guardian_phone_2.present? ? @guardian_phone_2.notification : "" %>
+              </div>
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="subscription"><%= t('subscription') %><span class="required-field"></span></label>
+                <br>
+                 <%= f.check_box :subscription, value: @guardian_phone_2.present? ? @guardian_phone_2.subscription : "" %>
+              </div>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        
+      <% end %>
+  </div>
+</div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+        var aadharField = document.getElementById('aadhar_no');
+
+        aadharField.addEventListener('input', function() {
+            var value = this.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (value.length > 12) {
+                value = value.slice(0, 12); // Trim to 12 digits
+            }
+            this.value = value;
+        });
+    });
+  document.addEventListener('DOMContentLoaded', function() {
+        var aadharField = document.getElementById('aadhar_number_field');
+
+        aadharField.addEventListener('input', function() {
+            var value = this.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (value.length > 12) {
+                value = value.slice(0, 12); // Trim to 12 digits
+            }
+            this.value = value;
+        });
+    });
+ $(document).ready(function () {
+  // $("form").validate({
+  //   rules: {
+  //     "guardian_details[first_name]": { required: true },
+  //     "guardian_details[last_name]": { required: true },
+  //     // "guardian_details[dob]": { required: true },
+  //     // "guardian_details[address_attributes][address_line1]": { required: true },
+  //     // "guardian_details[address_attributes][state]": { required: true },
+  //     // "guardian_details[address_attributes][country]": { required: true },
+  //     "guardian_details[phone_number]": { required: true }
+  //   }
+  // });
+
+
+    $(".dob").datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-100:+0",
+      maxDate: "0"
+    });
+ $("#guardian_dob").on('change', function () {
+      var dob = $("#guardian_dob").val();
+      $("#guardian_password").val(dob);
+    });
+
+    var guardianCount = 1;
+
+    function addGuardianSection() {
+      var newGuardianSection = $("<div>").load("/students/_guardian_2_details.html.erb");
+      $("#page-yield .box").append(newGuardianSection);
+      guardianCount++;
+
+      newGuardianSection.find("[name^='guardian_details']").each(function () {
+        var newName = $(this).attr("name").replace(/\[\d\]/, "[" + guardianCount + "]");
+        $(this).attr("name", newName);
+        $(this).attr("id", newName.replace(/[\[\]]/g, '_'));
+      });
+    }
+
+    // Use the addGuardian function as the click handler
+    $(".custom-button").on("click", function () {
+      $("#second_guardian").toggle();
+      addGuardianSection();
+    });
+  });
+</script>
+
+<style>
+    /* Add your custom styles here */
+    .custom-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #3498db; /* You can customize the background color */
+      color: #fff; /* You can customize the text color */
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+  .spacer {
+        margin-left: 15px; /* Adjust the value as needed */
+    }
+
+    #addGuardian {
+        margin-left: 15px; /* Adjust the value as needed */
+    }
+ 
+  </style>

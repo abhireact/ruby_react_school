@@ -1,0 +1,30 @@
+<!-- Sec --> 
+  <%= fields_for (phone_types) do |cnt| %>
+      <%if phone_types=="home"%>
+      <%= cnt.hidden_field :phone_type, :value => "home" %>
+      <%end%>
+
+      <%if phone_types=="personal"%>
+      <%= cnt.hidden_field :phone_type, :value => "personal" %>
+      <%end%>
+        <%= cnt.hidden_field :is_deleted, :value => 0 %>
+  <table>
+   <tr>
+      <td><%= cnt.label t('phonenumber') %></td> 
+      <td><%= cnt.text_field :phone_number %></td>
+    </tr>
+    <tr>
+      <td><%= cnt.label t('notification') %></td> 
+      <td> <%=cnt.check_box :notification%></td>
+    </tr>
+    <tr>
+      <td><%= cnt.label t('subscription') %></td> 
+      <td><%=cnt.check_box :subscription%></td>
+    </tr>
+       
+  </table>
+  
+ 
+  
+
+<% end %>   

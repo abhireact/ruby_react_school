@@ -1,0 +1,185 @@
+ 
+<%#= render  partial: 'student_left' %>
+<% navigation_add t('archive_student'),'/students/student_archive_list' %>
+<% navigation_add t('new'),'/students/student_archive' %>
+
+ <%=form_for @student_archive,:url=>{:controller=>"students",:action=>"student_archive_create"},:html => {:id => 'student_archive'} do |f|%>
+
+ 
+ 	<%= f.hidden_field :is_deleted, :value => 0 %>
+	<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+	<%= f.hidden_field :created_by, :value => session[:user_id] %>
+	<%= f.hidden_field :updated_by, :value => session[:user_id] %>
+   <%= hidden_field_tag 'selectStuds', ''  %>
+  <div class="box">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+        <h3 class="form-section-heading mc-margin-bottom-20">
+          <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= t('student_archive') %>
+          </b>
+        </h3>
+      </div>
+    </div>
+    <div class="row mc-padding-20 form-section-box">
+      <div class ="row">
+       <%= render partial: 'get_academic_year'%>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="mg-label mg-leave-width"><%=t('select_class')%><span>*</span></label><br/>
+          <%=select_tag :from_class_id, options_for_select([]),:prompt=>t('select'),:onchange=>"onchangeClass(this.value)",:class=>"current_year_class form-control"%><br/>
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="select_a_subject"> <%= t('select_section') %><span class="required-field">&nbsp;*</span></label><br/>
+          <%=select_tag :from_section_id,options_for_select([]),:prompt=>"Select",:onchange=>"onchangeSection(this.value)",:class=>"form-control"%><br/>
+        </div>
+      </div>
+      <div class ="row">
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="select_a_subject"> <%= t('reason') %><span class="required-field">&nbsp;*</span></label><br/>
+          <%=select_tag :mg_archive_reason_id,options_for_select(@reason),:prompt=>"Select",:class=>"form-control"%><br/>
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="select_a_subject"> <%= t('archive_date') %><span class="required-field">&nbsp;*</span></label><br/>
+          <%=text_field_tag :archive_date,nil,:class=>"form-control"%>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mc-padding-20 form-section-box">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="course_name">&nbsp;<%= t('available_students') %></label>
+          <%=select_tag :selectStudent, options_for_select([]),:multiple => true,:size =>10 ,:class=>"select_student form-control"%><br><br>
+          <a  id="AddClasses" class="submit mc-margin-bottom-20 flat-button mg-add-rem-btn add_button_to_show_specialization"><%=t('add')%></a> 
+        </div>
+       <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <label for="course_name"><%= t('selected_students') %>
+      <%=select_tag :selectedStudents,options_for_select([]),:multiple => true,:size =>10 ,:class=>" select_student form-control",:style=>"width:330px"%><br><br>
+      <a id="removeClasses" class="submit mc-margin-bottom-20 flat-button mg-add-rem-btn" ><%=t('remove')%> </a>
+          <!-- <button onclick="removeMyClass()">Try it</button> -->
+    </div>
+  </div>
+        </div>
+<br/>
+    <!--  <a onclick="$(this).closest('form').submit()" class="submit mg-small-form-btn submit mc-margin-bottom-20 flat-button">
+      <%#=t("save")%></a> -->
+   <%end%>
+    <button  class="mg-small-form-btn cancel-form-dialog submit mc-margin-bottom-20 flat-button" id="archiveStud">Submit</button>
+<%#= render  partial: 'student_left_close' %>
+   <%= link_to t('cancel'), {:controller=>'students',:action=>'student_archive_list'}, {:class=>"mg-small-form-btn cancel-form-dialog submit mc-margin-bottom-20 flat-button"} %>
+
+
+<script>
+  $( document ).ready(function() {
+    focusCurrentTab("studentArchiveAID","studentArchiveLiID");
+    dateFormatStr =  getJsDateFormat();
+    $('#archive_date').datepicker({ changeMonth: true,changeYear: true,yearRange: "-100:+0",maxDate: "0",dateFormat: dateFormatStr});
+  });
+  $("#student_archive").validate({
+    rules: {        
+      "from_class_id": {required: true},
+      "from_section_id": {required: true},
+      "mg_archive_reason_id": {required: true},
+      "archive_date": {required: true},
+      "mg_time_table_id": {required: true}
+    }
+  });
+
+  $("#archiveStud").on('click',function(){
+    var select = $("#selectedStudents option").map(function(){
+    return this.value; }).get();
+    if (select!="")
+    {
+      $("#student_archive").submit();
+    }
+    else
+    {
+      alert("Please select student to archive")
+    }
+  });
+
+function onchangeClass(courseid){
+  //alert(courseid);
+    var urlLink = "/cbsc_examinations/onchange_section_for_student_history/";
+     
+        $.ajax({
+            url: urlLink ,
+            data:{"mg_course_id":courseid},
+            cache: false,
+            success: function(html){
+            //$("#exammanagementID").empty();
+            $("#from_section_id").html(html);
+            //$("#rankingData").show()
+        }
+                }); 
+    };
+
+
+
+    function onchangeSection(batch_id){
+      //alert(batch_id);
+    var urlLink = "/students/onchange_bactch/";
+        $.ajax({
+            url: urlLink ,
+            data:{batch_id:batch_id},
+            cache: false,
+            success: function(data){
+             var apdStr = ""
+                    for(key in data )  
+                         {
+                          apdStr += '<option value="'+data[key][1]+'">'+data[key][0]+'</option>'
+                          // apdStr += '<option value="'+data[key].id+'">'+data[key].first_name+'</option>'
+                               // alert(data[key].first_name)
+                          }
+                      $("#selectStudent").empty().append(apdStr);
+                        // $("#selectStudent").val(data[key].first_name);
+                 }
+                }); 
+        };
+
+
+ $(document).on("click","#AddClasses",function(e){
+  
+
+    var selectedOptions=$("#selectStudent option:selected").remove();
+    $("#selectedStudents").append(selectedOptions);
+    var total_selcted = $("#selectedStudents option").map(function(){
+    return this.value; }).get();
+    $("#selectStuds").val(total_selcted);
+  });
+
+  $(document).on("click","#removeClasses",function(e){
+    var total_selcted = $("#selectedStudents option").map(function(){
+    return this.value; }).get();
+    var select = $("#selectedStudents option:selected").map(function(){
+      return this.value; }).get();
+    let rest_student = total_selcted.filter(val => !select.includes(val));
+    $("#selectStuds").val(rest_student);
+    var selectedOption=$("#selectedStudents option:selected").remove();
+    $("#selectStudent").append(selectedOption);
+    $("#selectedStudents").append(rest_student);
+    debugger;
+  });
+
+
+function onchangeToClass(courseid){
+  //alert(courseid);
+    var urlLink = "/cbsc_examinations/onchange_section/";
+     
+        $.ajax({
+            url: urlLink ,
+            data:{"mg_course_id":courseid},
+            cache: false,
+            success: function(html){
+            //$("#exammanagementID").empty();
+            $("#to_section_id").html(html);
+            //$("#rankingData").show()
+        }
+                }); 
+    };
+
+   $("#mg_time_table_id").change(function(e){
+    if ($(this).val() == ""){
+      $("#from_section_id").html('<option value="">Select</option>');
+    }
+  });
+
+</script>

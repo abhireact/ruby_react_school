@@ -1,0 +1,56 @@
+
+<%= fields_for :employeechild do |f| %>
+<!-- <#%= fields_for (language) do |f| %> -->
+
+<%= f.hidden_field :is_deleted, :value => 0 %>
+<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+<%= f.hidden_field :mg_user_id, :value => @student.mg_user_id %>
+<%= f.hidden_field :created_by, :value => session[:user_id] %>
+<%= f.hidden_field :updated_by, :value => session[:user_id] %>
+
+        <div id="studentEmployeeChildDivId" class="Student-Employee-Child-Div-Class">
+            <div class="row mc-padding-20 form-section-box">
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label for="employee_name" ><%= t('employee_name') %>
+                            <span class="required-field"></span> 
+                            </label>
+                        <%= f.text_field :employee_name  ,:class => ' form-control mg-emp-child-field'%>
+                          </div>
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label for="employee_type" ><%= t("employee_type") %>
+                            <span class="required-field"></span> 
+                            </label>
+                         <%= f.select :employee_type, [ 'Teaching', 'Non-Teaching', 'Admin' ], {:include_blank => 'Select'} ,:class=>"form-control mg-emp-child-field"%>
+                          </div>
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">                
+                            <label  for="employee_id" ><%= t("employee_id") %>
+                            <span class="required-field"></span>
+                            </label>
+                         <%= f.text_field :employee_id  ,:class => ' form-control mg-emp-child-field'%>
+                          </div>
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">                
+                            <label for="joining_date" ><%= t("joining_date") %>
+                              <span class="required-field"></span> 
+                            </label>
+                             <%= f.text_field :joining_date  ,:class => ' form-control joining_date mg-emp-child-field'%>
+                        </div>
+                </div>
+          </div>
+
+
+      <%end%>
+<!-- </div> -->
+<script>
+$(document).ready(function(){
+
+
+
+  dateFormatSt =  getJsDateFormat();
+      $( ".joining_date" ).datepicker({ changeMonth: true,
+                changeYear: true,yearRange: "-50:+0",maxDate: "0",dateFormat: dateFormatSt });
+});
+</script>

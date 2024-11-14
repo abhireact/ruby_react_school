@@ -1,0 +1,843 @@
+<!-- Sec --> 
+<%@session_user=""%>
+<%if session[:user_type]=="front_office_manager"%>
+    <% navigation_add 'Search', front_office_management_directory_search_path %>
+    <%#=render partial:"/front_office_management/front_office_management_left"%>
+    <%@session_user="front_office_manager"%>
+<%else%>
+    <% navigation_add t('about_student'), :controller=>'students', :action=>'index' %>
+<%end%>
+ <div class="mg-back-btn-align">
+ <%= link_to t('back'), :back, {:class=>"submit mc-margin-bottom-20 flat-button"} %>
+</div>
+<h4 class="form-section-heading mc-margin-bottom-20"><%= t("student_profile") %></h4>
+<div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+    <%= image_tag @student.avatar.url(:medium, timestamp: false) ,:class=>"mg-img-size"%><br>
+    <%= @student.first_name %>&nbsp; <%= @student.middle_name %> &nbsp;<%= @student.last_name %><br>
+    <%= t('user_id') %>:<%= @student.admission_number %><br/>
+    <%if @student.mg_batch_id.present?%>
+    <%@batchs=MgBatch.where(:id=>@student.mg_batch_id).pluck(:name)%>
+    <%= t('batch') %>:<%= @batchs[0] %><br/><br/>
+    <%end%>
+    <br/>
+    <%= link_to 'Download Profile', {:controller => "students", :action => "pdf_gen",:id =>@student.id } ,:target=>"_blank",:class=>"submit mc-margin-bottom-20 flat-button mg-prof-btn" %><br>
+        </div>
+    </div>
+             
+
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+                <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12"><%= t('general') %></h4>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('user_id') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%=  @user_name.user_name  %></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('admissiondate') %></label>
+								<% @id = @student.mg_school_id %>  
+                                <% @dateFormat = MgSchool.find_by_id(session[:current_user_school_id]).date_format %>
+                                <%if @student.admission_date.present?%>
+							 <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.admission_date.strftime(@dateFormat) %></label>
+                             <%end%>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('admissionnumber') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.class_roll_number %></label>
+                        </div>
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('fee_code') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.fee_code %></label>
+                        </div>
+                    </div>
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+                    <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12"><%= t('personaldetails') %></h4>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('firstname') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.first_name %></label>
+                        </div>
+
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('middle_name') %></label>
+                            <%if @student.middle_name.nil? %>
+                            <label>--</label>
+                            <%else%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.middle_name %></label>
+                            <%end%>
+                     </div>
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('lastname') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.last_name %></label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('coursename') %></label>
+                            <%#@batch=MgBatch.where(:id=>@student.mg_batch_id).pluck(:name)%>
+                            <%if @student.mg_batch_id.present?%>
+
+                            <%@batch=MgBatch.find(@student.mg_batch_id)%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @batch.course_batch_code %></label>
+                            <%else%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12">--</label><%end%>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('dateofbirth') %></label>
+                            
+                            <% @id=@student.mg_school_id %>
+                            <%if @student.date_of_birth.nil? %>
+                                <label>--</label>
+                            <%else%>
+                                 <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> <%= @student.date_of_birth.strftime(MgSchool.find_by_id(session[:current_user_school_id]).date_format) %></label>
+                            <%end%>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('gender') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.gender %></label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('bloodgroup') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.blood_group %></label>
+                        </div>
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('birth_place') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.birth_place %></label>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('nationality') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.nationality %></label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('mother_tongue') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.language %></label>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('religion') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.religion %></label>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('Aadhar Number') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @student.adharnumber %></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                   
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('Caste') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12">  
+                            <% if @student.mg_caste_id.present?%>
+                                <% 
+                                    @stud_caste=MgCaste.where(:id =>@student.mg_caste_id)
+                                    %>
+                                    <%=@stud_caste[0].try(:name)%></label>
+                                <%else%>
+                                <label>--</label>
+                                    <%end%>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('caste_Category') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><% 
+                                    @stud_caste_category=MgCasteCategory.where(:id =>@student.mg_caste_category_id)
+                                    %>
+                                    <%=@stud_caste_category[0].try(:name)%></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('Quota') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    
+                                    <%if @student.mg_student_catagory_id.present?%><% 
+                                    @stud_category=MgStudentCategory.where(:id =>@student.mg_student_catagory_id)
+                                    %>
+                                    <%=@stud_category[0].name%>
+                                    <%else%>
+                                    <label>--</label>
+                                    <%end%>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal" ><%= t('house_details') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><% 
+                                    @stud_house=MgHouseDetails.where(:id =>@student.mg_house_details_id)
+                                    %>
+                                    <%=@stud_house[0].try(:Name).present? ? @stud_house[0].try(:Name) : "--"%></label>
+                        </div>
+                    </div>
+
+                
+                <%if @stud_category.present?%><%
+                if @stud_category[0].name=="Employee Child"
+                    @empchild=MgEmployeeChild.where(:mg_user_id=>@student.mg_user_id)
+                    if @empchild.present?
+                %>
+                                             <div class="row">
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('employee_name') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].employee_name %></label>
+                      </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('employee_type') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].employee_type %></label>
+                    
+                      </div>
+                    
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('employee_id') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].employee_id %></label>
+                        
+                    
+                      </div>
+                  </div>
+                                      <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('joining_date') %></label>
+                            <% if @empchild[0].joining_date.present?%>
+                                <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].joining_date.strftime(MgSchool.find_by_id(session[:current_user_school_id]).date_format)%></label>
+                            <%end%>
+                      </div>
+                  </div>
+                    
+                    <%end%>
+                    <%end%>
+
+              
+                <%
+                if @stud_category[0].name=="Management"
+                    @empchild=MgManagementQuota.where(:mg_user_id=>@student.mg_user_id)
+                    if @empchild.present?
+                %>
+                                             <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('name') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].name %></label>
+                    
+                      </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="mg-label mg-std-form-width"><%= t('position') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].position %></label>
+                    </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('employee_id') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ><%= @empchild[0].employee_id %></label>
+                      </div>
+                  </div>
+                                      <div class="row">
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('joining_date') %></label>
+                            <% if @empchild[0].joining_date.present? %>
+                           <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].joining_date.strftime(MgSchool.find_by_id(session[:current_user_school_id]).date_format) %></label>
+                          <%end%>
+                    
+                      </div>
+                  </div>
+                    
+                    <%end%>
+                    <%end%>
+
+
+                <%
+                if @stud_category[0].name=="On Scholarship"
+                    @empchild=MgStudentScholarship.where(:mg_user_id=>@student.mg_user_id)
+                    if @empchild.present?
+                %>
+                                             <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal">Name of Scholarship</label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].name %></label>
+                    
+                            </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal">Annual Scholarship Amount</label>
+                                <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].amount %></label>
+                    
+                      </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal">Frequency of Disbursement</label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].frequency %></label>
+                        
+                      </div>
+                  </div>
+
+                                      <div class="row">
+
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('start_date') %></label>
+                        <%if @empchild[0].start_date.present?%>
+                           <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].start_date.strftime(MgSchool.find_by_id(session[:current_user_school_id]).date_format)%></label>
+                        <%end%>
+                    
+                      </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12 label-weight-normal"><%= t('end_date') %></label>
+                        <%if @empchild[0].end_date.present?%>
+                           <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @empchild[0].end_date.strftime(MgSchool.find_by_id(session[:current_user_school_id]).date_format)%></label>
+                        <%end%>
+                    
+                      </div>
+                  </div>
+                    
+                    <%end%>
+                    <%end%>
+                    <%end%>
+
+                <%
+             
+                @sibling=MgSibling.where(:mg_user_id=>@student.mg_user_id)
+                if @sibling.present?
+                %>
+                <h4 class="form-section-heading mc-margin-bottom-20"><%= t('sibling') %></h4>
+                                    <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('name') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @sibling[0].name %></label>
+                    
+                      </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('relationship') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @sibling[0].relation %></label>
+                    
+                      </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20"><%= t('class') %></label>
+                            <%@temp=MgCourse.where(:id=>@sibling[0].mg_course_id)%>
+                            <% if (!(@temp[0].to_s.empty?))%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @temp[0].course_name %></label>
+                            <%end%>
+                    
+                      </div>
+                  </div>
+              <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('section') %></label>
+                            <%@temp1=MgBatch.where(:id=>@sibling[0].mg_batch_id)%>
+                            <% if (!(@temp1[0].to_s.empty?))%>
+
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%=@temp1[0].name %></label>
+                            <%end%>
+                    
+                      </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('roll_number') %></label>
+                           <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @sibling[0].roll_no %></label>
+                    
+                      </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('date_of_admission') %></label>
+                            <% if @sibling[0].admission_date.present?%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @sibling[0].admission_date.strftime(MgSchool.find_by_id(session[:current_user_school_id]).date_format) %></label>
+                            <%end%>
+                    
+                      </div>
+                  </div>
+                                      <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('adm_reg_number') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @sibling[0].admission_no %></label>
+                    
+                      </div>
+                      
+                      </div>
+                    <%end%>
+                    </div>
+
+     <!-- ======================================================================================= -->
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+                    <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12 "><%= t('correspondanceaddress') %></h4>
+                                        <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('addressline1') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <%if @temporary_address.present?%><%= @temporary_address.address_line1 %><%end%></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('addressline2') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @temporary_address.present?%><%= @temporary_address.address_line2 %><%end%></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('city') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @temporary_address.present?%><%= @temporary_address.city %><%end%></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('state') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @temporary_address.present?%><%= @temporary_address.state %><%end%></label>
+                        </div>
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                   
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('pincode') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @temporary_address.present?%><%= @temporary_address.pin_code %><%end%></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                     
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('country') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @temporary_address.present?%><%= @temporary_address.country %><%end%></label>
+                        </div>                        
+                    </div>
+                        
+                    <div class="row">
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('landmark') %></label>
+                            <%if @temporary_address.present?%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @temporary_address.landmark %></label>
+                            <%else%>
+                            <label></label>
+                            <%end%>
+
+                        </div>
+                    </div>
+                    </div>
+
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+
+                    <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12 "><%= t('permanentaddress') %></h4>
+                    <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('addressline1') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @permanent_address.present?%><%= @permanent_address.address_line1 %><%end%></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal " ><%= t('addressline2') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @permanent_address.present?%><%= @permanent_address.address_line2 %><%end%></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal" ><%= t('city') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @permanent_address.present?%><%= @permanent_address.city %><%end%></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('state') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @permanent_address.present?%><%= @permanent_address.state %><%end%></label>
+                        </div>
+
+                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('pincode') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%if @permanent_address.present?%><%= @permanent_address.pin_code %><%end%></label>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                          
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('country') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><% if @permanent_address.present?%><%= @permanent_address.country %><%end%></label>
+                        </div>
+                        </div>
+                       <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('landmark') %></label>
+                            <%if @permanent_address.present?%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @permanent_address.landmark %></label>
+                            <%else%>
+                            <label></label>
+                            <%end%>
+
+                        </div>                    
+                 </div>
+             </div>
+
+
+
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+                    <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12 label-weight-normal"><%= t('contactdetails') %></h4>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('phonenumber') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @phone_number.present? ? @phone_number.phone_number : "--"%></label>
+
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('mobilenumber') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12">+91-<%= @mobile_number.phone_number %></label>
+                        </div> 
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('notification') %></label>
+                            <%if @mobile_number.notification.present?%>
+                                  <%if @mobile_number.notification==true%>
+                                  <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> Yes </label>
+                                  <%else%>
+                                  <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                                  <%end%>
+                            <%else%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                            <%end%>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                       
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('subscription') %></label>
+                            <%if @mobile_number.subscription.present?%>
+                                  <%if @mobile_number.subscription==true%>
+                                  <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> Yes </label>
+                                  <%else%>
+                                  <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                                  <%end%>
+                            <%else%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                            <%end%>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('emailid') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @email.mg_email_id %></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('notification') %></label>
+                            <%if @email.notification.present?%>
+                                  <%if @email.notification==true%>
+                                  <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> Yes </label>
+                                  <%else%>
+                                  <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                                  <%end%>
+                            <%else%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                            <%end%>
+
+                            
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                       
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('subscription') %></label>
+                            <%if @email.notification.present?%>
+                                    <%if @email.subscription==true%>
+                                    <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> Yes </label>
+                                    <%else%>
+                                    <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                                    <%end%>
+                            <%else%>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> No </label>
+                            <%end%>
+                        </div>
+                        </div> 
+               </div>
+
+
+
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+
+<%if @previous_education.size>0%>
+                <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12"><%= t('previousedcuation') %></h4>
+                                    <div class="row">
+
+                
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal" ><%= t('schoolname') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @previous_education[0].school_name %></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                       
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('course') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @previous_education[0].course %></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                   
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('year') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @previous_education[0].year %></label>
+                        </div>
+                    </div>
+                                        <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                       
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('marks_obtained') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @previous_education[0].marks_obtained %></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                    
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('total_marks') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @previous_education[0].total_marks %></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('gradepercentage') %></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= @previous_education[0].grade %></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('is_transfer_certificate_produced') %></label>
+                        <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"TransferCertificate")%><br>
+                        <%@document.each do |user|%>
+                          <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= user.file_file_name %></label>
+                          <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download" %><br/>
+                        <%end%>
+                      </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('is_character_certificate_produced') %></label>
+                        <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"CharacterCertificate")%><br>
+                        <%@document.each do |user|%>
+                          <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= user.file_file_name %></label>
+                          <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download" %><br/>
+                        <%end%>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20 label-weight-normal"><%= t('is_birth_certificate_produced') %></label>
+                        <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"BirthCertificate")
+                        %><br>
+
+                        <%@document.each do |user|%>
+                          <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= user.file_file_name %></label>
+                          <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download" %><br/>
+                        <%end%>
+                      </div>
+                    </div>
+
+                  <%end%>
+
+
+</div>
+
+
+                <!--   ################################################################# -->
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+                <div class="row">
+                  <%@@n=0%>
+                
+                  <%
+                  if @student.class_record.present?
+                  %>
+                    <%if @@n==0%>
+                      <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12"><%= t('activities') %></h4>
+                      <% @@n=2%>
+                    <%end%>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                      <%= t('class_record') %><br/>
+                      <%= @student.class_record %>
+                      <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"ClassRecords")%><br>
+                      <%@document.each do |user|%>
+                        <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= user.file_file_name %></label>
+                        <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download"%><br/>
+                      <%end%>
+                    </div>
+                  <%end%>
+                  <%@sports_ass = MgSportsAssociation.where(:mg_user_id=>@student.mg_user_id,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:mg_sport_id)%>
+                  <%@sports = MgSport.where(:id=>@sports_ass,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:name)%>
+                  <%@hobby_ass = MgHobbyAssociation.where(:mg_user_id=>@student.mg_user_id,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:mg_hobby_id)%>
+                  <%@hobby = MgHobby.where(:id=>@hobby_ass,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:name)%>
+                  <%@extra_ass = MgExtraCurricularAssociation.where(:mg_user_id=>@student.mg_user_id,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:mg_extra_curricular_id)%>
+                  <%@extra = MgExtraCurricular.where(:id=>@extra_ass,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:name)%>
+
+                      <%#if @student.sport_activity.present?
+                  %>
+                  <%if @@n == 0%>
+                    <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12"><%= t('activities') %></h4>
+                    <%@@n=2%>
+                  <%end%>
+                  <%if @sports.present? %>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                      <%= t('sport_activity') %><br/>
+                      <%@sports.each do |sports|%>
+                        <%= sports%>
+                      <%end%>
+                      <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"SportsActivity")%>
+                      <%@document.each do |user|%>
+                        <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= user.file_file_name %></label>
+                        <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download"%><br/>
+                      <%end%>
+                   </div>
+                  <%end%>
+                 
+                  <%if @extra.present?
+                  %>
+                    <%if @@n==0%>
+                      <h4 class="mg-h4"><%= t('activities') %></h4>
+                      <%@@n=2%>
+                    <%end%>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                      <%= t('extra_curricular') %><br/>
+                      <%@extra.each do |extra|%>
+                        <%= extra%>
+                      <%end%>
+                      <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"ExtraCurricular")%><br>
+                      <%@document.each do |user|%>
+                        <label class="mg-file-clr"><%= user.file_file_name %></label>
+                        <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download"%><br/>
+                      <%end%>
+                    </div>
+                  <%end%>
+                </div>
+                <div class="row">
+
+                  <%if @student.health_record.present?
+                  %>
+                    <%if @@n==0%>
+                      <h4 class="mg-h4"><%= t('activities') %></h4>
+                      <% @@n=2%>
+                    <%end%>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                      <%= t('health_record') %><br/>
+                      <%= @student.health_record %>
+                      <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"HealthRecords")%><br>
+                      <%@document.each do |user|%>
+                        <label class="mg-file-clr"><%= user.file_file_name %></label>
+                         <%= link_to_if user.file.url, '<i class="fa fa-download"></i>'.html_safe, user.file.url ,:class=>"mg-icon-btn mg-download-icon-font" ,:title=>"Download"%>
+                      <%end%>
+                    </div>
+                  <%end%>
+                  <%if @hobby.present?
+                    %>
+                    <%if @@n==0%>
+                      <h4 class="mg-h4"><%= t('activities') %></h4>
+                      <% @@n=2%>
+                    <%end%>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+                      <%= t('hobby') %><br/>
+                      <%@hobby.each do |hobby|%>
+                        <%= hobby%>
+                      <%end%>
+                    </div>
+                  <%end%>
+                </div>
+              </div>
+<!-- 33333333333333333333333333333333333333333333333333333333333333333333333333333 -->
+
+
+
+              <div class="card col-lg-12 col-md-12 col-xs-12 mc-margin-bottom-20 ">
+
+
+<%if @customData.size>0 %>
+
+                <h4 class="form-section-heading mc-margin-bottom-20 col-lg-12 col-md-12 col-xs-12"><%= t('Custom Fields') %></h4>
+                <% @dbdatas.each do |dbdata| %>
+               
+             <%@customData.each do |custDatas|%>
+
+            <%if dbdata.id.to_s==custDatas.mg_custom_field_id%>
+
+
+              <%custom_data=Array.new%>
+            <% hidden_field_tag 'custom_data[]', dbdata.id%>
+
+
+             
+
+
+             <%
+
+               @customData.each do |custData| 
+
+               if custData.mg_custom_field_id == dbdata.id.to_s
+                  @custValue = custData.value
+               
+               end
+             end
+              %> 
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20">
+
+            
+        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 mc-margin-bottom-20"><%= dbdata.name %></label>
+                <label class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> <%=@custValue%></label><br>
+                </div>
+
+              
+    <%end%>
+
+ <%end%>                 
+                <%end%>
+
+                    
+<%end%>
+
+
+
+          
+</div>
+
+
+<script>
+    
+    $(document).on("click",".preEssdcDet",function(){
+        var Id=$(this).attr("id");
+    
+        $.ajax({
+             url: "/previous_educations/show/"+Id,
+            success: function(html){
+            
+                 $("#manageStudentCategoryID").empty();
+               $("#manageStudentCategoryID").append(html);
+               
+            }
+        });
+    });
+
+
+    $(document).on("click",".download-pdf",function(){
+        alert("hhh");
+        var Id=$(this).attr("id");
+        alert(Id);
+    
+        $.ajax({
+             url: "/students/pdf_gen/"+Id,
+            success: function(html){
+            
+               //  $("#manageStudentCategoryID").empty();
+               //$("#manageStudentCategoryID").append(html);
+               
+            }
+        });
+    });
+</script>

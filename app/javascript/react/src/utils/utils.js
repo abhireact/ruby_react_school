@@ -1,15 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-
-export function getClassSection(data) {
-  const { academicYear, classData, sectionData, wingsData } = useSelector((state) => ({
-    academicYear: state.academicYear,
-    classData: state.classData,
-    sectionData: state.sectionData,
-    wingsData: state.wingsData,
-  }));
-
+export function getClassSection(academicYear, classData, sectionData) {
   // Step 1: Filter classes based on mg_time_table_id
-  const filteredClasses = classData.filter((classItem) => classItem.mg_time_table_id === data);
+  const filteredClasses = classData.filter(
+    (classItem) => classItem.mg_time_table_id === academicYear
+  );
 
   // Step 2: Get IDs of filtered classes
   const courseIds = filteredClasses.map((classItem) => classItem.id);
@@ -29,7 +22,5 @@ export function getClassSection(data) {
       id: section.id,
     };
   });
-
-  console.log(combinedData, "Combined Class-Section Data");
-  return data * 2;
+  return combinedData;
 }

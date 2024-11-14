@@ -1,0 +1,26 @@
+<!-- Sec --> 
+<%= fields_for :email do |eml| %>
+
+  <%= eml.hidden_field :email_type,:value => "home"%>
+  <%= eml.hidden_field :is_deleted, :value => 0 %>
+<table>
+        <tr>
+            <td><%= eml.label t('emailid') %><td>
+            <td><%= eml.text_field :mg_email_id %></td>
+        </tr>
+        <tr>
+            <td><%= eml.label t('notification') %><td>
+            <td><%=eml.check_box :notification%><td>
+        </tr>
+        <tr>
+          <td><%= eml.label t('subscription') %><td>
+          <td><%=eml.check_box :subscription%><td>
+        </tr>
+      
+    </tr>
+  </table>
+  
+  <hr/>
+
+ 
+ <% end %>        

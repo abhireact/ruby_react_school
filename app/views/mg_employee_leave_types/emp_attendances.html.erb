@@ -1,0 +1,441 @@
+<!-- Sec --> 
+
+<% navigation_add 'Employee Leave Type', mg_employee_leave_types_path %>
+<% navigation_add 'Reset', emp_attendances_path %>
+<br>
+<%#= render  partial: 'mg_employee_leave_types_left' %>
+
+
+<h4 class="form-section-heading"><%= t('resetallemployeeleaves')%></h4><br>
+          <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<p>
+<a id='selectResetAllID' class="mg-employee-leave-types-reset-all mg-small-form-btn mc-margin-bottom-20 flat-button"><%= t('resetleave')%></a>
+</p></div>
+<h4 class="form-section-heading"><%= t('departmentreset')%></h4><br>
+            <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<p>
+
+<a   class="department-reset-class mc-margin-bottom-20 flat-button mg-small-form-btn "><%= t('resetleave')%></a>
+</p></div><br>
+<div id ="showDeptResetID" style="display:none;" class="mg-btn-bottom-margin">
+        <table>
+            <tr>
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <%#@category=MgEmployeeDepartment.all.pluck(:department_name,:id)%>
+		<%@category=MgEmployeeDepartment.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:department_name,:id)%>
+                <%=select_tag :dept_id,options_for_select(@category),:prompt=>"Select Department",:class=>"form-control" %>
+            </div></tr><br>
+            <tr>          
+            <div class="form-group col-lg-10 col-md-4 col-sm-4 col-xs-12">
+                <button type="button" id="mgEmployeeLleaveTypesDepartmentResetBTNID" class="mc-margin-bottom-20 flat-button" style="margin-left: 3px;"><%= t('resetleave')%></button>
+           </div> </tr><br>
+        </table>
+
+</div>
+  <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <h4 class="form-section-heading"><%= t('individualreset')%></h4></div>
+      <div class="form-group col-lg-10 col-md-4 col-sm-4 col-xs-12">
+    <p><a   id="individualResetLeaveID" class="mc-margin-bottom-20 flat-button"><%= t('resetleave')%></a></p></div>
+
+    <div id ="show-indi-reset" style="display:none" class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+    <h4 class="form-section-heading mg-custom-labels"><%= t('searchusingemployeename')%></h4>
+    <br>
+    <p>
+        <%= text_field_tag :search, params[:search] ,:class=>"mg-custom-labels mg-text-field form-control"%><br>
+        <button class="mc-margin-bottom-20 flat-button" id="searchEmployeeNameID"><%= t('search')%></button>
+    </p>
+        <table>
+            <tr>
+                <%#@category=MgEmployeeDepartment.all.pluck(:department_name,:id)%>
+		<%@category=MgEmployeeDepartment.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:department_name,:id)%>
+                <%=select_tag :departmentID,options_for_select(@category),:prompt=>"Select Department" ,:class=>"mg-custom-labels mg-btn-bottom-margin form-control"%>
+                <!-- <select id="employeeLeaveSelectID" ></select> -->
+            </tr>
+                <!-- <tr>
+                    <button type="button" id="mgEmployeeLleaveTypesIndividualEmployeeLeaveRresetBTNID" class="">Reset</button> 
+                </tr> -->
+        </table>
+    <h4 class="form-section-heading mg-custom-labels"><%= t('employeelist')%></h4>
+    <div id="employeeLeaveSelectID" class="mg-custom-labels" style="width: 723px;"></div><br>
+ </div> </div>
+
+    
+
+<%#= render  partial: 'application/common_left_close' %>
+
+
+
+<script type="text/javascript">
+
+// $(document).on("click", "#searchEmployeeNameID", function(e){
+
+//     // var myID =$(this).attr('id');
+
+//     // var splString = myID.split("-");
+//     $("#employeeLeaveSelectID").empty();
+    
+//     var employeeName  = $("#search").val();
+//     var departmentId = $("#departmentID").val();
+//     //  alert("search Name :"+employeeName);
+ 
+//         // alert("departmentId :"+departmentId);
+//          var urlLink = "/mg_employee_leave_types/individual_employee_leave_reset/";
+
+//           $.ajax({
+//             url: urlLink ,
+//             cache: false,
+//             data:
+//             {
+//                 search_name: 'search',
+//                 employeeName: employeeName, departmentId: departmentId
+//             },
+//             success: function(data)
+//             {           
+//                     console.log(" succuess stepp --1 $$$ ")
+//                    console.log(data);
+//                      console.log(data.employee.length);
+//                         if(data.employee.length > 0){   
+//                                    var str='<table class="batch-tbl" border=""><tr class="subject-table-header"><th>First Name</th><th>Last Name</th><th>Action</th></tr>';
+//                                    // $("#employeeLeaveSelectID").append(str);
+//                                            for(key in data.employee )  
+//                                            {
+
+//                                             //for(key2 in data.employee[key])
+//                                             //{
+//                                                // console.log(data.employee[key][key2]);
+//                                                 var employeeId=data.employee[key].id;
+//                                                 var employeeName=data.employee[key].first_name;
+//                                                 var employeeLastName=data.employee[key].last_name;
+//                                                 // var employee_name=data.employee[key].employee_name;
+//                                                 //console.log(employeeId +  employeeName);
+//                                                 str +='<tr><td>'+employeeName+'</td><td>'+employeeLastName+'</td><td><a href="#", id="'+employeeId+'" class="mg-employee-leave-types-individual-employee-leave-reset">Reset</a></td></tr>'
+//                                                 // <td>'+employee_name+'</td>
+//                                                 console.log(str);
+
+//                                                 // $("#employeeLeaveSelectID").append(str);
+//                                             //}
+//                                            }
+//                                     str +='</table>';
+//                                     $("#employeeLeaveSelectID").append(str);
+//                         }else{
+
+//                             var str='Employee Not Found';
+//                             $("#employeeLeaveSelectID").append(str);
+
+//                         }
+
+//             }
+//         }); 
+// }); 
+
+$(document).on("click", "#searchEmployeeNameID", function(e){
+
+    // var myID =$(this).attr('id');
+
+    // var splString = myID.split("-");
+    $("#employeeLeaveSelectID").empty();
+    
+    var employeeName  = $("#search").val();
+    var departmentId = $("#departmentID").val();
+    //  alert("search Name :"+employeeName);
+ 
+        // alert("departmentId :"+departmentId);
+         var urlLink = "/mg_employee_leave_types/search/";
+
+          $.ajax({
+            url: urlLink ,
+            cache: false,
+            data:
+            {
+                search_name: 'search',
+                employeeName: employeeName, departmentId: departmentId
+            },
+            success: function(html)
+            {           
+                  
+              $("#employeeLeaveSelectID").append(html);
+            }
+        }); 
+}); 
+
+$(document).on('change','#departmentID',function(){
+
+    //alert("hi");
+    var employeeName  = $("#search").val();
+    var departmentId = $("#departmentID").val();
+    $("#employeeLeaveSelectID").empty();
+    //alert(retVal);
+
+    var urlLink = "/mg_employee_leave_types/search";
+          $.ajax({
+            url: urlLink ,
+            cache: false,
+            data:
+            {
+                departmentId: departmentId,
+                departmentParam: 'departmentParam', employeeName: employeeName
+            },
+            success: function(html)
+            {
+                
+              $("#employeeLeaveSelectID").append(html);
+              
+
+            }   
+        }); 
+
+});
+
+// $(document).on('change','#departmentID',function(){
+
+//     //alert("hi");
+//     var employeeName  = $("#search").val();
+//     var departmentId = $("#departmentID").val();
+//     $("#employeeLeaveSelectID").empty();
+//     //alert(retVal);
+
+//     var urlLink = "/mg_employee_leave_types/individual_employee_leave_reset";
+//           $.ajax({
+//             url: urlLink ,
+//             cache: false,
+//             data:
+//             {
+//                 departmentId: departmentId,
+//                 departmentParam: 'departmentParam', employeeName: employeeName
+//             },
+//             success: function(data)
+//             {
+                
+
+//                 if(data.employee.length > 0){   
+
+                
+//                    var str='<table class="batch-tbl" ><tr><th>First Name</th><th>Last Name</th><th></th></tr>';
+//               //     $("#employeeLeaveSelectID").append(str);
+//                    for(key in data.employee )  
+//                    {
+
+//                     //for(key2 in data.employee[key])
+//                     //{
+//                        // console.log(data.employee[key][key2]);
+//                         var employeeId=data.employee[key].mg_employee_id;
+//                         var employeeName=data.employee[key].first_name;
+//                         var employeeLastName=data.employee[key].last_name;
+//                         //console.log(employeeId +  employeeName);
+//                         str +='<tr class="employee-class"><td>'+employeeName+'</td><td>'+employeeLastName+'</td><td><a href="#", id="'+employeeId+'" class="mg-employee-leave-types-individual-employee-leave-reset">Reset</a></td></tr>';
+//               //          console.log(str);
+// //
+//   //                      $("#employeeLeaveSelectID").append(str);
+//                     //}
+//                    }
+//                    str +='</table>';
+
+//                    console.log(str) ;
+
+
+//                    $("#employeeLeaveSelectID").append(str);
+
+//                }else{
+//                  var str='Employee Not Found';
+//                  $("#employeeLeaveSelectID").append(str);
+//                }
+
+//             }   
+//         }); 
+
+// });
+
+
+
+
+
+$(document).on("click", "#mgEmployeeLleaveTypesDepartmentResetBTNID", function(e){
+    // var departmentId =$(this).attr('id');
+
+    // var splString = myID.split("-");
+    var departmentId = $("#dept_id").val();
+
+   //  alert(departmentId);
+    
+ 
+        // alert("retVal");
+         var retVal = confirm("Are you sure to reset the leaves?");
+          if(retVal){
+         var urlLink = "/mg_employee_leave_types/department_reset/"+departmentId;
+
+         // alert(urlLink);
+        
+        
+          $.ajax({
+            url: urlLink ,
+            cache: false,
+            
+            success: function(html){
+               // window.location.reload();
+               alert("Leave Reset Successful");
+             
+                           
+            }
+        }); 
+
+           }else{
+                   // alert(retVal);     
+                   return false;
+                }
+});  
+
+
+// $(document).on('change','#departmentID',function(){
+
+//     //alert("hi");
+//     var departmentId = $("#departmentID").val();
+//     $("#employeeLeaveSelectID").empty();
+//     //alert(retVal);
+
+//     var urlLink = "/mg_employee_leave_types/individual_employee_leave_reset";
+//           $.ajax({
+//             url: urlLink ,
+//             cache: false,
+//             data:
+//             {
+//                 departmentId: departmentId,
+//                 departmentParam: 'departmentParam'
+//             },
+//             success: function(data)
+//             {
+//                    console.log(data);
+
+//                    for(key in data.employee )  
+//                    {
+
+//                     //for(key2 in data.employee[key])
+//                     //{
+//                        // console.log(data.employee[key][key2]);
+//                         var employeeId=data.employee[key].id;
+//                         var employeeName=data.employee[key].first_name;
+//                         //console.log(employeeId +  employeeName);
+//                         var str='<option value="'+employeeId+'">'+employeeName+'</option>'
+//                         console.log(str);
+
+//                         $("#employeeLeaveSelectID").append(str);
+//                     //}
+//                    }
+
+//             }
+//         }); 
+
+// });
+
+
+
+
+
+
+$(document).on('click','.mg-employee-leave-types-individual-employee-leave-reset',function(){
+    var employeeID =$(this).attr('id');
+    // var employeeID = $("#employeeLeaveSelectID").val();
+   //  alert(employeeID);
+    var retVal = confirm("Are you sure to reset the leaves?");
+
+    var urlLink = "/mg_employee_leave_types/individual_employee_leave_reset";
+        if(retVal){
+
+                $.ajax({
+                        url: urlLink ,
+                        cache: false,
+                        data:
+                        {
+                            employeeID: employeeID,
+                            employee_id: 'empID'
+                        },
+                       success: function(html){
+                           alert("Leave Reset Successful");
+
+                           // window.location.reload();
+                                       
+                        }
+                    }); 
+        }else{
+             return false;
+        }
+});
+
+
+
+
+
+$(document).on("click", "#employeeLeaveReset", function(e){
+        var studentCategoryID =$(this).attr('id');
+         // alert(studentCategoryID);
+        //var urlLink = "/student_categories/"+studentCategoryID+"/edit";
+        var urlLink = "/mg_employee_leave_types/emp_attendances/"+studentCategoryID;
+        // alert(urlLink);
+        $.ajax({
+            url: urlLink ,
+            cache: false,
+            success: function(html){
+
+            //$(this).removeClass("header");
+            $("#manageStudentCategoryID").empty();
+            $("#manageStudentCategoryID").append(html);
+        }
+
+        });
+});
+
+
+
+
+
+
+
+
+
+$(document).on("click", ".mg-employee-leave-types-reset-all", function(e){
+    var myID =$(this).attr('id');
+
+    // var splString = myID.split("-");
+  //   alert("retVal");
+    var retVal = confirm("Are you sure to reset the leaves?");
+ 
+   //     alert("retVal");
+         var urlLink = "/mg_employee_leave_types/reset_all/"+2;
+  if(retVal){
+          $.ajax({
+            url: urlLink ,
+            cache: false,
+            success: function(html){
+               window.location.reload();
+                           
+            }
+        }); 
+
+     }else{
+             // alert(retVal);     
+             return false;
+          }
+});  
+
+
+
+$(document).on("click", ".department-reset-class", function(e){
+    // var myID =$(this).attr('id');
+  // alert("hiiii")
+   $("#showDeptResetID").toggle();
+});  
+
+$(document).on("click", "#individualResetLeaveID", function(e){
+    // var myID =$(this).attr('id');
+ //   alert("hiiii")
+   e.preventDefault();
+  // var retVal = confirm("Are you sure to delete course?");
+   $("#show-indi-reset").toggle();
+});
+$(document).ready(function () {
+    focusCurrentTab("employeeLeaveResetq","employeeLeaveResetqLiID");
+    focusAttendance();
+});
+
+
+ 
+</script>

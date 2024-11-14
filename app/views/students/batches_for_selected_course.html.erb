@@ -1,0 +1,4 @@
+<%= fields_for :sibling do |f| %>
+<%=f.select :mg_batch_id,options_for_select(@batches),{:include_blank => t("select")},:class => "myclass"%>
+ <%#= f.collection_select(:mg_batch_id,MgBatch.where(:is_deleted => 0, :mg_school_id=>session[:current_user_school_id]), :id, :name,{:include_blank => t("select")},:class => "myclass")%>
+<%end%>

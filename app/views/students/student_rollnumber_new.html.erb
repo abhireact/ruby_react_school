@@ -1,0 +1,141 @@
+<% navigation_add t('student_roll_number_entry'),'/students/student_rollnumber_new' %>
+<h4 class="form-section-heading mc-margin-bottom-20">Student Roll Number</h4>
+<%= form_for :examMarksEntry, :url=>{:controller=>'students',:action=>'student_rollnumber_create'},:html => {:id => 'exammanagement_examScoresEntryID', :class => 'elm_class',:style => 'elm_style' } do |f| %>
+  <%=f.hidden_field :created_by, :value=>session[:user_id]%>
+  <%=f.hidden_field :updated_by, :value=>session[:user_id]%>
+  <%=f.hidden_field :is_deleted, :value=>0%>
+  <%=f.hidden_field :mg_school_id, :value=>session[:current_user_school_id]%>
+
+  <div class="row mc-padding-20 form-section-box">
+    <div class="row">
+      <%= render partial: 'get_academic_year' %>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label for="mg-label mg-leave-width"><%=t('select')%> <%=t('course')%><span class="required-field">&nbsp;*</span></label><br/>
+        <%=select_tag :mg_course_id, options_for_select([]),:prompt=>t('select'),:onchange=>"classOnChange(this.value)",:class=>"current_year_class form-control"%><br>
+      </div>
+
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label for="mg-label" for="select_a_subject"><%= t('select_section') %><span class="required-field">&nbsp;*</span></label><br/>
+        <%=select_tag :mg_batch_id,options_for_select([]),:prompt=>"Select",:onchange=>"pre_populate_grade();",:class=>"form-control"%>
+      </div>
+    </div>
+  </div>
+
+  <div id="exammanagementID">
+    <%= render 'onchange_student' if @studentObj.present?%>
+  </div>
+  
+  <%= hidden_field_tag "mg_course_id", params[:mg_course_id]%>
+  <%= hidden_field_tag "batch_id", params[:mg_batch_id]%>
+
+<%end%>
+
+<div id="spinner" style="display: none;">
+    <img src="/assets/ajax-loader.gif" alt="Loading..."/>
+</div>
+<div id="overlay" style="display: none;"></div>
+
+
+<script>
+
+  function spin(){
+    $("#overlay").show();
+    $("#spinner").show();
+  };
+
+  function stopSpin(){
+    $("#overlay").hide();
+    $("#spinner").hide();
+  };
+
+  $(document).ready(function(){
+
+    user_type=$("#user_type").val();
+    if(user_type=="employee"){
+      focusCurrentTab("other_grade_AID","other_grade_LiId");
+      focusExaminationHeaderBox();  
+    }
+    else{
+      focusCurrentTab("other_grade_AID","other_grade_LiId");
+      focusExaminationHeaderBox();
+    }
+    // $("#evaluation_details_validations_edit_data_demo").validate();
+    $("#exammanagement_examScoresEntryID").validate({
+      rules: {
+         "mg_course_id": {required: true},
+        "mg_batch_id": {required: true},
+      }
+    });
+
+    $('#mg_time_table_id, #mg_course_id, #mg_batch_id').on('change', function() {
+     $("#exammanagementID").empty();
+    });
+  });
+
+
+
+  var mg_course_id = $("input:hidden[name=mg_course_id]").val();
+  var mg_batch_id = $("#batch_id").val();
+  var exam_type_id = $("#exam_type_id").val();
+
+  var urlLink = "/cbsc_examinations/onchange_section/";
+  $.ajax({
+    url: urlLink ,
+    data:{"mg_course_id":mg_course_id, "mg_batch_id":mg_batch_id},
+    cache: false,
+    success: function(html){
+      $("#mg_course_id").val(mg_course_id);
+      $("#mg_batch_id").html(html);
+    }
+  }); 
+
+ 
+
+
+   
+	function classOnChange(courseid){
+    var urlLink = "/cbsc_examinations/onchange_section/";
+    $.ajax({
+      url: urlLink ,
+      data:{"mg_course_id":courseid},
+      cache: false,
+      success: function(html){
+        $("#mg_batch_id").html(html);
+      }
+    }); 
+  };
+
+
+  function pre_populate_grade(){
+    $("#exammanagementID").empty();
+    var batch_id = $("#mg_batch_id").val();
+    var class_id = $("#mg_course_id").val();
+    var mg_time_table_id = $("#mg_time_table_id").val();
+    var urlLink = "/students/student_rollnumber_new/";
+    spin();
+    $.ajax({
+      url: urlLink ,
+      data:{"mg_batch_id":batch_id,mg_course_id:class_id, mg_time_table_id:mg_time_table_id},
+      cache: false,
+      success: function(html){
+        stopSpin();
+        $("#exammanagementID").append(html);
+      }
+    }); 
+  };
+
+  // function get_co_scholastic_particular(){
+  //   var courseid = $("#mg_course_id").val();
+  //   var batch_id = $("#mg_batch_id").val();
+  //   var mg_cbsc_exam_type_id = $("#mg_cbsc_exam_type_id").val();
+  //   var urlLink = '/cbsc_examinations/get_co_scholastic_particular'
+  //   $.ajax({
+  //     url: urlLink ,
+  //     data :{"mg_course_id":courseid,"mg_batch_id":batch_id,"mg_cbsc_exam_type_id":mg_cbsc_exam_type_id},
+  //     success: function(html){
+  //       $("#co_scholastic_component_id").html(html);
+  //     }
+  //   });
+  // }
+
+</script>

@@ -1,0 +1,141 @@
+
+<%             school_id=session[:current_user_school_id]
+school_name=MgSchool.find_by(:is_deleted=>0,:id=>school_id)
+%>
+<%#
+    @notifi = MgNotification.where(:to_user_id => session[:user_id],:status => false,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id] ).all
+    @noti_size = @notifi.size
+%>
+
+            <div class="sms-left-header">
+                <a href="#"><i class="fa fa-graduation-cap"></i> <span><%#=school_name.school_name%>
+					</span></a>
+                <span class="sms-sidebar-toggle"><a href="#"></a></span>
+            </div>
+
+            <div class="sms-right-header" sms-position-type="relative">
+                <span class="sms-sidebar-toggle"><a href="#" ></a></span>
+                <ul class="left-navbar ">
+                	<!--
+					<li class="dropdown sms-rheader-submenu message-notification">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							
+
+								<%# user=MgUser.find(session[:user_id])
+						  @help_document=MgHelpDocument.where(:mg_school_id=>session[:current_user_school_id],:user_type=>user.user_type,:is_deleted=>0)%>
+						        <%#if @help_document[@help_document.length-1].present?%>
+
+						        <%#= link_to_if @help_document[@help_document.length-1].document.url, image_tag("help_icons.png" ,:style=>"width: 40px; height: 40px; position: relative; left: 0px;"), @help_document[@help_document.length-1].document.url ,:class=>"help-doc-style"%>
+						        <%#else%>
+						              
+						              <img src="<%#=image_url('help_icons.png')%>" style="width: 35px; height: 35px; position: relative; left: 0px; top: -1px; cursor: pointer;" id="imageHelpDocumentId" title="Help Documentation" />
+
+
+						        <%#end%>
+						    </span>
+						</a>
+					</li>
+				-->
+
+				<%if( params[:controller] != "mg_student_admission_requests") && (params[:controller] != "mg_payment_details") && (params[:controller] != "mg_atom_payments")%>
+					<%@notification_details = MgNotificationDetail.where(to_user_id: session[:user_id],status:false,is_deleted: 0,mg_school_id: session[:current_user_school_id])%>
+					<%@noti_sizes = @notification_details.size%>
+					<li class="dropdown sms-rheader-submenu message-notification">
+						<a href="/notifications/show_notification/" class="dropdown-toggle icon-circle" data-toggle="dropdown">
+							<i class="fa fa-bell-o" ></i>
+							<span class="badge badge-success" style="background-color: red; color: black;"><%= @noti_sizes %></span>
+
+						</a>
+					</li> 
+					<!-- DASHBOARD START -->
+						<% user_type = ["admin", "principal", "school_incharge"] %>
+						<% if user_type.include?(session[:user_type]) %>
+						    <li class="dropdown sms-rheader-submenu message-notification">
+						    <!-- <li class="left-navbar"> -->
+						        <a href="" class="dash-toggle icon-circle custom-tooltip" data-toggle="tooltip" data-placement="bottom" title="Dashboard">
+						            <i class="fa fa-bar-chart"></i>
+						        </a>
+						    </li>
+						<% else %>
+						    <% role = MgRole.find_by(role_name: session[:user_type], mg_school_id: session[:current_user_school_id]) %>
+						    <% if role.present? %>
+							    <% if role.dashboard == true %>
+							        <li class="dropdown sms-rheader-submenu message-notification">
+							            <a href="" class="dash-toggle icon-circle custom-tooltip" data-toggle="tooltip" data-placement="bottom" title="Dashboard">
+							                <i class="fa fa-bar-chart"></i>
+							            </a>
+							        </li>
+							    <% end %>
+						    <% end %>
+						<% end %>
+					<!-- DASHBOARD END -->
+				<%end%>
+					<li class="sms-school-name-header">	
+
+				
+					<a href="#"> <span ><%=school_name.school_name%>
+					</span></a>
+				
+					</li>
+				</ul>	
+				<%
+				if (params[:controller] != "mg_student_admission_requests" ) && (params[:controller] != "mg_payment_details") && (params[:controller] != "mg_atom_payments")%>
+				<ul class="right-navbar">
+					      <%#user_data=MgUser.find(session[:user_id])%>
+                                                <%
+					      user_sql = "select first_name from mg_users where id=#{session[:user_id]}"; 
+					      user = ActiveRecord::Base.connection.execute("#{user_sql}")
+					      user_data = user.to_a%>
+					<span class="glyphicon glyphicon-user"><b class="padding-left-5">Welcome <%=user_data[0][0]%></b></span> 
+                    <a href="/log_out" class="padding-left-10"> <i class=" fa fa-sign-out sms-blue"></i></a> 
+				</ul>
+				<%else%>
+					<%if session[:user_type] == "school_incharge" || session[:user_type] == "AdmissionIncharge"%>
+						<ul class="right-navbar">
+					      <%#user_data=MgUser.find(session[:user_id])%>
+                                                <% 
+					      user_sql = "select first_name from mg_users where id=#{session[:user_id]}"; 
+					      user = ActiveRecord::Base.connection.execute("#{user_sql}")
+					      user_data = user.to_a%>
+					<span class="glyphicon glyphicon-user"><b class="padding-left-5">Welcome <%=user_data[0][0]%></b></span> 
+                    <a href="/log_out" class="padding-left-10"> <i class=" fa fa-sign-out sms-blue"></i></a> 
+				</ul> 
+					<%end%>
+				<%end%>
+				 
+            </div>
+
+           
+<script type="text/javascript">
+	  $("#imageHelpDocumentId").click(function(){
+	      alert("Help Documentation is not available.");
+	  });
+
+	  $(".dropdown-toggle").click(function(){
+	  	window.location = "/notifications/show_notification/"
+	   // action goes here!!
+	  }); 
+
+	  $(".dash-toggle").click(function(){
+	  	window.location = "/dashboards/principal_updates"
+	  }); 
+
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+
+<style>
+    /* Customize tooltip appearance */
+    .custom-tooltip .tooltip-inner {
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .custom-tooltip.tooltip.bottom .tooltip-arrow {
+        border-bottom-color: #3498db;
+    }
+</style>

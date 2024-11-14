@@ -1,0 +1,107 @@
+<%if @student_details.present? %>
+<%= hidden_field_tag "student_list_option",  params[:student_list_option] %>
+<h4 class="form-section-heading mc-margin-bottom-20" style="color: grey;">Student Admission Report From  <%= @start_date.to_date.strftime(@school.date_format) %> To <%= @end_date.to_date.strftime(@school.date_format)%></h4>
+<div>
+  <table class="table table-bordered table-striped" id="student_admission_index">
+      <thead>
+      <td>S.No.</td>
+      <td>Date of Admission</td>
+      <td>Student Name</td>
+      <td>Admission Number</td>
+      <td>Class & Section</td>
+      <td>User ID</td>
+      <td>Father’s Name</td>
+      <td>Admission Fee</td>
+  </thead>
+    <tbody>
+
+      <% s_no = 1 %>
+      <% @student_details.each do |stud| %>
+       <tr class="even">
+         <td><%= s_no %></td>
+         <td><%= stud[:date_of_admission] %></td>
+         <td><%=  stud[:student_name] %></td>
+         <td><%=  stud[:admission_number] %></td>
+         <td><%=  stud[:class_section] %></td>
+         <td><%=  stud[:user_id] %></td>
+         <td><%=  stud[:guardian_name] %></td>
+         <td><%=  stud[:admission_fee] %></td>
+      </tr>
+      <% s_no += 1 %>
+      <% end %>
+    </tbody>
+  </table>
+     <% if params.present?
+     @mg_time_table_id = @academic_year
+     @mg_wing_id = @mg_wing_id
+     @course =@course_id
+     @batch =  @batch_id
+     @start_date = @start_date 
+     @end_date =  @end_date
+     @archive_student = @archive_student
+     @student_list_option = params[:student_list_option]
+     end %>
+    <!-- <a onclick="new_admission_list_excel()" class="mg-small-form-btn mc-margin-bottom-20 flat-button"><%#=t("export_excel")%></a> -->
+    <!-- <a onclick="new_admission_list_pdf()" class="mg-small-form-btn mc-margin-bottom-20 flat-button"><%#=t("generate_pdf")%></a> -->
+<!--     <div class="row" style="margin-top: 2%;margin-left: 0%;" >
+    <%#= button_to 'Generate Excel',students_new_admission_docs_path, method: :post, params: { school: @school,school_logo:@school_logo,student_details:@student_details.to_json, course_batch: @course_batch,start_date:@start_date,end_date:@end_date,format:"xls" }, class: 'submit mc-margin-bottom-20 flat-button' %>
+    <%#= button_to 'Generate PDF',students_new_admission_docs_path, method: :post, params: { school: @school,school_logo:@school_logo,student_details:@student_details.to_json, course_batch: @course_batch,start_date:@start_date,end_date:@end_date,format:"pdf" }, class: 'submit mc-margin-bottom-20 flat-button' %>
+    </div>  -->
+<div class="row" style="margin-top: 2%; margin-left: -73%;">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+    <%= button_to 'Generate Excel', students_new_admission_docs_path, method: :post, params: { school: @school, school_logo: @school_logo, student_details: @student_details.to_json, course_batch: @course_batch, start_date: @start_date, end_date: @end_date, format: "xls" }, class: 'submit mc-margin-bottom-20 flat-button' %>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left" style="margin-left: -22px;">
+    <%= button_to 'Generate PDF', students_new_admission_docs_path, method: :post, params: { school: @school, school_logo: @school_logo, student_details: @student_details.to_json, course_batch: @course_batch, start_date: @start_date, end_date: @end_date, format: "pdf" }, class: 'submit mc-margin-bottom-20 flat-button' %>
+  </div>
+</div>
+
+</div>
+<% else %>
+ <h4 class="form-section-heading mc-margin-bottom-20" style="color: grey;">No Data</h4>
+
+<% end -%>
+<script >
+  function new_admission_list_pdf(){
+    // var mg_time_table_id = "<%= @mg_time_table_id %>"
+    // var course = "<%= @course %>"
+    // var batch = "<%= @batch %>"
+    var mg_wing_id = "<%= @mg_wing_id %>"
+    var start_date = "<%= @start_date %>"
+    var end_date = "<%= @end_date  %>"
+    var end_date = "<%= @end_date  %>"
+    var archive_student = "<%= @archive_student  %>"
+    var student_list_option = "<%= @student_list_option  %>"
+    // window.location="/archive_employee_reports/datewise_archive_employee?"+"start_date="+start_date+"&end_date="+end_date+"&format="+"pdf";
+    // window.location="/students/new_admission_index?"+"mg_time_table_id="+mg_time_table_id+"&mg_wing_id="+mg_wing_id+"&course="+course+"&batch="+batch+"&start_date="+start_date+"&end_date="+end_date+"&archive_student="+archive_student+"&student_list_option="+student_list_option+"&format="+"pdf";
+    window.location="/students/new_admission_index?"+"&wings="+mg_wing_id+"&start_date="+start_date+"&end_date="+end_date+"&archive_student="+archive_student+"&student_list_option="+student_list_option+"&format="+"pdf";
+  }
+  
+  function new_admission_list_excel(){
+    // var mg_time_table_id = "<%= @mg_time_table_id %>"
+    var mg_wing_id = "<%= @mg_wing_id %>"
+    // var course = "<%= @course %>"
+    // var batch = "<%= @batch %>"
+    var start_date = "<%= @start_date %>"
+    var end_date = "<%= @end_date  %>"
+    var archive_student = "<%= @archive_student  %>"
+    var student_list_option = "<%= @student_list_option  %>"
+    window.location="/students/new_admission_index?"+"&wings="+mg_wing_id+"&start_date="+start_date+"&end_date="+end_date+"&archive_student="+archive_student+"&student_list_option="+student_list_option+"&format="+"xls";
+  }
+  
+   $(document).ready(function(){
+    $('#student_admission_index').dataTable({
+       // $('.dataTables_filter input[type="search"]').css({ 'width': '350px', 'display': 'inline-block' })
+          sPaginationType: "full_numbers",
+          bJqueryUI: true,
+          searching: true,
+          order: [[0,"asc"]],
+          columnDefs: [
+            {orderable: false , targets: -1}
+          ] ,
+          "lengthMenu": [10,15,20],
+          bDestroy: true
+        });
+      });
+
+</script>

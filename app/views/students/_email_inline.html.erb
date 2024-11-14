@@ -1,0 +1,58 @@
+<!-- Sec -->
+<%phone_types = "phone"%>
+  <%= fields_for (phone_types) do |cnt| %>
+<div class="row mc-padding-20 form-section-box">
+      <%= cnt.hidden_field :is_deleted, :value => 0 %>
+      <%= cnt.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+      <%if phone_types=="home"%>
+        <%= cnt.hidden_field :phone_type, :value => "home" %>
+      <%end%>
+
+      <%if phone_types=="personal"%>
+       <%= cnt.hidden_field :phone_type, :value => "personal" %>
+      <%end%>
+
+      <%if phone_types=="phone"%>
+         
+         <%= cnt.hidden_field :phone_type, :value => "phone" %>
+         <%= cnt.hidden_field :notification, :value => 0 %>
+         <%= cnt.hidden_field :subscription, :value => 0 %>
+
+         <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+                <label   for="phone_number"><%= t('phonenumber') %>&nbsp&nbsp
+                  <a href="#" data-toggle="tooltip" class="pull-right" title="Can enter digits only. No arbitrary symbols like -,*,#,etc are allowed. Phone Number should not be initialised with 0, eg: If your number is 06542-2651XX, then enter it like 65422651XX. No need to mention \'0\' in the beginning."><i class="fa fa-question-circle-o fa-lg"></i></a>
+                </label>
+               <%= cnt.text_field :phone_number , :minlength => "10", :maxlength => "10",:class=>"form-control"%>  
+        </div>
+       
+
+      <%end%> 
+  <% end %>
+  <%= fields_for :email do |eml| %>
+    <%= eml.hidden_field :email_type, value: "home" %>
+    <%= eml.hidden_field :mg_school_id, value: session[:current_user_school_id] %>
+    <%= eml.hidden_field :is_deleted, value: 0 %>
+
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+  <%= eml.label t('emailid') %><span class="required-field"></span>
+  <%= eml.text_field :mg_email_id, class: "form-control email-input" %>
+</div>
+
+
+    <!-- Additional email fields if needed -->
+    <!--
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <%#= eml.label t('notification') %>
+      <br>
+      <%#= eml.check_box :notification %>
+    </div>
+
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <%#= eml.label t('subscription') %>
+      <br>
+      <%#= eml.check_box :subscription %>
+    </div>
+    -->
+  <% end %>
+
+<!-- </div> -->

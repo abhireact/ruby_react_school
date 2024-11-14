@@ -1,0 +1,439 @@
+<!-- #version1.1(for employee attendance and payslip   21/08/2018/Mamatha) -->
+<!-- # #version 1.2(31/08/18 for employee leaves  by mamatha) -->
+<!-- # #version 1.3(05/09/18 for employee leaves  table in employee login by mamatha) -->
+<!-- # #version 1.4(16/09/18 for exception by mamatha) -->
+
+<!-- Sec --> 
+<!--  -->
+<% navigation_add 'Apply Leave', from_emp_path %>
+
+
+<%#= render partial: 'dashboards/employee_left' %>
+
+  <% if !params[:notice].blank? %>
+  <div class="alert alert-info mg-success-msg">
+  <%= params[:notice] %>
+  </div>
+<% end %>
+
+<% if @isMabager.size > 0%>
+<h4><%= t('employeelist')%></h4>
+<table class="batch-tbl table-striped table">
+<thead>
+          <tr>
+            <th><%= t('firstname')%></th>
+            <th><%= t('lastname')%></th>
+            <th><%= t('actions')%></th>
+          </tr></thead>
+        
+         
+          <%for i in 0...@isMabager.size %>
+          <% @employee =MgEmployee.where(:id=>@isMabager[i].id) %>
+              <% @employee.each do |emp| %>
+                  <tr>
+                    <td><%= emp.first_name%></td>
+                    <td><%=emp.last_name %></td>
+                    <td><a id="<%=raw emp.id%>" class="managerAppruClass" ><%= t('approve')%></a></td>
+                    <!-- <td><input id="leaveEmpIsApprove" type="checkbox" class="<%=raw emp.id%>" onclick="myfunction(<%=raw emp.id%>)"></td> -->
+                    <!-- MgEmployee.where(:id=>@isMabager[i].id).pluck(:first_name) -->  
+                  </tr>
+              <%end%>
+
+          <%end%>
+    </table>
+<!-- <input type="submit" id='saveEmployeeData' value="Save" name="commit"> -->
+
+
+<%end%>
+
+
+<h4 class="form-section-heading"><%= t('leavedetails')%></h4>
+
+<table class="batch-tbl mg-btn-bottom-margin table-striped table" border="1">
+  <thead><tr class="subject-table-header">
+    <th><%= t('leavename')%></th>
+      <!-- <th><%#= t('min leave count')%></th> -->
+
+      <th class="mg-label-text-transform-none"><%= t('maxleavecount')%></th>
+    <th><%= t('Leave Applied')%></th>
+  
+    <th><%= t('leavebalance')%></th>
+  </tr></thead>
+      <tr>
+      <%@levee_typs.each do |s|%>
+            <td><%=s.leave_name %></td>
+            <!-- <td><%#=s.min_leave_count %></td> -->
+            <% @leve_taken=MgEmployeeLeaves.where(:mg_leave_type_id=>s.id, :mg_employee_id=>@employee_id[0] ,:is_deleted=>0, :mg_school_id=>session[:current_user_school_id], :leave_month_year=>@month_start...@month_end)%>
+            <% if !s.is_accumilation%>
+            <% max_leave_count = s.max_leave_count%>
+            <%if @leve_taken.length <=0
+                leave_taken = 0
+                leave_count = s.max_leave_count %>
+            <%else%>
+                <%
+                leave_taken = 0.0
+                leave_count = 0.0
+
+                @leve_taken.each do |l|
+
+                  leave_taken += l.leave_taken
+                   %>  
+                <%end%>
+             <%end%>
+                <%
+                leave_count=@leve_taken.last.available_leave rescue 0
+                 leave_count = leave_count >= 0 ? leave_count : 0.0 %>
+            <%else%>
+            <%
+            max_leave_count = @leve_taken.last.available_leave
+              leave_taken = @leve_taken.last.leave_taken
+              leave_count = max_leave_count 
+              %>
+            <%end%>
+             <td><%=max_leave_count%></td>
+                <td><%=leave_taken %></td>
+                    <td> <%=leave_count%></td>
+
+
+
+
+         </tr>  
+
+      
+      
+   
+    <%end%>
+
+     
+</table>
+
+<h4 class="form-section-heading"><%= t('applied leave details')%></h4>
+
+<%if @leave.present?%>
+<div class="mg_pagination">
+
+<table class="batch-tbl mg-tbl-margin table-striped table">
+          <tr>
+          <!-- <th><%#=t('Employee Number')%></th> -->
+           <!--  <th><%#= t('firstname')%></th>
+            <th><%#= t('lastname')%></th> -->
+            <!-- <th><%#= t('department')%></th> -->
+            <th><%= t('leave_type')%></th>
+            <th><%= t('from_date')%></th>
+            <th><%= t('to_date')%></th>
+            <th><%= t('reason for reject')%></th>
+            <th><%= t('applied_date')%></th>
+            <th><%= t('status date')%></th>
+            <th><%= t('status')%></th>
+          </tr>
+        
+         
+          <%@leave.each do |l| %>
+          <% employee =MgEmployee.find(l.mg_employee_id) %>
+                  <tr>
+                    <!-- <td><%#=employee.employee_number%></td> -->
+            <!--         <td><%#= employee.first_name%></td>
+                    <td><%#=employee.last_name %></td> -->
+                    <!-- <td><%#=MgEmployeeDepartment.find(employee.mg_employee_department_id).department_name%></td> -->
+                    <td><%=MgEmployeeLeaveType.find(l.mg_employee_leave_type_id).leave_name%> </td>
+                    <td><%=l.from_date.strftime(@school.date_format)%></td>
+                    <td><%=l.to_date.strftime(@school.date_format)%></td>
+                    <td><%=l.reject_reason%></td>
+                    <td><%=l.applied_date.strftime(@school.date_format)%></td>
+                    <%if l.status_date.present?%>
+                    <%date=l.status_date.strftime(@school.date_format)%>
+                    <%else%>
+                    <%date=""%>
+
+                    <%end%>
+                    <td><%=date%></td>
+                    <td><%=l.status%></td>
+
+                  </tr>
+             
+          <%end%>
+    </table>
+    <p>
+     <%= will_paginate @leave, :container => false %><br>
+     </p>
+  </div>
+<%else%>
+<h5>Leaves not applied.</h5>
+<%end%>
+
+
+
+
+
+
+<h4 class="form-section-heading"><%= t('applyforleave')%></h4>
+<%= form_for :mg_employee_leave_types , url: mg_employee_leave_types_employee_leave_path, :html => {
+                            :id => 'employeeLeaveApplyID', :class => 'employeeLeaveApplyClass' } do |f| %>
+  <div class="row mc-padding-20 form-section-box">
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+  <!-- <p> -->
+    <%= f.label :Leave_Type ,t('leavetype'),:class=>"mg-label"%><span class="required-field"> *</span><br>
+    <%= f.collection_select(:leave_type, @shr_leave_types, :id, :leave_name, {:include_blank => 'Select Leave Type'},:class=>"form-control") %>
+  <!-- </p> --></div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<!-- <p>   -->
+        <%= f.label :is_halfday ,t('ishalfday'),:class=>"mg-label"%>
+        <br>
+        <%= f.hidden_field :is_halfday, :value => false ,:id=>"emp_halfdayfield"%>    
+        <input id="emp_attendances_halfday" type="checkbox" onclick="toggleAll();" name="employees_attendances[is_halfday]">
+   <!-- </p> -->
+   <%= f.hidden_field :is_afternoon, :value => false ,:id=>"emp_afternoonfield"%> </div>
+
+<div id="showAndHideEmployeeLeaveAppplyDIVID" style="display:none">
+       <div class="mg-custom-labels form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+         <label class="mg-label"><%= f.label :morning ,t('morning') %></label>
+          <%= f.radio_button :is_afternoon, false, :checked => true%>
+          <label class="mg-label"><%= f.label :afternoon,t('afternoon')%></label>
+          <%= f.radio_button :is_afternoon, true%>
+          </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+          <%= f.label :date ,t('date'),:class=>"mg-label"%><span class="required-field"> *</span></br>
+          <%= f.text_field :half_day_date ,:class=>"mg-text-field form-control"%></div>
+        
+   </div>
+
+<div id="hideAndShowEmployeeLeaveAppplyDIVID">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<!--   <p> -->
+    <%= f.label :From_Date ,t('from date'),:class=>"mg-label"%><span class="required-field"> *</span></br>
+    <%= f.text_field :from_date ,:class=>"mg-text-field form-control"%>
+  <!-- </p> --></div>
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<p>
+    <%= f.label :To_Date ,t('todate'),:class=>"mg-label"%><span class="required-field"> *</span></br>
+    <%= f.text_field :to_date ,:class=>"mg-text-field form-control"%>
+  </p>
+</div>
+</div>  
+    
+
+   <%= f.hidden_field :mg_employee_id, :value =>@employee_id[0]%> 
+
+   <%= f.hidden_field :mg_employee_department_id, :value => @deptId[0]%> 
+   <%= f.hidden_field :is_approved, :value => 0 %>
+
+      
+
+
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+  <p>
+    <%= f.label :reason ,t('reason'),:class=>"mg-label"%><span class="required-field"> *</span></br>
+    <%= f.text_area :reason ,:class=>"mg-text-field form-control"%>
+  </p></div>
+
+<p>
+<%= f.hidden_field :is_deleted, :value=>0%>
+<%= f.hidden_field :mg_school_id, :value=>session[:current_user_school_id]%>
+<%= f.hidden_field :created_by, :value=>session[:user_id]%>
+<%= f.hidden_field :updated_by, :value=>session[:user_id]%>
+
+
+</p>
+
+</div>
+
+<p>
+ <input type="submit" id='save_student_data' value="" name="commit" class="mg-small-form-btn" style="display:none" > 
+</p>
+<% end %>
+
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<p class="mg-p-mgtop">
+ <a onclick="$(this).closest('form').submit()" id="employeeLeaveApplyFormBTNID" class="mg-small-form-btn mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+<%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog flat-button  margin-left-10"} %>
+</p></div>
+
+
+
+    
+<script type="text/javascript">
+dateFormatStr =  getJsDateFormat();
+$(document).on("change","#mg_employee_leave_types_from_date",function(e){
+
+      var from_date = $(this).val();
+      var to_date = $("#mg_employee_leave_types_to_date").val();
+
+      if(from_date && to_date){
+        if(!compareDate(from_date,to_date,dateFormatStr)){
+          alert("From Date should be lesser than To Date");
+          document.getElementById('mg_employee_leave_types_from_date').value ="";
+        }
+      }
+   });
+   $(document).on("change","#mg_employee_leave_types_to_date",function(e){
+
+      var from_date = $("#mg_employee_leave_types_from_date").val();
+      var to_date = $(this).val();
+
+      //var admission_date=$(this).val();
+      //var dob=$("#mg_employee_leave_types_from_date").val();
+
+       // if(getDateObj(dob,dateFormatStr)>getDateObj(admission_date,dateFormatStr)){
+       if(from_date && to_date){ 
+          if(!compareDate(from_date,to_date,dateFormatStr)){
+            alert("From Date should be lesser than To Date");
+            document.getElementById('mg_employee_leave_types_to_date').value ="";
+          }
+       } 
+   });
+
+
+
+$( "#mg_employee_leave_types_from_date" ).datepicker({minDate: new Date(), changeMonth: true,
+                changeYear: true,dateFormat: dateFormatStr });
+$( "#mg_employee_leave_types_to_date" ).datepicker({ minDate: new Date(), changeMonth: true,
+                changeYear: true,dateFormat: dateFormatStr });
+$( "#mg_employee_leave_types_half_day_date" ).datepicker({minDate: new Date(), changeMonth: true,
+                changeYear: true,dateFormat: dateFormatStr });
+
+
+  
+// $("#mg_employee_leave_types_to_date").change(function () {
+//     var startDate = document.getElementById("mg_employee_leave_types_from_date").value;
+//     var endDate = document.getElementById("mg_employee_leave_types_to_date").value;
+//     if ((Date.parse(endDate) <= Date.parse(startDate))) {
+//         alert("End date should be greater than Start date");
+//         document.getElementById("mg_employee_leave_types_to_date").value = "";
+//     }
+// });
+
+
+
+
+
+
+
+
+$(document).on("click", ".managerAppruClass", function(e){
+   e.preventDefault();
+        var myID =$(this).attr('id');
+       var splString = myID.split("-");
+        var urlLink = "/mg_employee_leave_types/approve_leave_by_manager/"+myID;
+        $.ajax({
+            url: urlLink ,
+            cache: false,
+            success: function(html){
+                  $('<div class="fancybox-outer" style="padding: 15px; width: auto; height: auto;"></div>').dialog({
+                    modal: true,
+                    title: "Approve Leave",
+                    width: 'auto',
+                    open: function () {
+                        
+                        $(this).html(html);
+                    }
+                }); 
+               
+            }
+        });
+});
+
+
+
+
+
+function toggleAll()
+{
+ $("#hideAndShowEmployeeLeaveAppplyDIVID").toggle();
+ $("#showAndHideEmployeeLeaveAppplyDIVID").toggle();  
+}
+
+
+
+function myfunction(empID){
+  var empID=empID;
+  var arrList= new Array();
+  var checked=$("input#leaveEmpIsApprove").is(':checked');
+  if(checked){
+  arrList.push(empID);
+  }else{
+  arrList.pop(empID);
+  }
+
+}
+
+
+$(document).on("click", "#emp_attendances_halfday", function(){
+       var depVal = $("#emp_attendances_halfday").is(':checked')
+       $("#emp_halfdayfield").val(depVal);
+        });
+
+
+$(document).on("click", "#employees_attendances_is_afternoon_false", function(){
+       var depVal = $("#employees_attendances_is_afternoon_false").val();
+       $("#emp_afternoonfield").val(depVal);
+        });
+
+
+$(document).on("click", "#employees_attendances_is_afternoon_true", function(){
+    
+       var depVal = $("#employees_attendances_is_afternoon_true").val();
+       
+       $("#emp_afternoonfield").val(depVal);
+        });
+
+
+$(document).on("click", "#emp_attendances_halfday", function(){
+ 
+       var depVal = $("#emp_attendances_halfday").is(':checked')
+       if(!depVal){
+           $("#mg_employee_leave_types_is_afternoon_true").val(0);
+           $("#mg_employee_leave_types_is_afternoon_false").val(0);
+
+       }
+
+       $("#emp_halfdayfield").val(depVal);
+});
+
+
+$(document).ready(function () {
+  focusCurrentTab("viewEmployeeLeave","viewEmployeeLeaveLiID");
+    focusDashboards();
+
+  $(function () {
+    $.validator.addMethod('dateFormat',
+    function (value, element) {
+      dateFormatStr =  getJsDateFormat();
+        if (this.optional(element)) {
+            return true;
+        }
+        var ok = true;
+        try {
+            $.datepicker.parseDate(dateFormatStr, value);
+        }
+        catch (err) {
+            ok = false;
+        }
+        return ok;
+    },
+      "Please enter a date in the format "+ getDateFormat(dateFormatStr) +".");
+      dateFormatStr =  getJsDateFormat();
+
+    $(".datefield").datepicker({ dateFormat: dateFormatStr, changeYear: true });
+});
+$("#employeeLeaveApplyID").validate({
+
+rules: {
+"mg_employee_leave_types[from_date]": {required: true,dateFormat: true},
+"mg_employee_leave_types[to_date]": {required: true,dateFormat: true},
+"mg_employee_leave_types[reason]": {required: true},
+"mg_employee_leave_types[leave_type]": {required: true},
+"mg_employee_leave_types[half_day_date]": {required: true,dateFormat: true}
+// "mg_employee_leave_types[to_date]": { greaterThan: "#mg_employee_leave_types_to_date" }
+
+}
+});
+});
+
+
+
+</script>
+ 
+
+
+

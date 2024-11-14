@@ -1,0 +1,11 @@
+<!-- Sec --> 
+
+$("h2").removeClass("cur ");
+
+$(".parent-tab").addClass("cur");
+
+$("#studentNewFormID").empty();
+
+$( ".captionWrapper" ).tabs({ selected: 2 });
+
+$("<%= escape_javascript(render 'guardianForm') %>").appendTo("#studentNewFormID");

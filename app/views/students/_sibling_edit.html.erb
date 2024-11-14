@@ -1,0 +1,145 @@
+<!-- <div id="check"> -->
+
+
+<%= fields_for :sibling do |f| %>
+<!-- <#%= fields_for (language) do |f| %> -->
+
+<%= f.hidden_field :is_deleted, :value => 0 %>
+<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+<%= f.hidden_field :mg_user_id, :value => session[:user_id] %>
+<%= f.hidden_field :created_by, :value => session[:user_id] %>
+<%= f.hidden_field :updated_by, :value => session[:user_id] %>
+
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: 14px;">
+          <tbody>
+            <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="sibling" ><%= t('sibling') %>
+                      <span class="required-field"></span> 
+                    </label>
+                  </td>
+                  <td valign="top">
+                   <%= f.check_box :is_sibling ,{:id=>"siblingCheckedId",:class=>"checkbox-read-cls"}, true %>
+                  </td>
+            </tr>
+                  
+               
+              
+          </tbody> 
+        </table>
+
+            <div id="studentSiblingDivId" class="Student-Sibling-Div-Class" style="display: none;">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="employee-form-cls">
+                <tbody>
+                        <tr>
+                          <td width="33%" valign="bottom">
+                            <label for="sibling_name" ><%= t('sibling_name') %>
+                            <span class="required-field"></span> 
+                            </label>
+                          </td>
+
+                          <td width="33%" valign="bottom">
+                            <label for="relationship" ><%= t("relationship") %>
+                            <span class="required-field"></span> 
+                            </label>
+                          </td>
+
+                          <td width="33%" valign="bottom">
+                            <label for="select_class" ><%= t("classname") %>
+                            <span class="required-field"></span>
+                            </label>
+                          </td>
+                      </tr>
+                    <tr>
+                        <td valign="top">
+                        <%= f.text_field :name  ,:class => ' mg-text-field'%>
+                        </td>
+                  
+                        <td valign="top">
+                         <%= f.text_field :relation  ,:class => ' mg-text-field'%>
+                        </td>
+                          
+                        <td valign="top">
+                         <%= f.collection_select(:mg_course_id,MgCourse.where(:is_deleted => '0', :mg_school_id=>session[:current_user_school_id]), :id, :course_name,{:include_blank => t("select")},:class => "myclass")%>
+                        </td>
+                    </tr>
+                    <tr>
+                     
+                        <td width="33%" valign="bottom">
+                            <label for="select_section" ><%= t("sectionname") %>
+                              <span class="required-field"></span> 
+                            </label>
+                        </td>
+
+                        <td width="33%" valign="bottom">
+                           <label for="roll_number" ><%= t("roll_number") %>
+                            <span class="required-field"></span>
+                            </label>
+                       </td>
+
+                       <td width="33%" valign="bottom">
+                            <label for="date_of_admission" ><%= t("date_of_admission") %>
+                              <span class="required-field"></span> 
+                            </label>
+                       </td>
+                    </tr>
+                      <tr>
+                          <td valign="top">
+                             <%= f.collection_select(:mg_batch_id,MgBatch.where(:is_deleted => '0', :mg_school_id=>session[:current_user_school_), :id, :name,{:include_blank => t("select")},:class => "myclass")%>
+                          </td>
+                          
+                        
+                          <td valign="top">
+                                <%= f.text_field :roll_no ,:class => ' mg-text-field'%>
+                          </td>
+                        
+                          <td valign="top">
+                             <%= f.text_field :admission_date ,:class => 'admission_dates  mg-text-field'%>
+                          </td>
+                      </tr>
+                     <tr>
+                          <td width="33%" valign="bottom">
+                          <label for="admission_number" ><%= t("admission_number") %>
+                            <span class="required-field"></span>
+                            </label>
+                          </td>
+                    </tr> 
+                    <tr>
+                          <td valign="top">
+                           <%= f.text_field :admission_no ,:class => ' mg-text-field'%>
+                          </td>
+                    </tr>
+                    
+                    </tbody>
+                    </table>
+                    </div>
+
+
+      <%end%>
+<br/>
+<!-- </div> -->
+
+gggg
+<script>
+$(document).ready(function(){
+  dateFormatStr =  getJsDateFormat();
+      $( ".admission_dates" ).datepicker({ changeMonth: true,
+                changeYear: true,yearRange: "-50:+0",maxDate: "0",dateFormat: dateFormatStr });
+ 
+$("#siblingCheckedId").click(function(){
+  var checked=$("#siblingCheckedId").is(":checked");
+  alert(checked);
+  if(checked){
+    $("#studentSiblingDivId").find("input").each(function(){
+      console.log($(this));
+      $(this).val("");
+    });
+  }
+  $("#studentSiblingDivId").toggle();
+
+  
+  
+
+});
+});
+</script>

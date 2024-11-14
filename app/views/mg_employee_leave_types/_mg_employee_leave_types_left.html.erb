@@ -1,0 +1,181 @@
+<!-- # #version 1.1(31/08/18 for employee and student  attendance reports  by mamatha) -->
+<!-- #version 1.2(3/10/18 for consolidated  student  attendance reports   by mamatha) -->
+<!-- #version 1.3(16/10/18 for  attendance incharge login   by mamatha) -->
+
+
+<!-- Sec --> 
+
+                         <li class="myAccountMenu sms-has-menu dropdown-submenu">
+                                <a href="#" >
+                                    <span class="menu-text"><%= t('attendances') %></span>
+                                    
+                                </a>
+                 <%if session[:user_type] == "attendance_incharge"%>
+                                 <ul class="mg-left-sub-menu-title sms-sub-menu dropdown-menu">
+                                    <li id="viewEmployeeStudentAttendancesLiID">
+                                        <a class="Employee-Student-Attendances" href="/cloud_admins/change_attendance_incharge_password/#{session[:user_id]}" id="viewEmployeeStudentAttendancesAID">
+                                            <div class="setMenu"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>Change Password<i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i>
+                                            </div>
+                                        </a>
+                                    </li>                                          
+
+
+                                    <li id="employeeAttendanceLiID" >
+
+                                        <a id="employeeAttendanceAID" href="/employees_attendances"><div><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('employeeattendance')%></div></a>
+
+                                    </li>
+                                    <li id="viewEmployeeStudentAttendancesLiID">
+                                        <a class="Employee-Student-Attendances" href="/attendances/employee_student_attendance/" id="viewEmployeeStudentAttendancesAID">
+                                            <div class="setMenu"><i class="fa fa-check-square-o">&nbsp;&nbsp;</i>Student Attendances<i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i>
+                                            </div>
+                                        </a>
+                                   </li> 
+                                    
+                                </ul>
+                 <%else%>
+                      <ul class="mg-left-sub-menu-title sms-sub-menu dropdown-menu">
+                         <div class =  "left-link-scroll-drop-down">                      
+
+
+                        <li id="employeeAttendanceLiID" >
+
+                            <a id="employeeAttendanceAID" class = "left-link-scroll-drop-down-length" href="/employees_attendances"><div><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('employeeattendance')%></div></a>
+
+                        </li>
+                          <li id="employeeHolidayAttendanceLiID" >
+
+                            <a id="employeeHolidayAttendanceAID" class = "left-link-scroll-drop-down-length" href="/attendances/employee_holiday_attendance_new"><div><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('employeeholidayattendance')%></div></a>
+
+                        </li>
+
+                        <li id="viewEmployeetListLiID">
+                            <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/mg_employee_leave_types/" id="viewEmployeetList">
+
+                                <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%=t('leavetypelist')%></i>
+
+                                </div>
+                            </a>
+                        </li>
+                         
+                        <li id="EmployeeLeaveTypesLiID">
+                            <a class="menuItemsActivities1 left-link-scroll-drop-down-length" href="/mg_employee_leave_types/new/" id="EmployeeLeaveTypes">
+
+                                <div class="setMenu"><i class="fa fa-tag">&nbsp;&nbsp;</i><%=t('createleavetypes')%>
+                                </div>
+                            </a>
+                        </li>
+                        <li id="employeeLeaveResetqLiID">
+                            <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/mg_employee_leave_types/emp_attendances/" id="employeeLeaveResetq">
+
+                                <div class="setMenu"><i class="fa fa-tags">&nbsp;&nbsp;</i><%=t('resetleave')%>
+ 
+                                </div>
+                            </a>
+                        </li>
+                        <%if !["Admin"].include?(session[:user_type])%>
+                            <li id="consolidateAttendanceLiIDAtt">
+                                <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/mg_datewise_attendances" id="smployeeAttendanceReport">
+                                     <div class="setMenu"><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('datewise_absent_details')%>
+                                         </div>
+                                </a>
+                            </li>
+                            <li id="consolidateAttendanceLiIDAtt">
+                                <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/attendances/employee_student_attendance" id="smployeeAttendanceReport">
+                                     <div class="setMenu"><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('student_attendance')%>
+                                         </div>
+                                </a>
+                            </li>
+                        <%end%>    
+                        <%user_obj=MgUser.where(:id=>session[:user_id], :user_type=>'principal', :is_deleted=>0)%>
+                        <%if user_obj[0].present?%>
+                         <li id="resetLeaveApplicationLiID">
+                            <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/mg_employee_leave_types/leave_for_approve/" id="employeeLeavepplicationA">
+                                <div class="setMenu"><i class="fa fa-navicon">&nbsp;&nbsp;</i><%=t('leave Details')%>
+                                </div>
+                            </a>
+                        </li>
+                      <%end%>
+
+                        
+
+                       <!--  <li >
+                            <a class="menuItemsActivities2" href="/mg_employee_leave_types/from_emp" id="em">
+                                <div class="setMenu"><i class="fa fa-tachometer">&nbsp;&nbsp;</i>Employee<i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px;"></i>
+                                </div>
+                            </a>
+                        </li> -->
+
+                        <!--<li id="resetLeaveImportAttendanceLiID">
+                            <a class="menuItemsActivities2" href="/employees_attendances/import_attendance/" id="employeeLeaveImportAttendance">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%#=t('import attendance')%>
+                                </div>
+                            </a>
+                        </li>-->
+                        <li id="employeeBiometricAttendanceLiID">
+                            <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/employee_biometric_attendances/" id="employeeBiometricAttendance">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%=t('biometric_attendances')%>
+
+                                </div>
+                            </a>
+                        </li>
+                        <!--
+                        <li id="importEmployeeBiometricAttendanceLiID">
+                            <a class="menuItemsActivities2" href="/employee_biometric_attendances/import" id="importEmployeeBiometricAttendance">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%#=t('import_biometric_attendances')%>
+
+                                </div>
+                            </a>
+                        </li>
+
+                        <li id="importEmployeeBiometricAttendanceLiID">
+                            <a class="menuItemsActivities2" href="/employee_biometric_attendances/import" id="importEmployeeBiometricAttendance">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%#=t('import_biometric_attendances')%>
+
+                                </div>
+                            </a>
+                        </li>-->
+
+                        <li id="employeeAttendanceReportLiID">
+                            <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/employees_attendances/employee_attendance_report/" id="employeeAttendanceReport">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%=t('employee_attendance_report')%>
+
+                                </div>
+                            </a>
+                        </li>
+
+                        <li id="importEmployeeBiometricAttendanceLiID">
+                            <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/employees_attendances/student_attendance_report/" id="smployeeAttendanceReport">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%=t('student_attendance_report')%>
+
+                                </div>
+                            </a>
+                        </li>
+
+                        <li id="consolidateAttendanceLiID">
+                            <a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/employees_attendances/consolidate_student_attendance_report/" id="smployeeAttendanceReport">
+                                <div class="setMenu"><i class="fa fa-upload">&nbsp;&nbsp;</i><%=t('consolidate_student_attendance_report')%>
+
+                                </div>
+                            </a>
+                        </li>
+			<li id="consolidateAttendanceLiID">
+				<a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/employee_attendance_graph" id="smployeeAttendanceReport">
+    					<div class="setMenu"><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('employee_attendance_graph')%>
+    					</div>
+				</a>
+			</li>
+			<li id="consolidateAttendanceLiID">
+   				<a class="menuItemsActivities2 left-link-scroll-drop-down-length" href="/student_attendance_graph" id="smployeeAttendanceReport">
+   					 <div class="setMenu"><i class="fa fa-check-square">&nbsp;&nbsp;</i><%=t('student_attendance_graph')%>
+    					 </div>
+  				</a>
+			</li>   
+            </div>          
+                    </ul>    
+                    <%end%>
+
+               </li>
+             <%#= render 'layouts/messages' %> 
+
+                

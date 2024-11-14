@@ -1,0 +1,152 @@
+<!-- <div id="check"> -->
+
+
+<%= fields_for :sibling do |f| %>
+<!-- <#%= fields_for (language) do |f| %> -->
+
+<%= f.hidden_field :is_deleted, :value => 0 %>
+<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+<%= f.hidden_field :mg_user_id, :value => @student.mg_user_id %>
+<%= f.hidden_field :created_by, :value => session[:user_id] %>
+<%= f.hidden_field :updated_by, :value => session[:user_id] %>
+
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: 14px;">
+          <tbody>
+            <tr>
+                  <td width="10%" valign="top">
+                    <!-- <label for="sibling" ><%#= t('sibling') %> -->
+                        <h4 class="form-section-heading mc-margin-bottom-20">
+                 <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Sibiling</b>
+              </h4>
+                      <span class="required-field"></span> 
+                    </label>
+                  </td>
+                  <td valign="top">
+                    <br>
+                  <%= f.check_box :is_sibling, { :id => "siblingCheckedId", :class => "checkbox-read-cls", :style => "margin-top: 10px; margin-left: 5px;" }, true %>
+
+                  </td>
+            </tr>
+                  
+               
+              
+          </tbody> 
+        </table>
+        <br>
+
+            <div id="studentSiblingDivId" class="Student-Sibling-Div-Class mg-inner-tbl-align" style="display: none;">
+            <div class="row mc-padding-20 form-section-box">
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label   for="sibling_name" ><%= t('sibling_name') %>
+                            <span class="required-field"></span> 
+                            </label>
+                        <%= f.text_field :name  ,:class => 'form-control'%>
+                          </div>
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label   for="relationship" ><%= t("relationship") %>
+                            <span class="required-field"></span> 
+                            </label>
+                         <%= f.text_field :relation  ,:class => 'form-control'%>
+                          </div>
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label   for="select_class" ><%= t('course') %>
+                            <span class="required-field"></span>
+                            </label>
+                         <%= f.collection_select(:mg_course_id,MgCourse.where(:is_deleted => '0', :mg_school_id=>session[:current_user_school_id]), :id, :course_name,{:include_blank => t("select")},:class => "myclass form-control")%>
+                          </div>
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label   for="select_section" ><%= t('batch') %>
+                              <span class="required-field"></span> 
+                            </label>
+                             <%= f.collection_select(:mg_batch_id,MgBatch.where(:is_deleted => 0, :mg_school_id=>session[:current_user_school_id]), :id, :name,{:include_blank => t("select")},:class => "myclass form-control")%>
+                        </div>
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                           <label   for="roll_number" ><%= t("roll_number") %>
+                            <span class="required-field"></span>
+                            </label>
+                                <%= f.text_field :roll_no ,:class => 'form-control'%>
+                     </div>
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label for="date_of_admission" ><%= t("date_of_admission") %>
+                            <!-- <label  class="mg-rm-text-trans mg-label"  for="date_of_admission" ><%#= t("date_of_admission") %> -->
+                              <span class="required-field"></span> 
+                            </label>
+                             <%= f.text_field :admission_date ,:class => 'admission_dates form-control'%>
+                </div>
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                          <label   for="admission_number" ><%= t("admission_number") %>
+                            <span class="required-field"></span>
+                            </label>
+                           <%= f.text_field :admission_no ,:class => ' form-control'%>
+                  </div>
+
+
+                
+    </div>
+                        
+                    </div>
+
+
+      <%end%>
+<!-- </div> -->
+<script>
+$(document).ready(function(){
+
+
+
+  dateFormatSt =  getJsDateFormat();
+      $( ".admission_dates" ).datepicker({ changeMonth: true,
+                changeYear: true,yearRange: "-50:+0",maxDate: "0",dateFormat: dateFormatSt });
+
+
+if($("#siblingCheckedId").is(':checked'))
+    $("#studentSiblingDivId").show();  // checked
+else
+    $("#studentSiblingDivId").hide();  // unchecked
+
+
+
+ 
+$("#siblingCheckedId").change(function(){
+  if($("#siblingCheckedId").is(':checked'))
+      $("#studentSiblingDivId").show();  // checked
+  else{
+      $("#studentSiblingDivId").hide();
+      /*$("#studentSiblingDivId").find("input, select").each(function(){
+      console.log($(this));
+      $(this).val("");
+    });*/
+
+  }
+
+     // unchecked
+
+
+
+//$("#studentSiblingDivId").toggle();
+});
+});
+
+$(document).on("change","#sibling_mg_course_id",function(){
+  var courseId=$(this).val();
+  // console.log(courseId);
+  jQuery.ajax({
+            url: "/students/batches_for_selected_course",
+            type: "GET",
+            data: {"course_id" :courseId},
+            dataType: "html",
+            success: function(html) {
+              console.log("inside success");
+
+              $("#batchChange").html(html);
+            },
+            error:function(){
+              alert("inside error");
+            }
+        });
+});
+</script>

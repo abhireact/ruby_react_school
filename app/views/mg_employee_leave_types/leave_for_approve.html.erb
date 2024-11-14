@@ -1,0 +1,72 @@
+<% navigation_add t('leave_details'),'/mg_employee_leave_types/leave_for_approve' %>
+
+<div id="employee_data">
+<%dataArray = [[t("select"), ""], [t("leave_type"), "mg_employee_leave_type_id"], [t("name"), "mg_employee_id"], [t("status"), "status"]]
+%>
+<%#= render  partial: 'mg_employee_leave_types_left' %>
+    <%if @emp_data.present?%>
+    <%= select_tag :empo_leave, options_for_select(dataArray, :selected=>@emp_data) , :onchange=>"emp_select(this.value)",:class=>"form-control",:style=>"width:200px" %><br>
+    <%= form_tag '/mg_employee_leave_types/leave_for_approve', :method => 'get', :id => "curriculum_syllabus" do %>
+           <p>
+           <%=hidden_field_tag :search_by, @emp_data %>
+         <%= text_field_tag :search, params[:search],:class=>"form-control",:style=>"width:200px" %>
+           <%#= submit_tag "Search", :name => nil %>
+           </p>
+           <div id="curriculum_sylla"><%= render partial: 'leave_for_approve' %>
+    </div>
+       <% end %>
+        <div id="submitted_items_result_ID"></div>
+        <p class="mg-p-mgtop">
+        <button type="button" class="inventory-search-result-submit-btn mg-small-form-btn submit mc-margin-bottom-20 flat-button" style=""><%=t("save")%></button>
+    </p>
+    <%else%>
+    <%= select_tag :empo_leave, options_for_select(dataArray) , :onchange=>"emp_select(this.value)",:class=>"form-control",:style=>"width:200px" %>
+    <%= render partial: 'leave_for_approve' %>
+    <%end%>
+
+   <%#= render  partial: 'application/common_left_close' %>
+</div>
+<script>
+
+      $(document).ready(function () {
+          focusCurrentTab("viewStudentListAId","viewStudentListLiId");
+      });
+
+      $("#curriculum_sylla th a, #curriculum_sylla .pagination a").on("change", function() {
+        $.getScript(this.href);
+        return false;
+      });
+
+    $("#search").keyup(function(e) {
+       var textLength = $("#search").val();
+        if(e.keyCode == 8)
+          {
+           $.get($("#curriculum_syllabus").attr("action"), $("#curriculum_syllabus").serialize(), null, "script");
+          };
+          if (textLength.length >= 3 ) {
+            $.get($("#curriculum_syllabus").attr("action"), $("#curriculum_syllabus").serialize(), null, "script");
+          };
+            return false;
+        });
+
+
+
+  function emp_select(selected){
+  // alert("hi")
+  // var temp_val=$("#search").val();
+  var urlLink = "/mg_employee_leave_types/leave_for_approve/";
+    $.ajax({ 
+               url: urlLink,
+               cache: false,
+               data:
+            {
+             "search_by":selected
+            },
+            success: function(html){
+              // alert("success");
+                  $("#employee_data").empty();
+                  $("#employee_data").append(html);
+            }  
+    });
+};
+</script>  

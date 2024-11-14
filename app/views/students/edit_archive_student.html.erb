@@ -1,0 +1,37 @@
+<% navigation_add t('archive_student'),'/students/student_archive_list' %>
+<% navigation_add t('edit_archive_student'),students_edit_archive_student_path(@student_archive.id) %>
+<h4 class="form-section-heading mc-margin-bottom-20"><%=t('edit_archive_student')%></h4>
+<%= form_for @student_archive, :html=>{:id=>'archive_edit_form'}, url: "/students/update_archive_student/#{@student_archive.id}", method: :patch do |f| %>
+
+  <div class="row mc-padding-20 form-section-box">
+		<div class ="row">
+			<%= f.hidden_field :student_id, :value => @student_archive.id %>
+	    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+	      <label for="select_a_subject"> <%= t('reason') %><span class="required-field">&nbsp;*</span></label><br/>
+	      <%=select_tag :mg_archive_reason_id,options_for_select(@reason,:selected =>@stduent_reason.try(:id)),:prompt=>"Select",:class=>"form-control"%><br/>
+	    </div>
+	    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+	      <label for="select_a_subject"> <%= t('archive_date') %><span class="required-field">&nbsp;*</span></label><br/>
+	      <%=text_field_tag :archive_date,@date,:class=>"form-control"%>
+	    </div>
+	  </div>
+	</div>
+
+  </br>
+  <a onclick="$(this).closest('form').submit()" class="submit mg-small-form-btn submit mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+ 	<%= link_to t('cancel'), {:controller=>'students',:action=>'student_archive_list'}, {:class=>"mg-small-form-btn cancel-form-dialog submit mc-margin-bottom-20 flat-button"} %>
+<%end%>
+
+<script type="text/javascript">
+	$( document ).ready(function() {
+    focusCurrentTab("studentArchiveAID","studentArchiveLiID");
+    dateFormatStr =  getJsDateFormat();
+    $('#archive_date').datepicker({ changeMonth: true,changeYear: true,yearRange: "-100:+0",maxDate: "0",dateFormat: dateFormatStr});
+  });
+  $("#archive_edit_form").validate({
+    rules: {        
+      "mg_archive_reason_id": {required: true},
+      "archive_date": {required: true}
+    }
+  });
+</script>

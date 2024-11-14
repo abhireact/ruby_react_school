@@ -1,0 +1,40 @@
+<%#= render  partial: 'student_left' %>
+  
+  <%= form_tag 'guardian_archive_list', :method => 'get', :id => "guardian_archive_search" do %>
+       <p>
+     <%= text_field_tag :search, params[:search] ,placeholder: 'search'%>
+         <i id="filtersubmit" class="fa fa-search"></i>
+       </p>
+
+       <div id="guardians"><%= render  partial: 'guardian_archive_list' %></div>
+   <% end %>
+
+<%#= render  partial: 'student_left_close' %>
+
+
+<div class="fancybox-outer mg-pop-up-padding" id="editStudentDialogID" style=" width: auto; height: auto; overflow-x: inherit;"></div>
+
+<div class="fancybox-outer" id="student_guardian_list"  style="padding: 2px; width: auto; height: auto; overflow: hidden;"></div>
+
+<script>
+   $( document ).ready(function() {
+   focusCurrentTab("guardianArchiveAID","guardianArchiveLiID");
+});
+
+   $("#students th a, #students .pagination a").on("click", function() {
+        $.getScript(this.href);
+        return false;
+    });
+
+    $("#search").keyup(function(e) {
+       var textLength = $("#search").val();
+    if(e.keyCode == 8)
+      {
+       $.get($("#guardian_archive_search").attr("action"), $("#guardian_archive_search").serialize(), null, "script");
+      };
+      if (textLength.length >= 3 ) {
+    	    $.get($("#guardian_archive_search").attr("action"), $("#guardian_archive_search").serialize(), null, "script");
+      };
+        return false;
+    });
+</script>

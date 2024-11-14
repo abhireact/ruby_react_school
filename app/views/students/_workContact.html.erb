@@ -1,0 +1,41 @@
+<!-- Sec --> 
+<%= fields_for :workContact do |cnt| %>
+
+	<%= cnt.hidden_field :phone_type,:value => "work"%>
+	<div class="form-content">
+	          <div class="form-content-inner">
+	            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="student-form-cls">
+	              <tbody>
+	              	<tr>
+	                  <td width="33%" valign="bottom">
+	                    <label for="phone_number"><%= t('phonenumber') %></label>
+	                  </td>
+
+	                  <td> </td>
+	                  <td width="33%" valign="bottom">
+	                    
+	                  </td>
+	                  <td> </td>
+	                  <td width="33%" valign="bottom">
+	                    
+	                  </td>
+	                </tr>
+	                <tr>
+	                  <td valign="top">
+	                     <%= cnt.text_field :phone_number %>
+	                  </td>
+	                  <td> </td>
+	                  <td valign="top">
+	                    
+	                  </td>
+	                  <td> </td>
+	                  <td valign="top">
+	                    
+	                  </td>
+	                </tr>
+	              </tbody>
+	            </table>
+	          </div>
+	      </div>       
+
+<% end %>   

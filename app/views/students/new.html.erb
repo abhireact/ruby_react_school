@@ -1,0 +1,672 @@
+<% navigation_add t('students'),students_path %>
+
+<% navigation_add t('students_new'),'/students/new' %>
+
+<%if flash[:error].present?%>
+  <%= flash[:error]%>
+<%end%>
+<%$rv = 23%>
+
+<% if !params[:notice].blank? %>
+  <div class="alert alert-info mg-success-msg">
+  <%= params[:notice] %>
+  </div>
+<% end %>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+    <h4 class="form-section-heading ">
+      <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Student Details</b>
+    </h4>
+  </div>
+</div>
+<div id="studentNewFormID"  class="student-form-cls" >
+  <div class="box">
+    <%= render  partial: 'student_form' ,:locals => {:form => "new"} %>
+  </div> 
+</div>
+
+<script>
+$(document).on("click", "#Add_hobby", function(e){
+    var lastRepeatingGroup = $('.student_hobby').last();
+    var cloned = lastRepeatingGroup.clone();
+    cloned.find('input').val('');
+    cloned.insertAfter(lastRepeatingGroup);
+    return false;
+});
+
+$(document).ready(function () {
+  // Function to perform validation and processing
+  function validateAndProcess() {
+    var first_name = $("#guardian_details_first_name").val();
+    var guard_phone_no = $("#guardian_details_phone_number").val();
+    var guard_relation = $("#guardian_details_relation").val();
+
+    if (first_name === "" && guard_phone_no === "" && guard_relation === "") {
+      alert("Please Enter Guardian Name, Mobile No. and Relation!!");
+      return false; // Prevent form submission if validation fails
+    }
+
+    // Additional validation or processing for the first name
+    if (first_name === "") {
+      alert("Please Enter Guardian Name!!");
+      return false; // Prevent form submission if validation fails
+    }
+    // Perform further validation or processing for the first name as needed
+    if (guard_relation === "") {
+      alert("Please Enter Guardian Relation!!");
+      return false; // Prevent form submission if validation fails
+    }
+    // Additional validation or processing for the phone number
+    if (guard_phone_no === "") {
+      alert("Please Enter Guardian Mobile No.!!");
+      return false; // Prevent form submission if validation fails
+    }
+
+    // Validate that guard_phone_no contains only digits and is between 10 to 12 characters
+    if (!/^\d{10,12}$/.test(guard_phone_no)) {
+      alert("Guardian Mobile No. must be a numeric value between 10 to 12 digits!!");
+      return false; // Prevent form submission if validation fails
+    }
+
+    // If you reach this point, both fields are filled and pass validation
+    // Proceed with additional logic if necessary, or allow form submission
+    // Example: performAjaxValidation();
+
+    return true; // Allow form submission if validation passes
+  }
+
+  // Bind the validation logic to the submit event of the form
+  $("form").submit(function () {
+    return validateAndProcess();
+  });
+});
+
+
+
+
+// test
+
+  $( function() {
+    function split( val ) {
+      return val.split( / \s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+    $( ".autocomplete_for_sports" )
+      .on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          $.ajax({
+            url: "get_sports_name",
+            data: {
+                term: extractLast(request.term)
+            },
+            dataType: "json",
+            type: "GET",
+            success: function(data) {
+                response(data);
+            },
+            error: function() {
+                response($.ui.autocomplete.filter(
+                    ["opt1","opt2"]
+                    , extractLast(request.term)));
+            }
+          });
+        },
+        focus: function() {
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          terms.pop();
+          terms.push( ui.item.value );
+          terms.push( "" );
+          this.value = terms.join( " " );
+          return false;
+        }
+      });
+  
+   
+      $( ".autocomplete_for_extra_curricular" )
+        .on( "keydown", function( event ) {
+          if ( event.keyCode === $.ui.keyCode.TAB &&
+              $( this ).autocomplete( "instance" ).menu.active ) {
+            event.preventDefault();
+          }
+        })
+        .autocomplete({
+          minLength: 0,
+          source: function( request, response ) {
+            $.ajax({
+              url: "get_extra_curricular",
+              data: {
+                  term: extractLast(request.term)
+              },
+              dataType: "json",
+              type: "GET",
+              success: function(data) {
+                  response(data);
+              },
+              error: function() {
+                  response($.ui.autocomplete.filter(
+                      ["opt1","opt2"]
+                      , extractLast(request.term)));
+              }
+            });
+          },
+          focus: function() {
+            return false;
+          },
+          select: function( event, ui ) {
+            var terms = split( this.value );
+            terms.pop();
+            terms.push( ui.item.value );
+            terms.push( "" );
+            this.value = terms.join( " " );
+            return false;
+          }
+        });
+
+      $( ".autocomplete" )
+        .on( "keydown", function( event ) {
+          if ( event.keyCode === $.ui.keyCode.TAB &&
+              $( this ).autocomplete( "instance" ).menu.active ) {
+            event.preventDefault();
+          }
+        })
+        .autocomplete({
+          minLength: 0,
+          source: function( request, response ) {
+            $.ajax({
+              url: "hobbies",
+              data: {
+                  term: extractLast(request.term)
+              },
+              dataType: "json",
+              type: "GET",
+              success: function(data) {
+                  response(data);
+              },
+              error: function() {
+                  response($.ui.autocomplete.filter(
+                      ["opt1","opt2"]
+                      , extractLast(request.term)));
+              }
+            });
+          },
+          focus: function() {
+            return false;
+          },
+          select: function( event, ui ) {
+            var terms = split( this.value );
+            terms.pop();
+            terms.push( ui.item.value );
+            terms.push( "" );
+            this.value = terms.join( " " );
+            return false;
+          }
+        });
+      });
+
+
+
+$(document).ready(function (){
+  focusCurrentTab("createNewStudentAID","createNewStudentLiID");
+  var date = new Date();
+  var cur_date = date.getFullYear(); 
+  $("#student_mg_student_catagory_id").change(function(){
+    var category=$( "#student_mg_student_catagory_id option:selected" ).text();
+    if (category=="Employee Child")
+    {
+      if ($('#studentManagementQuotaId').is(':visible')) 
+      {   
+        $(".mg-management-field").val('');
+        $('#studentManagementQuotaId').hide();
+        //$('#studentEmployeeChildId').show();
+      }
+      if ($('#studentScholarshipId').is(':visible')) 
+      {   
+        $(".mg-scholarship-field").val('');
+        $('#studentScholarshipId').hide();
+        //$('#studentEmployeeChildId').show();
+      }
+      // else 
+      // {
+        $('#studentEmployeeChildId').show();
+      // };
+    }
+    if (category.toLowerCase()=="Management".toLowerCase())
+    {
+      if ($('#studentEmployeeChildId').is(':visible')) 
+      {   
+        $('#studentEmployeeChildId').hide();
+        $(".mg-emp-child-field").val('');
+        //$('#studentManagementQuotaId').show();
+      }
+
+      if ($('#studentScholarshipId').is(':visible')) 
+      {   
+        $('#studentScholarshipId').hide();
+        $(".mg-scholarship-field").val('');
+        //$('#studentManagementQuotaId').show();
+      }
+      // else 
+      // {
+        $('#studentManagementQuotaId').show();
+      // };
+    }
+    if (category=="On Scholarship")
+    {
+      if ($('#studentEmployeeChildId').is(':visible')) 
+      {   
+        $('#studentEmployeeChildId').hide();
+        $(".mg-emp-child-field").val('');
+       // $('#studentScholarshipId').show();
+      }
+
+      if ($('#studentManagementQuotaId').is(':visible')) 
+      {   
+        $('#studentManagementQuotaId').hide();
+        $(".mg-management-field").val('');
+       // $('#studentScholarshipId').show();
+      }
+
+      // else 
+      // {
+        $('#studentScholarshipId').show();
+      // };
+    }
+        //==================================================
+    if (category=="General")
+    {
+      if ($('#studentEmployeeChildId').is(':visible')) 
+      {   
+        $('#studentEmployeeChildId').hide();
+        $(".mg-emp-child-field").val('');
+       // $('#studentScholarshipId').show();
+      }
+
+      if ($('#studentManagementQuotaId').is(':visible')) 
+      {   
+        $('#studentManagementQuotaId').hide();
+        $(".mg-management-field").val('');
+       // $('#studentScholarshipId').show();
+      }
+
+      if ($('#studentScholarshipId').is(':visible')) 
+      {   
+        $('#studentScholarshipId').hide();
+        $(".mg-scholarship-field").val('');
+       // $('#studentScholarshipId').show();
+      }
+    }
+     if (category=="R.T.E")
+    {
+      if ($('#studentEmployeeChildId').is(':visible')) 
+      {   
+        $('#studentEmployeeChildId').hide();
+        $(".mg-emp-child-field").val('');
+      }
+
+      if ($('#studentManagementQuotaId').is(':visible')) 
+      {   
+        $('#studentManagementQuotaId').hide();
+        $(".mg-management-field").val('');
+      }
+
+      if ($('#studentScholarshipId').is(':visible')) 
+      {   
+        $('#studentScholarshipId').hide();
+        $(".mg-scholarship-field").val('');
+      }
+    } 
+  });//ending the changing function
+
+  $("#languagePlusId").click(function(){
+      $(".language-Student-Div-Class").hide();
+      var cloneDiv=$(".languagedivcloneclass").first();
+      console.log(cloneDiv);
+      $(cloneDiv).children().find('input,checkbox').each(function(){
+         $(this).val('');
+         $(this).attr("checked",false);
+        });
+     
+       $(cloneDiv).clone().appendTo("#languagedivscloneid");
+  });
+    
+  dateFormatStr =  getJsDateFormat();
+  $( ".admission_date" ).datepicker({ changeMonth: true,
+            changeYear: true,yearRange: "-50:+5" ,dateFormat: dateFormatStr});
+
+  $( ".date_of_birth" ).datepicker({ 
+        changeMonth: true,
+        changeYear: true,yearRange: "-100:+0",maxDate: "0",
+        dateFormat: dateFormatStr,
+        onSelect: function(dateText, obj) {
+            var selectedDate = $(this).datepicker('getDate');
+            var currentDate=new Date();
+            var age_difference = $("#minimum_age").val();
+         
+            var b_check=getYearDifference(selectedDate,currentDate, dateFormatStr,age_difference-2);
+            if(b_check){
+              $( ".date_of_birth" ).val("");
+              alert("Please check the age.");
+            }else{
+
+            var admission_date=$("#student_admission_date").val();
+            if(admission_date){
+              /*if(compareDate($(this).val(), admission_date, dateFormatStr)==false){
+                alert("Date of Birth should be earlier than Admission Date");
+                document.getElementById('student_date_of_birth').value ="";
+              }*/
+
+              // alert(admission_date);
+              if(getDateStudentObj($(this).val(),dateFormatStr) >getStudentAdmissionDateObj(admission_date,dateFormatStr)){
+                    alert("Please check the age");
+                    document.getElementById('student_date_of_birth').value ="";
+                }
+                else{
+                  $("#student_admission_date").val("")
+                  $( ".date_of_birth" ).val("");
+                }
+            }
+          }
+        }
+  });//closing date format
+function getYearDifference(selected_date, current_date, formatStr,age_difference){
+  var selectedDate = selected_date;//getDateObj(selected_date ,formatStr);
+  var currentDate = current_date;//getDateObj(current_date ,formatStr);
+  var day  = selectedDate.getDate();  
+  var month = selectedDate.getMonth() + 1;            
+  var year =  selectedDate.getFullYear();
+  var currentMonth=currentDate.getMonth() + 1;
+  var currentYear=currentDate.getFullYear();
+  var curr_year = moment([currentYear,currentMonth]);
+  var birth_year = moment([year,month]);
+  var difference = curr_year.diff(birth_year, 'years',true);
+  var yearDif= difference.toFixed(1);
+  if(parseFloat(yearDif) < parseFloat(age_difference)) {
+    return true;
+  }
+  return false;
+}
+
+  $(function () {
+    $.validator.addMethod('dateFormat',
+    function (value, element) {
+      dateFormatStr =  getJsDateFormat();
+        if (this.optional(element)) {
+            return true;
+        }
+        var ok = true;
+        try {
+            $.datepicker.parseDate(dateFormatStr, value);
+        }
+        catch (err) {
+            ok = false;
+        }
+        return ok;
+    },
+      "Please enter a date in the format "+ getDateFormat(dateFormatStr) +".");
+      dateFormatStr =  getJsDateFormat();
+
+    $(".datefield").datepicker({ dateFormat: dateFormatStr, changeYear: true });
+  });//closing the function checking the date format
+
+  // $( ".captionWrapper" ).tabs();
+  $("#studentFormID").validate({
+    rules: {
+        "student[admission_date]": {dateFormat: true},
+        "student[first_name]": {required: true, maxlength: 20},
+        "student[last_name]": {maxlength: 20, name_validate: true},
+        "student[date_of_birth]": {dateFormat: true},
+        "student[mg_batch_id]": {required: true},
+        "Correspondance[pin_code]": {number: true, minlength: 6,maxlength: 6}, 
+        "previous_education[marks_obtained]": {number: true, min: 0},
+        "previous_education[total_marks]": {number: true, min: 0},
+        "Permanent[pin_code]": {number: true, minlength: 6,maxlength: 6},
+        "mobile[phone_number]": {required: true, number: true, minlength: 10,maxlength: 10},
+        "phone[phone_number]": {number: true, maxlength: 10},
+        "email[mg_email_id]": {email: "Your email must be in the format of name@domain.com"}
+        // "student[avatar]": {required: true}
+      },
+      messages: {
+        "Correspondance[pin_code]": {minlength: "Please enter 6 digits.",maxlength: "Please enter only 6 digits"},
+        "Permanent[pin_code]": {minlength: "Please enter 6 digits.",maxlength: "Please enter only 6 digits"},
+        "mobile[phone_number]": {minlength: "Please enter 10 digits.",maxlength: "Please enter only 10 digits"},
+        "phone[phone_number]": {maxlength: "Please enter only 10 digits"},
+        "previous_education[year]": {minlength: "Please enter 4 digits.",maxlength: "Please enter only 4 digits"},
+        "previous_education[year]": {maxlength: "Please enter 4 digits.",maxlength: "Please enter only 4 digits"}
+        // "student[avatar]": {required: "Please upload a photo."}
+          }
+    });//end of validation function
+});
+
+$(document).on("change","#student_admission_date",function(e){
+
+  var admission_date=$(this).val();
+  var dob=$("#student_date_of_birth").val();
+
+    if(getDateStudentObj(dob,dateFormatStr)>getStudentAdmissionDateObj(admission_date,dateFormatStr)){
+      alert("Please check the age");
+      document.getElementById('student_admission_date').value ="";
+    }
+});
+
+$(document).on("change","#scholarship_start_date",function(e){
+var end_date=$("#scholarship_end_date").val();
+var start_date=$(this).val();
+
+if(start_date && end_date){
+     if(!compareDate(start_date,end_date,dateFormatStr)){
+        alert("Start Date should be lesser than End Date");
+        document.getElementById('scholarship_start_date').value ="";
+      }
+} 
+});
+
+$(document).on("change","#scholarship_end_date",function(e){
+  var end_date=$(this).val();
+  var start_date=$("#scholarship_start_date").val();
+  console.log("start_date="+start_date);
+  console.log("end_date="+end_date);
+  console.log("dateFormatStr="+dateFormatStr);
+
+  if(start_date && end_date){
+    if(!compareDate(start_date,end_date,dateFormatStr)){
+      alert("End Date should be greater than Start Date");
+      document.getElementById('scholarship_end_date').value ="";
+    }
+  }  
+});
+
+function validateStudentImage(inputFile, that) {
+  var maxFileSize = $("#student_avatar").data('max-file-size');
+  var maxExceededMessage = "This file exceeds the maximum allowed file size (300 kB)";
+    if ( that.files && that.files[0]) {
+      // alert("inside if");
+        var size=that.files[0].size
+        var reader = new FileReader();
+        reader.onload = imageIsLoaded;
+        reader.readAsDataURL(that.files[0]);
+    }
+   if (size>maxFileSize){
+          window.alert(maxExceededMessage);
+          $("#student_avatar").val('');
+          $('#studentImageTagID').hide();
+   }
+   else{
+    }
+  var allowedExtension = ["jpg", "jpeg", "gif", "png","JPG","JPEG","GIF","PNG"];
+ var extName = inputFile.split(/\.(?=[^\.]+$)/);
+  var extNames = extName[1].toLowerCase(); 
+  if ($.inArray(extNames, allowedExtension) == -1){
+     window.alert("Only image file with extension: .jpg, .jpeg, .gif or .png is allowed");
+     $("#student_avatar").val('');
+     $('#studentImageTagID').hide();
+  }
+else{
+  // $("#schoolImageTagID").attr("src","ssc.jpeg.url");
+
+  }
+} //validateStudentImage function end
+
+/*$(document).on("change","#previous_education_total_marks",function(){
+  console.log("inside total marks");
+  var marks_obtained=$("#previous_education_marks_obtained").val();
+  var total_marks=$(this).val();
+  console.log("marks obtained"+marks_obtained);
+  console.log("total marks"+total_marks);
+  if(parseInt(marks_obtained) > parseInt(total_marks)){
+    alert("Total marks should be greater than marks obtained ");
+   document.getElementById('previous_education_total_marks').value="";
+  }
+});*/
+
+
+$(document).on("change","#previous_education_total_marks",function(){
+  var marks_obtained=$("#previous_education_marks_obtained").val();
+  var total_marks=$(this).val();
+  validateMarks(marks_obtained, total_marks, $(this) );
+});
+
+$(document).on("change","#previous_education_marks_obtained",function(){
+  var total_marks=$("#previous_education_total_marks").val();
+  var marks_obtained=$(this).val();  
+  validateMarks(marks_obtained, total_marks, $(this) );
+  
+});
+
+
+function validateMarks(marks_obtained, total_marks, currentObj ){
+  //alert(marks_obtained+"/"+total_marks);
+  if(parseInt(marks_obtained) > parseInt(total_marks)){
+    alert("Total marks should be greater than marks obtained ");
+   //document.getElementById('previous_education_total_marks').value="";
+   currentObj.val("");
+  }
+};
+
+
+function imageIsLoaded(e) {
+    $('#studentImageTagID').attr('src', e.target.result);
+    $('#studentImageTagID').show();
+};
+// $('#autocomplete').keyup(function()
+// {
+//   $('#autocomplete').autocomplete({
+//     serviceUrl: '/students/hobbies',
+//     source: function(request, response) { 
+//        // response($.ui.autocomplete.filter(first_name, extractLast(request.term)));
+//       console.log(request) },
+//     onSelect: function (suggestion) {
+//       alert("jjj")
+//         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+//     }
+// });
+// });
+
+    // $('#autocomplete').autocomplete({
+    //   source: '/students/hobbies',
+    //   appendTo: '#books-search-results',
+    //   select: $.proxy(this._select, this)
+    //   // success: function(data){
+    //   //   console.log(data)
+    //   //   alert("kkk")
+    //   // // for (var i = 0; i < data.length; i++) {
+    //   // //  // alert(data[i].name)
+    //   // // }
+    //   // },
+    //   // error: function(){
+    //   //   alert("kk")
+    //   // }
+    // })
+// $(document).on("keypress", ".autocomplete", function(e){
+//   $(".autocomplete").keypress(function(e){
+//         var urlLink = "/students/hobbies/";
+//         var term = $("#hobby").val()
+//         $.ajax({
+//             url: urlLink ,
+//             cache: false,
+//             data:
+//             {
+//                 "term":term
+//             },
+//             success: function(data){
+//             $("#hobby").removeAttr('disabled');
+//                 $("#hobby").tokenInput(data,{
+//                 crossDomain: false,
+//                 allowFreeTagging: true,
+//                  theme: "facebook"
+//               });
+//                 // $("#hobby").attr('disabled','false')
+//                 auto = new Array
+//                 for (var i = 0; i <data.length; i++)
+//                  {
+//                   auto.push(data[i].name)               
+//                    }
+//                     $(".autocomplete").autocomplete({
+//                       source: auto
+//                     });
+//                     $(".autocomplete").attr('autocomplete','on')
+//             }
+//         });
+// });
+
+// $(document).on("keyup", ".autocomplete_for_sports", function(e){
+  
+// $(document).on("keyup", ".autocomplete_for_extra_curricular", function(e){
+//   $(".autocomplete_for_extra_curricular").keypress(function(e){
+//         var urlLink = "/students/get_extra_curricular/";
+//         var term = $("#extra_curricular").val()
+//         $.ajax({
+//             url: urlLink ,
+//             cache: false,
+//             data:
+//             {
+//                 "term":term
+//             },
+//             success: function(data){  
+//             // alert(JSON.stringify(data))
+//             // data[asd: "adss"]
+//             // $("input").removeAttr('disabled');
+//                 $("#extra_curricular").tokenInput(data,{
+//                 crossDomain: false,
+//                 allowFreeTagging: true,
+//                  theme: "facebook"
+//                  // preventDuplicates: true,
+//                  // prePopulate: $("#hobby"),
+//               });
+//                 // $("#hobby").attr('disabled','false')
+
+//                 auto = new Array
+//                 for (var i = 0; i <data.length; i++)
+//                  {
+//                   auto.push(data[i].name)     
+//                    }
+//                     $(".autocomplete_for_extra_curricular").autocomplete({
+//                       source: auto
+//                     });
+//                     $(".autocomplete_for_extra_curricular").attr('autocomplete','on');
+//             }
+//         });
+// });
+
+
+
+
+  
+</script>
+
+<style>
+.mg-capitalize-lbl{
+  text-transform: capitalize;
+}
+</style>

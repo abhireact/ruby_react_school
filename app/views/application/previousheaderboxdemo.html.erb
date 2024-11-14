@@ -1,0 +1,190 @@
+<!-- Sec -->
+<%
+rlAndPer = session[:roles_permissions_data]
+index = 0
+ary = Array.new
+userType = session[:user_type]
+
+%>
+
+<div class="background-box">
+          <ul id="headerBoxID" class="distributedBoxes">
+            <% if userType == "admin" %>
+
+              <li class="home-box-li">
+                  <a class="homeBox" id="homeID" href="/dashboards" >
+                      <div class="navBox">
+                        <i class="fa fa-home"></i>
+                        <div class="homeBoxText">HOME</div>
+                      </div>
+                  </a>
+              </li>
+            <% elsif  userType == "principal" %>
+             <li class="home-box-li">
+                              <a class="homeBox" id="homeID" href="/dashboards/principal/" >
+                                  <div class="navBox">
+                                    <i class="fa fa-home"></i>
+                                    <div class="homeBoxText">HOME</div>
+                                  </div>
+                              </a>
+                          </li>
+
+            <% elsif  userType == "guardian" %>
+            <li class="home-box-li">
+                              <a class="homeBox" id="homeID" href="/dashboards/guardian/" >
+                                  <div class="navBox">
+                                    <i class="fa fa-home"></i>
+                                    <div class="homeBoxText">HOME</div>
+                                  </div>
+                              </a>
+                          </li>
+
+         <% elsif  userType == "employee" %>
+            <li class="home-box-li">
+                              <a class="homeBox" id="homeID" href="/dashboards/employee/" >
+                                  <div class="navBox">
+                                    <i class="fa fa-home"></i>
+                                    <div class="homeBoxText">HOME</div>
+                                  </div>
+                              </a>
+                          </li>
+            <% elsif  userType == "student" %>
+                <li class="home-box-li">
+                              <a class="homeBox" id="homeID" href="/attendances/student/" ><!-- <a class="homeBox" id="homeID" href="/dashboards/student/" > -->
+                                  <div class="navBox">
+                                    <i class="fa fa-home"></i>
+                                    <div class="homeBoxText">HOME</div>
+                                  </div>
+                              </a>
+                          </li>
+              
+             <% end %> 
+
+<% if userType == "admin" || userType == "principal" %>
+
+          <% rlAndPer.each do   |key|  %> 
+              <% key.each do |kee, valId| %>
+
+              <!-- Step -5 open--> 
+
+                <% if kee.to_s.eql?("model_id") && index < 8 %>
+                      
+                      <% modelData =  MgModel.find(valId)  %>
+                      <% mdlData =  modelData.model_name  %>
+
+                      <%#= mdlData.inspect %>
+
+                      <% iconName = case mdlData
+                                   when "STUDENTS" then "graduation-cap"
+                                   when "CLASSES" then "book"
+                                   when "ATTENDANCES" then "shield"
+                                   when "SETTINGS" then "cog"
+                                   when "EMPLOYEES" then "users"
+                                   when "SUBJECTS" then "file-text"
+                                   when "FEES" then "money"
+                                   when "SCHOOLS" then "institution"
+
+                                   else "home"
+                                end%>
+
+                      <!-- Step -4 open--> 
+                      <% if ary.include?(mdlData.to_s) %>
+
+                      <% else %>
+                          <!-- for every condition check the data content-->
+                        <%  ary.push(mdlData.to_s) %>
+                        <%
+                       # if 
+
+
+                       # from here we can hide the settings tab
+
+                      #  if  mdlData.to_s.eql?("BATCHES") || mdlData.to_s.eql?("SETTINGS")
+                       %>
+                      <!-- Step -3 open--> 
+                       <% if  mdlData.to_s.eql?("BATCHES")  %>
+                          <% else %>
+                              <li class="home-box-li">
+                                  <a class="homeBox" href="/<%= mdlData.downcase%>" >
+                                      <div class="navBox">
+                                        <i class="fa fa-<%= iconName %>"></i>
+                                        <div class="homeBoxText"><%= mdlData %> </div>
+                                      </div>
+                                  </a>
+                                </li>
+
+
+
+                           
+                      <% end %> <!-- End Kee If -->
+                      <!-- Step -3 close--> 
+                     <%#  index = index + 1 %>
+                  <% end %><!-- batch if is closed-->
+                  <!-- Step -4 close--> 
+                <% end %><!-- array.include method-->
+                 <!-- Step -5 close-->   
+                   <!-- Step -1 open--> 
+                              
+                              <!-- Step -2 open--> 
+                              <% if index == 7 %>
+                                          </ul>
+                                    <div id="navDropDown"><i class="fa fa-caret-square-o-down" style="position:relative; top:6px;"></i></div>
+                                      </div> 
+
+                                  <div class="distributedBoxes1">
+                                      <ul class="distributedBoxes2">
+                                                  <div class="navDropDownList">
+                                                    <div class="navDropDownSubList"> 
+                              <% end %>  
+                             <%#  index = index + 1 %>
+                              <!-- Step -2 close--> 
+
+
+                             <% if kee.to_s.eql?("model_id") && index > 7 %>  
+
+                              <% if ary.include?(mdlData.to_s) %>
+
+                              <% else %>
+                           <!-- for every condition check the data content-->
+                              <%  ary.push(mdlData.to_s) %> 
+
+                                  <% modelData =  MgModel.find(valId)  %>
+                                  <% mdlData =  modelData.model_name  %>
+                                                   <li class="home-box-li">
+                                                            <a class="transportBox" href="#" >
+                                                              <div class="navBox">
+                                                                  <i class="fa fa-bus"></i>
+                                                                  <span class="settingsBoxText"><%= mdlData %> </span>
+                                                              </div>
+                                                            </a>
+                                                          </li>
+                                    <%  index = index + 1 %>
+
+
+
+                             <% end %> <!-- End Kee second  If -->  
+                            <% end %> <!-- End Kee second  If -->  
+                             <!-- Step -1 close-->  
+                 <%#  index = index + 1 %>  
+
+              <% end %><!-- End Key each -->
+          <% end %> <!-- End rlAndPer Each -->
+          <% if rlAndPer.length < 7 %>
+                  </ul>
+               </div> 
+          <% end %>
+          <% if rlAndPer.length > 7 %>
+                   </div>
+                              </div>
+                        </ul>
+                  </div>  
+          <% end %>
+            
+<% else %>
+                        </ul>
+                  </div> 
+
+
+<% end %>
+
+

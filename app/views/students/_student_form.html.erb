@@ -1,0 +1,967 @@
+ <%= form_for :student, :url=>@action=='new' ? '/students/create' : '/students'+'/update/'+@student.try(:id).to_s, :method=> @action=='new' ? "post" : "patch", :html => {:id => 'studentFormID' } do |f| %>
+ <%= hidden_field_tag 'minimum_age', @year_diff%>
+ <% if form == "new" %>
+ <%= f.hidden_field :user_name, :value => ""%>
+        <%= f.hidden_field :password, :value => "student123"%>
+        <%= f.hidden_field :is_deleted, :value => 0 %>
+        <%= f.hidden_field :user_type, :value => 'student' %>
+        <%= f.hidden_field :mg_school_id, :value =>session[:current_user_school_id]%>
+
+  <% end %>
+ 
+  <div class="row mc-padding-20 form-section-box">
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+      <label  for="admission_number"><%= t('user_id') %></label>
+      <%= tooltip '<i class="fa fa-question"></i>'.html_safe, { :tooltip => 'User Id is auto generated. ' }, :class => 'mytooltip mg-icon-btn' ,:style=>"font-size: 0.85em;"%>
+      <%user_name=MgUser.find_by(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id],:id=>@student.mg_user_id)%>
+      <%if @action=='new'%>
+        <%= text_field_tag :user_id,nil,:readonly => "readonly", :class=>"textboxwidth form-control"%>
+      <%else%>
+        <%= text_field_tag :user_id,user_name.user_name,:readonly => "readonly", :class=>"textboxwidth form-control"%>
+      <%end%>
+          
+    </div>
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <label for="admission_date"><%= t('admission_date') %><span class="required-field">&nbsp;</span></label>
+      <%= f.text_field :admission_date ,:class => 'admission_date form-control'%>
+    </div>
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+      <label   for="admission_number"><%= t('admission_number') %></label>
+      <%= f.text_field :class_roll_number, :class=>"textboxwidth form-control"%>
+    </div>
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+      <label   for="fee_code"><%= t('fee_code') %></label>
+      <%= f.text_field :fee_code, :class=>"textboxwidth form-control"%>
+    </div>
+  </div>
+       <!--  <hr> -->
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+      <h4 class="form-section-heading mc-margin-bottom-20">
+         <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= t('personaldetails') %></b>
+      </h4>
+    </div>
+  </div>
+
+  <div class="row mc-padding-20 form-section-box">
+
+    <div class="row mc-padding-20 form-section-box">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+        <label   for="first_name"><%= t('firstname') %>
+          <span class="required-field">*</span> 
+        </label>
+        <%= f.text_field :first_name  ,:class=>"form-control"%>
+      </div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label   for="middle_name"><%= t('middlename') %></label>
+        <%= f.text_field :middle_name ,:class=>"form-control"%>
+      </div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label for="last_name"><%= t('lastname') %>
+        </label>
+        <%= f.text_field :last_name ,:class=>"form-control"%>
+      </div>
+    </div>
+    <div class="row mc-padding-20 form-section-box">
+      <% if form == "new" %>
+        <%= render :partial=>'get_academic_year'%>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="batch_name"> <%= t('coursebatch') %>
+            <span class="required-field">*</span>
+          </label>
+          <%=f.select(:mg_batch_id,{},{:include_blank => 'Select'} ,:class=>"current_year_class_sections form-control") %>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label  class="mg-rm-text-trans" for="date_of_birth" ><%= t('dateofbirth')%>
+            <span class="required-field"></span>
+          </label>
+          <%= f.text_field :date_of_birth  ,:class => 'date_of_birth form-control'%>
+        </div>
+      <% else %>
+        <%if @student.mg_batch_id.present?%>
+          <%batch = MgBatch.find(@student.mg_batch_id)%>
+          <% batch.course_batch_name 
+          params[:mg_batch_id] = @student.mg_batch_id
+        end%>
+        <%= render :partial=>'get_academic_year'%>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="batch_name"> <%= t('coursebatch') %>
+            <span class="required-field">*</span>
+          </label>
+           <%=f.select(:mg_batch_id,{},{:include_blank => 'Select'},:class=>"current_year_class_sections form-control",:disabled => true) %>
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+              <label class="mg-rm-text-trans" for="date_of_birth" ><%= t('dateofbirth')%>
+                <span class="required-field"></span>
+              </label>
+              <%= f.text_field :date_of_birth  ,:class => 'dateofbirth form-control'%>
+        </div>
+        
+
+      <% end %>
+    </div>
+
+    <div class="row mc-padding-20 form-section-box">
+      <% if form == "new" %>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="gender"><%= t('gender') %></label>
+          <%= f.select :gender, [ 'Male', 'Female' ], {:include_blank => 'Select'} ,:class=>"form-control"%>
+        </div>
+      <%else%>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <label for="gender" ><%= t('gender') %></label>
+          <% if @student.gender != nil
+              if @student.gender.to_s.casecmp("Male")==0
+                gender = "Male"
+              elsif @student.gender.to_s.casecmp("Female")==0
+                gender = "Female"
+              else
+                gender = ""
+              end
+            else 
+              gender = ""
+            end
+          %>
+          <%= f.select :gender, options_for_select([[t("MALE"), "Male"], [t("FEMALE"), "Female"]],:selected=>gender),{:include_blank => 'Select'},:class=>"form-control" %>
+        </div>
+      <%end%>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for="blood_group"><%= t('bloodgroup') %></label>
+         <%= f.select :blood_group, [ 'A+' ,'A-','B+','B-','O+','O-','AB+','AB-'], {:include_blank => 'Select'} ,:class=>"form-control" %>
+      </div>
+
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for="birth_place"><%= t('birthplace') %></label>
+        <%= f.text_field :birth_place  ,:class => 'birth_place form-control'%>
+      </div>
+
+    </div>
+    <div class="row mc-padding-20 form-section-box">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for="nationality"><%= t('nationality') %>
+          <span class="required-field"></span>
+        </label>
+        <%= f.country_select :nationality, ["India"], {}, { :class => "form-control" } %>
+      </div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for=" Category"><%= t('Aadhar Number') %>
+          <span class="required-field"></span>
+        </label>
+         <%= f.text_field :adharnumber  ,  :minlength => "12", :maxlength => "12", :class => ' form-control'%>
+      </div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for="religion" ><%= t('Caste') %></label>
+        <%=f.select(:mg_caste_id,caste,{:include_blank => 'Select'} ,:class=>"form-control mg-category-class"  ) %>
+      </div>
+    </div>
+    <div class="row mc-padding-20 form-section-box">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for=" Category"><%= t('Caste-Category') %>
+          <span class="required-field"></span>
+        </label>
+        <%=f.collection_select(:mg_caste_category_id, get_caste_category,:id, :name,{:include_blank => 'Select'},:class=>"form-control") %>
+      </div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label   for="language"><%= t('mothertongue') %></label>
+         <%= f.text_field :language  ,:class=>"form-control"%>
+      </div>
+
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for="religion"><%= t('religion') %></label>
+         <%= f.text_field :religion  ,:class => 'religion form-control'%>
+      </div>
+    </div>
+    <div class="row mc-padding-20 form-section-box">
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for=" Category"><%= t('Quota') %>
+          <span class="required-field"></span>
+        </label>
+        <%=f.collection_select(:mg_student_catagory_id, get_student_category, :id, :name,{:include_blank => 'Select'},:class=>"form-control" )%>
+      </div>
+       <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for=" Category"><%= t('house_details') %>
+          <span class="required-field"></span>
+        </label>
+        <%=f.collection_select(:mg_house_details_id, get_house_details, :id, :Name,{:include_blank => 'Select'},:class=>"form-control" )%>
+      </div>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <label    for=" Category"><%= "PEN Number" %>
+          <span class="required-field"></span>
+        </label>
+        <%= f.text_field :pen_number  ,:class => 'birth_place form-control'%>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+          <div id="studentEmployeeChildId" class= "Student-Employee-Child-Class mg-mrgn-left13" style="display: none;">   
+              <%= render :partial => "employee_child_new" %>  
+          </div>
+
+          <div id="studentManagementQuotaId" class= "Student-Management-Quota-Class mg-mrgn-left13" style="display: none;">   
+              <%= render :partial => "management_quota_new" %>  
+          </div>
+
+          <div id="studentScholarshipId" class= "Student-Scholarship-Class mg-mrgn-left13" style="display: none;">   
+              <%= render :partial => "scholarship_new" %>  
+          </div>
+
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+              <h4 class="form-section-heading mc-margin-bottom-20">
+              <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Contact Details</b>
+              </h4>
+            </div>
+          </div>
+
+          <div class="row mc-padding-20 form-section-box">
+            <div class="row col-lg-12 col-md-12 colsm-12 col-xs-12">
+              <%#= render :partial => "contact_inline" ,:locals => {:phone_types => "phone"} %>
+            </div>
+            <div class="row col-lg-12 col-md-12 colsm-12 col-xs-12">
+              <% if form == "new" %>
+                <span style="left: -989px; position: relative; float: right; top: 51px;">
+                  <%="+91-"%>
+                  </span>
+              <%else%>
+                <span style="left: -989px; position: relative; float: right; top: 51px;">
+                  <%="+91-"%>
+                  </span>
+              <%end%>
+                <%= render :partial => "contact_inline" ,:locals => {:phone_types => "mobile"} %>
+            </div>
+            <div class="row col-lg-12 col-md-12 colsm-12 col-xs-12">
+              <%= render :partial => "email_inline" ,:locals => {:phone_types => "phone"}%>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">  
+              <h4 class="form-section-heading mc-margin-bottom-20 ">
+              <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Student Photo</b>
+              </h4>
+            </div>
+          </div>
+
+          <div class="mc-padding-20 form-section-box">
+            <label    for="schoollogo "><%= t 'PhotoUpload' %><span class="required-field">
+            <%= tooltip '<i class="fa fa-question"></i>'.html_safe, { :tooltip => 'Only image file with extension: .jpg, .jpeg, .gif or .png is allowed. Files cannot be more than 300 KB.' }, :class => 'mytooltip mg-icon-btn' ,:style=>"font-size: 0.85em;"%>&nbsp;</span></label><br/>
+
+            <% if form == "edit" %>
+              <%= image_tag  @student.avatar.url(:medium, timestamp: false),:class => 'mg-img-size mg-btn-bottom-margin mg-custom-labels',:id=>"studentImageTagID"  %>
+            <% end %>
+            <%#= image_tag  @employee.photo.url(:medium, timestamp: false),:class => 'mg-img-size mg-btn-bottom-margin mg-custom-labels',:id=>"employeeImageTagID"  %>
+            <img id="studentImageTagID" class="mg-img-size mg-btn-bottom-margin mg-custom-labels" src="#" style="display:none"> 
+
+            <br/>
+            <%= f.file_field :avatar,:onchange =>"validateStudentImage(this.value,this);",data: { max_file_size: 300.kilobytes }%>
+            <%#= file_field 'user_pic', accept: 'image/png,image/gif,image/jpeg'%>
+            <%#= @school.logo_file_name %>
+          </div>
+
+          
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+              <h4 class="form-section-heading mc-margin-bottom-20">
+              <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Guardian Details </b>
+              </h4>
+            </div>
+          </div>
+
+          <div class="row mc-padding-20 form-section-box">
+            <div class="row col-lg-12 col-md-12 colsm-12 col-xs-12">
+              <%= render :partial => "guardian_details" %>
+            </div>
+          </div>
+
+          <!-- <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+              <h3 class="form-section-heading mc-margin-bottom-20">
+                 <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Guardian 2 Details</b>
+              </h3>
+            </div>
+          </div>
+          <div id="studentSiblingId" class= "Student-Sibling-Class">
+           <div class="row mc-padding-20 form-section-box">  
+              <%#= render :partial => "guardian_2_details" %>  
+              </div>
+          </div> -->
+
+
+
+
+
+
+<!-- Language part has been done below -->
+<!-- <h4 class="mg-h4"><#%= t('language') %></h4>
+<div id="languagePlusId">+</div>
+<div id="languagedivcloneid" class= "languagedivcloneclass">
+      
+      <#%= render :partial => "language_known" %>  
+</div>
+
+<div id="languagedivscloneid" class= "languagedivscloneclass">
+      
+</div>
+ -->
+<!-- Language part has been done above -->
+ <!--  <hr/> -->
+      <!-- Address will come here -->
+
+<!-- ====================Language part has been done below ======================== -->
+       <!--  <h4 class="mg-h4"><#%= t('sibling') %> -->
+
+
+     <!--  ===================Language part has been done above ========================= -->
+       <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+              <h4 class="form-section-heading mc-margin-bottom-20">
+                 <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= t('temporaryaddress') %></b>
+              </h4>
+            </div>
+          </div>
+           <!-- <div class="row mc-padding-20 form-section-box"> -->
+       <%#=render :partial => 'address_with_street' , :locals => {:addresstype => "Correspondance"}%>
+       <div class="row mc-padding-20 form-section-box">
+      <%= render :partial => 'addresses' , :locals => {:addresstype => "Temporary"}%>
+    </div>
+       <!-- </div> -->
+       <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+              <h4 class="form-section-heading mc-margin-bottom-20">
+                 <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= t('permanentaddress') %></b>
+              </h4>
+            </div>
+          </div>
+           <!-- <div class="row mc-padding-20 form-section-box"> -->
+      <div class="row mc-padding-20 form-section-box">
+
+      <label for="same" ><%= t('same_as_current_address') %></label>
+        <br>
+        <%= check_box_tag 'same_as_current_adress', 'no',false%> 
+      <%=render :partial => 'addresses' , :locals => {:addresstype => "Permanent"}%>
+      </div>
+      <!-- </div> -->
+     
+      <!-- Address will end here -->
+
+      <%#= render :partial => "contacts" ,:locals => {:phone_types => "phone"} %>
+      <%#= render :partial => "contacts" ,:locals => {:phone_types => "mobile"} %>
+      <%#= render :partial => "emails" %>
+
+
+        <!-- <div class="form-content" style=" width:100%; border:0px #fac94a solid; color:#000; ">
+          <div class="form-content-inner" style="padding:5px;">
+          <h4 class="mg-h4"><b>Image</b></h4>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: 9px;">
+              <tbody>
+                <tr>
+                  <td align="left" width="33%">
+                    <label for="upload_file" ><%#= t('PhotoUpload') %></label> 
+                  </td>
+                  <td style="padding-left:8px;">
+                    <%#= f.file_field :avatar %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div> -->
+
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+            <!--   <h3 class="form-section-heading mc-margin-bottom-20">
+                 <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Sibiling</b>
+              </h3> -->
+            </div>
+          </div>
+          <div id="studentSiblingId" class= "Student-Sibling-Class">
+           <div class="row mc-padding-20 form-section-box">  
+              <%= render :partial => "sibling_new" %>  
+              </div>
+          </div>
+
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+            <!-- <h3 class="form-section-heading mc-margin-bottom-20">
+            <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%#= t('previousedcuation') %></b>
+            </h3> -->
+        </div>
+      </div>
+<div class="row mc-padding-20 form-section-box">
+ <%= render :partial => "previous_education_details" ,:locals => {:form => form} %>
+</div>
+<br>
+
+<!-- ############################################################################################ -->
+
+
+
+
+
+<div class="row mc-padding-20 form-section-box">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20" style="margin-left: 18px;" >
+      <!-- <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: 14px;"> -->
+
+    <h4 class="form-section-heading mc-margin-bottom-20">
+      <b><%= t('activities') %></b>
+      <%= check_box_tag 'show_documents_checkbox', true, false, id: 'show_documents_checkbox', style: 'margin-left: 15px;' %>    </h4>
+</div>
+
+
+<div id="document_div" class="row mc-padding-20 form-section-box" style="display: none;">
+          <% if form == "new" %>
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label  for="sport_activity" ><%= t('sport_activity') %>
+                        </label>
+                        <%=text_field_tag :sport_activity, nil,class: "autocomplete_for_sports form-control", :autocomplete => :on, :size=>"50" %>
+                        </div>
+                      <%= fields_for :document_managements, url: document_managements_path, :html => {
+                                      :id => 'documentManagementsFormID' } do |f| %>
+                       <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_sport_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label    for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'sports_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_sport_uploads" class="add-sport-file mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+        </div>
+      <% end %>
+
+            <% else %>
+
+                <div class="row mc-padding-20 form-section-box">
+            
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label for="sport_activity" ><%= t('sport_activity') %>
+                        </label>
+                        <%#= f.text_area :sport_activity, :rows=>"5", :cols=>"70", :maxlength=>"4000", :class=>"textboxwidths mg-text-fields" %>
+                        <%@sports_ass = MgSportsAssociation.where(:mg_user_id=>@student.mg_user_id,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:mg_sport_id)%>
+                       <%@sports = MgSport.where(:id=>@sports_ass,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:name)%>
+                        <%=text_field_tag :sport_activity,@sports,class: "autocomplete_for_sports form-control", :autocomplete => :on, :size=>"50" %>
+                          <%= hidden_field_tag "sports_auto_suggestion", @sports %>
+                          <%=hidden_field_tag "sports_autocomplete"%>
+
+                        <%#=text_field_tag :sport_activity, nil,class: "autocomsports_assplete_for_sports", :autocomplete => :on, :size=>"50" %>
+                        </div><br>
+                        <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"SportsActivity")%>
+                   
+                    <%@document.each_with_index do |user,i|%>
+                    
+                      <li data-index="<%= i %>" class="mg-custom-labels">
+                      <div delete-index="<%= i %>">
+                          <label class="mg-file-clr mg-label-inner-form"><%= user.file_file_name %></label>
+                          
+                         <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe,{ action: "delete_record", documentID: user.id },method: :get, data: { confirm: "Are you sure?" } ,:title=>"Delete" ,:class=>"mg-icon-btn"%> 
+                         </div>
+                      </li>
+                     
+                   <%end%>
+                  <%= form_for :document_managements, url: document_managements_path, :html => {:id => 'documentManagementsFormID' } do |f| %>
+                    <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_sport_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label    for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'sports_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_sport_uploads" class="add-sport-file mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+            </div>
+            <% end %>
+            <% end %>
+
+        
+<div class="row mc-padding-20 form-section-box">
+                    <% if form == "new" %>
+                    <!-- <div id="document_div" class="row mc-padding-20 form-section-box" style="display: none;"> -->
+              <div id="document_extra" class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12" style="display: none;">
+                      <label  for="extra_curricular" ><%= t("extra_curricular") %>
+                      </label>
+                        <%=text_field_tag :extra_curricular, nil,class: "autocomplete_for_extra_curricular form-control", :autocomplete => :on, :size=>"50" %>
+                      </div>
+                          <div class="row"  id="document_file_id" style="display: none;">
+                          <div class="form-group">
+                              <div class="student_file_file_extra_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'extra_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_extra_uploads" class="mg-icon-btn"  style="display: none;" >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+        </div>
+                    <% else %>
+<div class="row mc-padding-20 form-section-box">
+ 
+                      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                      <label for="extra_curricular" ><%= t("extra_curricular") %>
+                      </label>
+                         <%#= f.text_area :extra_curricular, :rows=>"5", :cols=>"70", :maxlength=>"4000", :class=>"textboxwidths mg-text-fields" %>
+                         <%@extra_ass = MgExtraCurricularAssociation.where(:mg_user_id=>@student.mg_user_id,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:mg_extra_curricular_id)%>
+                        <%@extra = MgExtraCurricular.where(:id=>@extra_ass,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:name)%>
+                        <%#=@extra%>
+                        <%=text_field_tag :extra_curricular, @extra,class: "autocomplete_for_extra_curricular form-control", :autocomplete => :on, :size=>"50" %>
+                        <%#=hidden_field_tag : %>
+                          <%= hidden_field_tag "auto_suggestion", @extra %>
+                          <%=hidden_field_tag "auto_suggession_update[]", @extra_ass%>
+
+                          <%=hidden_field_tag "extra_suggestion"%>
+                      </div>
+                          <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"ExtraCurricular")%>
+                          <%@document.each_with_index do |user,i|%>
+                          
+                              <li data-index="<%= i %>"  class="mg-custom-labels">
+                              <div delete-index="<%= i %>">
+                                <label    class="mg-file-clr mg-label-inner-form"><%= user.file_file_name %></label>
+                              <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe,{ action: "delete_record", documentID: user.id },method: :get, data: { confirm: "Are you sure?" } ,:title=>"Delete" ,:class=>"mg-icon-btn"%> 
+                              </div>
+                              </li> 
+                          
+                          <%end%>
+                     <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_extra_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label    for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'extra_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_extra_uploads" class="mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+            </div>
+
+                    <% end %>
+
+
+
+<div id="extra_document_div" class="row mc-padding-20 form-section-box" style="display: none;">            
+                      <% if form == "new" %>
+                      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                      <label for="hobby" ><%= t("hobby") %>
+                      </label>
+                    <%=text_field_tag :hobby, nil,class: "autocomplete form-control", :autocomplete => :on, :size=>"50" %>
+                      </div>
+                    <%else%>
+                     <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                      <label for="hobby" ><%= t("hobby") %>
+                      </label>
+                       <%#= f.text_area :hobby, :rows=>"5", :cols=>"70", :maxlength=>"4000", :class=>"textboxwidths mg-text-fields" %>
+                       <%@hobby_ass = MgHobbyAssociation.where(:mg_user_id=>@student.mg_user_id,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:mg_hobby_id)%>
+                       <%@hobby = MgHobby.where(:id=>@hobby_ass,:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:name)%>
+                    <%=text_field_tag :hobby,@hobby,class: "autocomplete form-control", :autocomplete => :on, :size=>"50" %>
+                      <%= hidden_field_tag "hobby_auto_suggestion", @hobby %>
+                          <%=hidden_field_tag "hobby_autocomplete"%>
+                     </div>
+                    <%end%>
+<br><br><br><br>
+                    <% if form == "new" %>
+                     <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label for="helath_record" ><%= t("health_record") %>
+                          <span class="required-field"></span> 
+                        </label>
+
+                         <%= f.text_area :health_record, :rows=>"5", :cols=>"70", :maxlength=>"4000", :class=>"textboxwidths form-control" %>
+                  </div>
+                    <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_health_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'health_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_health_uploads" class="mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+                      <% else %>
+                      <br><br>
+                      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <label  for="helath_record" ><%= t("health_record") %>
+                          <span class="required-field"></span> 
+                        </label>
+                         <%= f.text_area :health_record, :rows=>"5", :maxlength=>"4000", :class=>"textboxwidths form-control" %>
+                      </div>
+                        <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"HealthRecords")%>
+                        <%@document.each_with_index do |user,i|%>
+                        
+                            <li data-index="<%= i %>" class="mg-custom-labels">
+                            <div delete-index="<%= i %>">
+                                <label class="mg-file-clr mg-label-inner-form"><%= user.file_file_name %></label>
+                                
+                              <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe,{ action: "delete_record", documentID: user.id },method: :get, data: { confirm: "Are you sure?" } ,:title=>"Delete" ,:class=>"mg-icon-btn"%> 
+                            </div>
+                            </li>
+                       <%end%>
+                      <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_health_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label    for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'health_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_health_uploads" class="mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+                      <% end %>
+
+
+                    <% if form == "new" %>
+                      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                      <label for="hobby" ><%= t("class_record") %>
+                        <span class="required-field"></span>
+                        </label>
+                       <%= f.text_area :class_record, :rows=>"5", :maxlength=>"4000", :class=>"textboxwidths form-control" %>
+                        </div>
+         
+                         <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_record_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'class_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_record_uploads" class="mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+                    <% else %>
+                    <br>
+                     <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                      <label for="hobby" ><%= t("class_record") %>
+                        <span class="required-field"></span>
+                        </label>
+                       <%= f.text_area :class_record, :rows=>"5", :maxlength=>"4000", :class=>"textboxwidths form-control" %>
+                  </div>
+                          <%@document=MgDocumentManagement.where(:mg_user_id=>@student.mg_user_id,:document_type=>"ClassRecords")%>
+                          <%@document.each_with_index do |user,i|%>
+                          
+                            <li data-index="<%= i %>" class="mg-custom-labels">
+                            <div delete-index="<%= i %>">
+                              <label class="mg-file-clr mg-label-inner-form"><%= user.file_file_name %></label>
+                               <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe,{ action: "delete_record", documentID: user.id },method: :get, data: { confirm: "Are you sure?" } ,:title=>"Delete" ,:class=>"mg-icon-btn"%> 
+                           </div>
+                           </li> 
+                          
+                          <%end%>
+                        
+                        <div class="row">
+                          <div class="form-group">
+                              <div class="student_file_file_record_div col-lg-12 col-md-12 col-sm-12 col-xs-12" id="dueFineDivId">
+                                <label    for="upload_file"><%= t('upload_file') %></label>
+                                <br>
+                                <label class="btn btn-default col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                  <%= file_field_tag 'class_file[]'%>
+                                </label>
+                                  <a href="#" class="studentfile-upload ">
+                                  <i class="fa fa-trash-o fa-lg col-lg-offset-1 col-md-offset-1 col-sm-offset-1 fa-trash-border"></i>
+                                  </a>
+                              </div>
+                          </div>
+                        </div>
+
+                            <br> 
+
+                        <a href="#" id="add_file_student_record_uploads" class="mg-icon-btn"  >
+                           <i class="fa fa-plus-circle">&nbsp;Add File</i>
+                        </a> 
+
+                        <br/>
+                    <% end %>
+      </div>
+    </div>
+
+
+
+
+<!-- ############################################################################################### -->
+
+<%if  @dbdatas.size>0 %>
+     
+             <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+                    <h4 class="form-section-heading mc-margin-bottom-20">
+                    <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Custom Fields</b>
+                    </h4>
+                </div>
+              </div>
+        <div class="row mc-padding-20 form-section-box">
+
+
+               <% @dbdatas.each do |dbdata| %>
+
+              <%custom_data=Array.new%>
+            <%= hidden_field_tag 'custom_data[]', dbdata.id%>
+
+
+              <label class="mg-capitalize-lbl mg-label"><%= dbdata.name%></label><br>
+
+
+
+             <%
+             if form == "edit"
+
+               @customData.each do |custData| 
+
+               if custData.mg_custom_field_id == dbdata.id.to_s
+                  @custValue = custData.value
+               
+               end
+             end
+           end
+              %> 
+
+
+           
+              <%@data=dbdata.text_data.split(",")%>
+
+               <%for i in 0..@data.length-1%>
+
+                  <%if dbdata.data_type=="check_box"%>
+
+                      <%custom_field=Array.new%>
+<% if  form == "edit"%>
+                      <%= check_box_tag 'custom_field_'+dbdata.id.to_s+'[]', @data[i],
+                      if @custValue.nil? then false else @custValue.include?(@data[i]) end
+                        %>
+                       <% else %>
+                       <%= check_box_tag 'custom_field_'+dbdata.id.to_s+'[]', @data[i] %>
+                       <% end %>
+
+                      <%=@data[i] %>
+                  
+
+               <%elsif dbdata.data_type=="radio_button" %>
+                      <%custom_field=Array.new%>
+                      <% if form == "new"%>
+                      <%= radio_button_tag 'custom_field_'+dbdata.id.to_s+'[]', @data[i] %>
+                      <% else %>
+
+                      <%= radio_button_tag 'custom_field_'+dbdata.id.to_s+'[]', @data[i], (@data[i]==@custValue) %>
+
+
+                      <% end %>
+                       <%=@data[i] %>
+              
+
+
+               <%elsif dbdata.data_type=="drop_down" %>
+                      <%custom_field=Array.new%>
+
+                      <%if form == "new" %>
+
+                      <%=select_tag 'custom_field_'+dbdata.id.to_s+'[]', options_for_select(@data) ,:class=>"form-control mg-select-btn",:style=>"width:250px"%><br>
+
+                      <% else %>
+
+                     <%= select_tag 'custom_field_'+dbdata.id.to_s+'[]', options_for_select(@data, :selected => @custValue ) ,:class=>" mg-select-btn form-control",:style=>"width:250px"%><br/>
+                     <% end %>
+
+                 <%break%>
+
+
+                <%elsif dbdata.data_type=="input_type" %>
+
+                     <%custom_field=Array.new%>
+                     <%if form == "new" %>
+
+                     <%= text_field_tag 'custom_field_'+dbdata.id.to_s+'[]',@data[i] ,:class=>" form-control mg-select-btn",:style=>"width:250px"%>
+
+                     <% else %>
+
+                     <%= text_field_tag 'custom_field_'+dbdata.id.to_s+'[]',@custValue ,:class=>"form-control mg-select-btn",:style=>"width:250px"%><br/>
+
+                     <% end %>
+
+                <%end%><br>
+
+                 <%end%>
+
+                  <%end%>
+<%end%>
+                   </div> 
+
+ 
+     <!-- custom field finish -->
+     <br/>
+     <p>
+      <%#= submit_tag t("save"), id: "saveStudentRecordID", class: "submit mg-small-form-btn"  %>
+        <a onclick="$(this).closest('form').submit()" id="saveStudentRecordID" class="submit mg-small-form-btn submit mc-margin-bottom-20 flat-button"><%=t("save")%></a>
+        <%= link_to t('cancel'), students_path, {:class=>"mg-small-form-btn cancel-form-dialog submit mc-margin-bottom-20 flat-button"} %>
+        <%#= link_to t("Submit With Fee Schedule"), student_create_path(fee: 'fee'), method: :post, class: "submit mg-small-form-btn mc-margin-bottom-20 flat-button" %>
+          <%#= f.submit t("Fee Schedule"), class: "submit mg-small-form-btn mc-margin-bottom-20 flat-button" %>
+          <%#= f.submit t('fee'), class: "mg-small-form-btn cancel-form-dialog submit mc-margin-bottom-20 flat-button", style: "height: 38px; padding-top: 8px;" %>
+
+          <%#binding.pry%>
+          <%if @model_name == "FEES" %>
+          <%= f.submit t('fee_schedule'), class: "submit mg-small-form-btn submit mc-margin-bottom-20 flat-button", style: "height: 38px; padding-top: 8px;" %>
+          <%end%>
+
+
+
+      </p>
+    <% end %>
+
+<script>
+  $(document).ready(function() {
+    $('#show_documents_checkbox').change(function() {
+      if (this.checked) {
+        $('#document_div').show();
+      } else {
+        $('#document_div').hide();
+      }
+    });
+  });
+
+  $(document).ready(function(){
+    $('#show_documents_checkbox').change(function(){
+      if(this.checked) {
+        $('#extra_document_div').show();
+      } else {
+        $('#extra_document_div').hide();
+      }
+    });
+  });
+
+  $(document).ready(function(){
+    $('#show_documents_checkbox').change(function(){
+      if(this.checked) {
+        $('#document_extra').show();
+      } else {
+        $('#document_extra').hide();
+      }
+    });
+  });
+
+
+  $(document).ready(function(){
+    $('#show_documents_checkbox').change(function(){
+      if(this.checked) {
+        $('#document_id').show();
+      } else {
+        $('#document_id').hide();
+      }
+    });
+  });
+
+  // document_file_id
+
+$(document).ready(function(){
+    $('#show_documents_checkbox').change(function(){
+      if(this.checked) {
+        $('#document_file_id').show();
+      } else {
+        $('#document_file_id').hide();
+      }
+    });
+  });
+
+$(document).ready(function(){
+    $('#show_documents_checkbox').change(function(){
+      if(this.checked) {
+        $('#add_file_student_extra_uploads').show();
+      } else {
+        $('#add_file_student_extra_uploads').hide();
+      }
+    });
+  });
+
+  // document2
+</script>
+
+
+

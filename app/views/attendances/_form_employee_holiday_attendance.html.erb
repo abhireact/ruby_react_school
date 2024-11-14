@@ -1,121 +1,108 @@
-<% navigation_add t('employeeholidayattendance'),'/attendances/employee_holiday_attendance_new' %>
-<h4 class="form-section-heading"><%= t('employeeholidayattendance') %></h4>
-<%=form_for @holiday,:url=> @action=='new' ? "employee_holiday_attendance_create" : "/attendances/employee_holiday_attendance_update/"+@holiday.id.to_s, :method=> @action=='new' ? "post" : "patch",:html => {:id =>"holidayAttendance"} do |f|%>
+<h4 class="card-title mb-4"><%= t('employeeholidayattendance') %></h4>
 
- 
-<%= f.hidden_field :is_deleted, :value => 0 %>
-<%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
-<%= f.hidden_field :created_by, :value => session[:user_id] %>
-<%= f.hidden_field :updated_by, :value => session[:user_id] %>
-  <div class="row mc-padding-20 form-section-box">
-	    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
-<label class="mg-label" for="course_name"><%= t('select_employee_category') %><span class="required-field",> *</span></label>
-       <%#=select_tag 'mg_employee_category', options_for_select(get_employee_category),prompt: "both",:class=>"mg-select-btn",:onchange => "getHolidayandEmployeeDepartment(this.value)"%>
-       <%=select_tag 'mg_employee_category', options_for_select(get_employee_category),prompt: "both",:class=>"mg-select-btn form-control"%>
+<%= form_with(model: @holiday,
+              url: @action == 'new' ? "/attendances/employee_holiday_attendance_create" : "/attendances/employee_holiday_attendance_update/#{@holiday.id}",
+              method: @action == 'new' ? :post : :patch,
+              html: { id: "holidayAttendance" }) do |f| %>
 
-    </div>
-    	<div id="replace_data">
-	    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
-	    <label class="mg-label" for="course_name"><%= t('select_holiday') %><span class="required-field"> *</span></label><br>
-	    <%=select_tag 'mg_holiday_id', options_for_select(get_holiday_by_emp_category("")),prompt: "Select",:class=>"mg-select-btn form-control",:onchange => "getStartDateEndDate(this.value)"%>
-  		</div>
-  		<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
-  		<label class="mg-label" for="course_name"><%= t('select_employee_department') %><span class="required-field"> *</span></label><br>
-	     <!-- <div class="input-container"> -->
-	    <%=select_tag 'mg_employee_department_id', options_for_select(get_employee_department),prompt: "Select",:class=>"mg-select-btn form-control"%>
-  		</div>
-    </div>
-  		<div id="datepickerChangeDIVID" class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
-		<label class="mg-label mg-tt-width" style="width:185px"><%=t('date')%><span class="required-field"> *</span></label><br />
-		<%= text_field_tag "day_of_presence" ,nil,:class=>"mg-text-field holiday-dates form-control"%>
-		</div>
+  <%= f.hidden_field :is_deleted, value: 0 %>
+  <%= f.hidden_field :mg_school_id, value: session[:current_user_school_id] %>
+  <%= f.hidden_field :created_by, value: session[:user_id] %>
+  <%= f.hidden_field :updated_by, value: session[:user_id] %>
 
-</div>
-    <div id="employeeTable" class="form-group col-lg-12 col-md-4 col-sm-4 col-xs-12">
-    	
+  <div class="row g-3 mb-4">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-12"> 
+      <div class="form-group">
+        <%= f.label :employee_category, t('select_employee_category'), class: "form-label" %>
+        <span class="text-danger">*</span>
+        <%= select_tag 'mg_employee_category', 
+                      options_for_select(get_employee_category),
+                      { prompt: "both",
+                        class: "form-select" } %>
+      </div>
     </div>
+
+    <div id="replace_data">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-12"> 
+        <div class="form-group">
+          <%= f.label :holiday, t('select_holiday'), class: "form-label" %>
+          <span class="text-danger">*</span>
+          <%= select_tag 'mg_holiday_id',
+                        options_for_select(get_holiday_by_emp_category("")),
+                        { prompt: "Select",
+                          class: "form-select",
+                          onchange: "getStartDateEndDate(this.value)" } %>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-4 col-12"> 
+        <div class="form-group">
+          <%= f.label :department, t('select_employee_department'), class: "form-label" %>
+          <span class="text-danger">*</span>
+          <%= select_tag 'mg_employee_department_id',
+                        options_for_select(get_employee_department),
+                        { prompt: "Select",
+                          class: "form-select" } %>
+        </div>
+      </div>
+    </div>
+
+    <div id="datepickerChangeDIVID" class="col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group">
+        <%= f.label :date, t('date'), class: "form-label" %>
+        <span class="text-danger">*</span>
+        <%= text_field_tag "day_of_presence",
+                          nil,
+                          class: "form-control holiday-dates" %>
+      </div>
+    </div>
+  </div>
+
+  <div id="employeeTable" class="col-lg-12 col-md-12 col-sm-12 col-12">
+  </div>
 <% end %>
 
-<script type="text/javascript">
-
- $(document).ready(function () {
-      $(".content-tab").tabs();
-
-    focusCurrentTab("employeeHolidayAttendanceAID","employeeHolidayAttendanceLiID")
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    $(".content-tab").tabs();
+    focusCurrentTab("employeeHolidayAttendanceAID","employeeHolidayAttendanceLiID");
     focusAttendance();
+  });
 
-    // $( "#day_of_presence" ).datepicker();
-
-
+  $(document).on("change", "#day_of_presence_onchange", function() {
+    var department_id = $("#mg_employee_department_id").val();
+    var date = $("#day_of_presence_onchange").val();
+    var category = $("#mg_employee_category").val();
+    var hliday_id = $("#mg_holiday_id").val();
+    
+    $.ajax({
+      url: '/attendances/get_employee_list',
+      data: { 
+        mg_employee_category_id: category,
+        mg_employee_department_id: department_id,
+        mg_holiday_id: hliday_id,
+        date: date
+      },
+      success: function(html) {
+        $("#employeeTable").html(html);
+      }
     });
-	
-	// function getHolidayandEmployeeDepartment(categoryID) {
-	// 	var urlLink = '/attendances/get_holiday_and_employee_department'
-	//     $.ajax({
-	//             url: urlLink ,
-	//             data:{ mg_employee_category_id:categoryID} ,
-	//             success: function(html){
-	//             $("#replace_data").html(html);
-	//             }
-	//         });
-	// }
+  });
 
-	// function getEmployeeList(department_id){
+  $(document).on("click", "#day_of_presence", function() {
+    var value = $("#mg_holiday_id").val();
+    if (value == "") {
+      alert("First Select the Holiday");
+    }
+  });
 
-	// 	var category = $("#mg_employee_category").val()
-	// 	var hliday_id = $("#mg_holiday_id").val()
-	// 	var urlLink = '/attendances/get_employee_list'
-	//     $.ajax({
-	//             url: urlLink ,
-	//             data:{ mg_employee_category_id:category,mg_employee_department_id:department_id,mg_holiday_id:hliday_id} ,
-	//             success: function(html){
-	//             $("#employeeTable").html(html);
-	//             }
-	//         });
-
-	// }
-
-	$(document).on("change","#day_of_presence_onchange",function(){
-		var department_id = $("#mg_employee_department_id").val()
-		var date = $("#day_of_presence_onchange").val()
-		var category = $("#mg_employee_category").val()
-		var hliday_id = $("#mg_holiday_id").val()
-		var urlLink = '/attendances/get_employee_list'
-	    $.ajax({
-	            url: urlLink ,
-	            data:{ mg_employee_category_id:category,mg_employee_department_id:department_id,mg_holiday_id:hliday_id,date:date} ,
-	            success: function(html){
-	            $("#employeeTable").html(html);
-	            }
-	        });
-
-	});
-	
-
-
-	$(document).on("click","#day_of_presence",function(){
-		
-		var value = $("#mg_holiday_id").val()
-		if ( value == "" ) {
-			alert("First Select the Holiday");
-		}
-	});
-
-	function getStartDateEndDate(holiday_id){
-		var urlLink = '/attendances/getStartDateEndDate'
-	    $.ajax({
-	            url: urlLink ,
-	            data:{mg_holiday_id:holiday_id} ,
-	            success: function(html){
-	            $("#datepickerChangeDIVID").html(html);
-	            }
-	        });
-
-
-	}
-
-
-	
-
-
+  function getStartDateEndDate(holiday_id) {
+    $.ajax({
+      url: '/attendances/getStartDateEndDate',
+      data: { mg_holiday_id: holiday_id },
+      success: function(html) {
+        $("#datepickerChangeDIVID").html(html);
+      }
+    });
+  }
 </script>

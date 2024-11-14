@@ -1,0 +1,20 @@
+<%= form_for :mg_employee_leave_types, url: leave_action_save_path, :html => {
+                            :id => 'mgEmployeeLeaveActionFornID' } do |f| %>
+ <p>
+ <%=f.label :reject_reason, 'Reason' ,:class=>"mg-label"%> <br>
+ <%=f.text_area :reject_reason%> 
+</p>
+<%=f.hidden_field :mg_employee_leave_application_id, :value =>@mg_employee_leave_application%>
+<%=f.hidden_field :updated_by, :value =>session[:user_id]%>
+
+<p class="mg-p-mgtop">
+  <%#= f.submit 'Reject' ,:class=>"mg-small-form-btn"%>
+  <a onclick="$(this).closest('form').submit()" class="mg-small-form-btn"><%=t("reject")%></a>
+     <%= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog"} %>
+</p>
+<%end%>
+
+
+<script type="text/javascript">
+	
+</script>

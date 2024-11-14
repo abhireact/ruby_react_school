@@ -1,0 +1,87 @@
+
+
+<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+    <label for="mg-label mg-leave-width">Select Academic Year<span class="required-field"> *</span></label>
+    <%= select_tag :mg_time_table_id, options_for_select(get_academic_year,:selected=>get_current_academic_year(session[:current_user_school_id])), :class=>"form-control", :prompt=>"Select"%><br>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $("#mg_time_table_id").change(function(e){
+            var timetableid = $(this).val();
+            var urlLink = "/application/get_course/";
+            $.ajax({
+                url: urlLink ,
+                data:{"mg_time_table_id":timetableid},
+                cache: false,
+                success: function(response){
+                    var courses = response["courses"]
+                    var courses_batches = response["courses_batches"]
+                    var timetable = response["timetable"]
+                    var employee_courses_batches = response["employee_courses_batches"]
+                    var str  = "";
+                    var str1 = "";
+                    var str2 = "";
+                    var str3 = "";
+                    
+                        
+                    $(".current_year_class").find('option').each(function(){
+
+                        var value = $(this).val()
+
+                        if(value == "" || value.toLowerCase() == "select" || value.toLowerCase() == "all class" ){
+                        }else{
+                           $(this).remove(); 
+                        }
+                    });
+                    for(i=0;i<courses.length;i++){
+                        str += "<option value='" +courses[i][1] + "'>"  +courses[i][0] + "</option>";
+                    }
+
+         
+                    $(".current_year_class_sections").find('option').each(function(){
+
+                        var value = $(this).val()
+
+                        if(value == "" || value.toLowerCase() == "select" || value.toLowerCase() == "common" || value.toLowerCase() == "all class" || value.toLowerCase() == "all" ) {
+                        }
+                        else{
+                           $(this).remove(); 
+                        }
+                    });
+
+                    for(i=0;i<courses_batches.length;i++){
+                        str1 += "<option value='" +courses_batches[i][1] + "'>"  +courses_batches[i][0] + "</option>";
+                    }
+
+                    
+                    $(".current_year_check_class_sections").empty();
+
+                    str2 += '<div id="classSectionDivID" class="mg-scroll-bar-course-batch"> <table>'
+                    for(i=0; i<courses_batches.length; i++){
+                        str2 += '<tr> <td><input type="checkbox" id="item_selected_batches1" name="selected_batches1[]" value="'+courses_batches[i][1]+'" class="auto-ckeckbox-fee-particular-batch-cls"> '+courses_batches[i][0]+' </td></tr>'
+                    }
+                    str2+='</table></div>';
+
+                    $(".employee_courses_batches").find('option').each(function(){
+
+                        var value = $(this).val()
+                        if(value == "" || value.toLowerCase() == "select" || value.toLowerCase() == "all class"){
+                        }else{
+                           $(this).remove(); 
+                        }
+                    });
+                    for(i=0;i<employee_courses_batches.length;i++){
+                        str3 += "<option value='" +employee_courses_batches[i]["batch_id"] + "'>"  +employee_courses_batches[i]["course_batch"] + "</option>";
+                    }
+
+                    $(".current_year_class").append(str).val("<%=params[:mg_course_id]%>");
+                    $(".current_year_class_sections").append(str1).val("<%=params[:mg_batch_id]%>");
+                    $(".current_year_check_class_sections").append(str2);
+                    $(".employee_courses_batches").append(str3).val("<%= params[:mg_batch_id] %>");
+                }
+            }); 
+        }).trigger('change');
+    }); 
+</script>

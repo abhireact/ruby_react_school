@@ -1,0 +1,311 @@
+<% @school = MgSchool.find_by(:id=>session[:current_user_school_id]) %>
+<% navigation_add t('students'), students_path %>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20">
+    <h4 class="form-section-heading " style="margin-left: -15px;">
+      <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Student Admission Report</b>
+    </h4>
+  </div>
+</div>
+
+ <div class="form-content" style=" width:100%; border:0px #fac94a solid; color:#000; ">
+  <div class="row">
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label for="select_a_start_date"> <%= t('select academic_year') %><span class="required-field">&nbsp;*</span></label><br/>
+            <%= select_tag :mg_time_table_id, options_for_select(get_academic_year), :class=>"form-control"%>
+            
+        </div>
+    </div>
+  <div class="row">
+    <% @wings = get_wings_or_programme%>
+    <h5 style="margin-left: 15px; font-size: 13px;"><b>Select Wing *</b></h5>
+    <table class="table table-bordered table-striped" style="margin-left: 15px;width: 230px;">
+        <thead>
+        <th>Wing Name</th>
+        <th align="center">
+            <p align="center" style="font-size: 10px;">Select</p>
+            <a class="select-all-subjects-for-section mg-pop-link"><%=t('all')%></a>&nbsp;
+            <a class="select-none-subjects-for-section mg-pop-link"><%=t('none')%></a>
+        </th>
+    </thead>
+    <tbody>
+        <%@wings.each do |wing|%>
+            <tr>
+              <td>
+                <label class="mg-label mg-custom-labels mg-label-width "><%=wing[0]%></label>
+              </td>
+              <td class="mg-align-center">
+                  <%= check_box_tag :wing,wing[1],true,:style=>"positin: relative; top: -1px;"%>
+              </td>
+          </tr>    
+        <%end%>
+    </tbody>
+  </table>
+</div>
+    <div class="row">
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label for="select_a_start_date"> <%= t('start_date') %><span class="required-field">&nbsp;*</span></label><br/>
+            <%=text_field_tag :start_date,nil,:class=>"archive_date form-control", readonly:true,:style=>"cursor:pointer; background-color: #FFFFFF"%>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label for="select_a_end_date"> <%= t('end_date') %><span class="required-field">&nbsp;*</span></label><br/>
+            <%=text_field_tag :end_date,nil,:class=>"archive_date form-control",readonly:true,:style=>"cursor:pointer; background-color: #FFFFFF"%>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label for="mg-label" for="archive_student"><%= t('student') %><span class="required-field">&nbsp;</span></label><br>&nbsp; 
+            <%= check_box_tag "archive_student_id", 1, checked: true, style: "margin: 0px auto; width:5%;" %> <ui>is archive</ui>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label><%= t('admission_list_as_per') %><span class="required-field">&nbsp;*</span></label><br>&nbsp;
+            <%= radio_button_tag :student_list_option, 'admission_number', true %> <%= t('admission_date') %><br>
+        </div>
+
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label><%= t('admission_list_as_per') %><span class="required-field">&nbsp;*</span></label><br>&nbsp;
+            <%= radio_button_tag :student_list_option, 'creation_date' %> <%= t('student_creation_date') %>
+        </div>
+    </div>
+</div>
+<br/>
+      <div class="actions" style="float: left;">
+        <button id = "studemtListSubmitId" class="mg-small-form-btn submit mc-margin-bottom-20 flat-button">Submit</button>
+        <%#= link_to t('cancel'), :back, {:class=>"mg-small-form-btn cancel-form-dialog flat-button cancel-form-dialog margin-left-10"} %>
+      </div><br><br><br><br>
+    <div id = "student_list"></div>
+    <div id="spinner" style="display: none">
+      <img src="/assets/ajax-loader.gif" alt="Loading..."/>
+    </div>
+    <div id="overlay" style="display: none"></div>
+</div>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $("#new_admission_list").validate({
+      rules:{
+        // "[mg_time_table_id]":{required:true},
+        // "[mg_wing_id]":{required:true},
+        // "[course]":{required:true},
+        // "[batch]":{required:true},
+        "[wing]":{required:true},
+        "[start_date]":{required:true},
+        "[end_date]":{required:true},
+      }
+    });
+  });
+</script>
+
+<script >
+  function spin(){
+    $("#overlay").show();
+    $("#spinner").show();
+  };
+
+  function stopSpin(){
+      $("#overlay").hide();
+      $("#spinner").hide();
+  };
+
+  // $(document).ready(function(){
+  //   focusCurrentTab("feeRecepterAID","feeRecepterLiID");
+  //   focusFees();
+  // });
+  // $("#student_list").hide();
+    // var archive_student = $("#archive_student_id").is(':checked');
+
+
+  $(document).on("click", "#studemtListSubmitId", function(){
+    $("#student_list").hide();
+    // var mg_time_table_id = $("#mg_time_table_id").val();
+    // var mg_wing_id = $("#mg_wing_id").val();
+    // var course = $("#course").val();
+    // var batch = $("#batch").val();
+    var checkedValues = $('input:checkbox:checked').map(function() {
+            return this.value;
+        }).get();
+    var mg_time_table_id = $("#mg_time_table_id").val();
+    var start_date = $("#start_date").val();
+    var end_date = $("#end_date").val();
+    var archive_student = $("#archive_student_id").is(':checked');
+    var student_list_option = $("input[name='student_list_option']:checked").val();
+
+    // if (course && batch && start_date && end_date) {
+    if (start_date && end_date) {
+        var urlLink = "/students/new_admission_index/";
+        spin();
+        $.ajax({
+            url: urlLink,
+            data: {
+                mg_time_table_id: mg_time_table_id,
+                // mg_wing_id: mg_wing_id,
+                // course: course,
+                // batch: batch,
+                start_date: start_date,
+                end_date: end_date,
+                archive_student: archive_student,
+                student_list_option: student_list_option,
+                wings:checkedValues
+            },
+            cache: false,
+            success: function(html){
+                stopSpin();
+                $("#student_list").show();
+                $("#student_list").html(html);
+            }
+        }); 
+    } else {
+        alert("Please select the mandatory fields");
+    }
+});
+
+
+  $( document ).ready(function() {
+    focusCurrentTab("employeeArchiveAID","employeeArchiveexportLiID");
+    dateFormatStr =  getJsDateFormat();
+    $('#start_date').datepicker({ changeMonth: true,changeYear: true,yearRange: "-100:+1",maxDate: "0",dateFormat: dateFormatStr});
+    $('#end_date').datepicker({ changeMonth: true,changeYear: true,yearRange: "-100:+0",
+         maxDate: "0",dateFormat: dateFormatStr});
+  });
+
+
+  // $(document).ready(function () {
+  //   $("#mg_time_table_id").change(function(e){
+  //     var timetableid = $(this).val();
+  //     var urlLink = "/application/get_course/";
+  //     $.ajax({
+  //       url: urlLink ,
+  //       data:{"mg_time_table_id":timetableid},
+  //       cache: false,
+  //       success: function(response){
+  //           var courses = response["courses"]
+  //           var course  = "<option value='" +"all"+ "'>"  +"All" + "</option>";
+  //           for(i=0;i<courses.length;i++){
+  //             course += "<option value='" +courses[i][1] + "'>"  +courses[i][0] + "</option>";
+  //           }
+  //           $("#course").find('option').not(':first').remove();
+  //           $("#course").append(course);
+  //       }
+  //     })
+  //   }).trigger('change');
+  // }); 
+
+  $(document).ready(function () {
+    $("#mg_wing_id").change(function(e){
+      var mg_time_table_id = $("#mg_time_table_id").val();
+      var mg_wing_id = $(this).val();
+      var urlLink = "/application/get_wing_course/";
+    if (mg_wing_id != "all"){
+
+      $.ajax({
+        url: urlLink ,
+        data:{"mg_time_table_id":mg_time_table_id,"mg_wing_id":mg_wing_id},
+        cache: false,
+        success: function(response){
+            var courses = response["courses"]
+            var course  = "<option value='" +"all"+ "'>"  +"All" + "</option>";
+            for(i=0;i<courses.length;i++){
+              course += "<option value='" +courses[i][1] + "'>"  +courses[i][0] + "</option>";
+            }
+            $("#course").find('option').not(':first').remove();
+            $("#course").append(course);
+        }
+      })
+    }
+    else{
+        $("#course").empty();
+        $("#course").empty();
+        $("#batch").empty();
+        $("#batch").empty();
+    }
+    }).trigger('change');
+  }); 
+
+ 
+  function get_batch_id_by_course_id(id){
+    $("#batch").find('option').not(':first').remove();
+    $("#student").empty
+    if (id != "all"){
+      var urlLink = '/cbsc_examinations/get_batch_id_by_course_id'
+      $.ajax({
+          url: urlLink ,
+          data:{id:id} ,
+          success: function(html){
+            $("#batch").show();
+            $("#batchlist").show();
+            $("#batch").html(html);
+          }
+      });
+     }
+    else{
+        $("#batchlist").empty();
+        $("#batch").empty();
+      // $("#batchlist").hide();
+        // $("#batch").hide();
+    }
+  }
+
+
+  $(document).on("change","#start_date",function(){
+     var dateFormatStr =  getJsDateFormat();
+    var end_date=$("#end_date").val();
+    var start_date=$(this).val();
+    
+    if(start_date && end_date){
+      if(!(compareDate(start_date,end_date,dateFormatStr))){
+        alert("start date should not be greater than end date");
+         // $(this).val() = "";
+         $("#start_date").empty();
+         $("#end_date").empty();
+      }
+    }
+  });
+
+
+  $(document).on("change","#end_date",function(){
+    var dateFormatStr =  getJsDateFormat();
+    var start_date=$("#start_date").val();
+    var end_date=$(this).val();
+    
+    if(start_date && end_date){
+      if(!(compareDate(start_date,end_date,dateFormatStr))){
+        alert("End date should be greater than start date");
+         $("#start_date").empty();
+         $("#end_date").empty();
+      }
+    }
+  });
+  $(document).on("click", ".select-all-subjects-for-section", function(e){
+    $('input:checkbox').map(function() {
+      $(this).prop('checked', true);
+    })
+  });
+  $(document).on("click", ".select-none-subjects-for-section", function(e){
+    $('input:checkbox').map(function() {
+      $(this).prop('checked', false);
+    })
+  });
+
+</script>
+
+<style type="text/css">
+  #userBodyContentBox .userMenuBoxLeft ul {
+  left: -40px;
+  list-style: outside none none;
+  position: relative;
+  width: 235px;
+}
+
+ 
+.userMenuBoxLeft ul .setMenu {
+  padding: 13px;
+  width: 195px;
+}
+</style>
+
+
+ 
