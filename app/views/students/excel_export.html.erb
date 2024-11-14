@@ -1,0 +1,163 @@
+<!-- version1.1(for excel&pdf export 11/052018/sasi) -->
+<!-- #version1.2(for excel&pdf alignment issues and delay for loding the page  30/05/2018/sasi)
+ -->
+ <!-- #version1.3(Changing the heading in the camel case 15/06/18/bindhu)
+ #version1.4(for opening the pdfs in new window 18/06/18/Mamatha)
+ -->
+
+<% navigation_add t('students'),"students/excel_export" %>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+    <h3 class="form-section-heading ">
+      <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12">Student Data Extract</b>
+    </h3>
+  </div>
+</div>
+
+<%= form_for :student_excel, :url=>{:controller=>"students", :action=>"excel_export", :id=>"search"}, :html=>{:id=>"student_export"} do |f|%>
+
+    <div class="row mc-padding-20 form-section-box" >
+        <%= render 'get_academic_year' %>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label class="mg-label"><%=t('select')%> <%=t('class')%><span class="required-field"> *</span></label>
+            <%= select_tag :mg_course_id, options_for_select([]), :class=>"form-control current_year_class", :prompt=>t('select'), :onchange=>"sectionForSelectedCourse(this.value)" %>
+        </div>
+        <%#= hidden_field_tag :course_id, params[:mg_course_id] %>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label class="mg-label"><%=t('select')%> <%=t('section')%><span class="required-field"> *</span></label>
+            <%= select_tag :mg_batch_id, options_for_select([]), :class=>"form-control", :prompt=>t('select') %></div>
+            <%= hidden_field_tag :settings_values, @sorting_order %>
+        </div>
+
+        <div class="row" style="margin-top: 2%;margin-left: 2%;" >
+            <a class="mg-small-form-btn mc-margin-bottom-20 flat-button" id="settings"><%=t("export_excel")%></a>
+            <!-- <a onclick="class_section_data()" class="mg-small-form-btn mc-margin-bottom-20 flat-button"><%#=t("Pdf Generation")%></a> -->
+            <a class="mg-small-form-btn mc-margin-bottom-20 flat-button" id="student_list_pdf" ><%=t("Student List Pdf")%></a>
+            <a class="mg-small-form-btn mc-margin-bottom-20 flat-button" id="student_profile_pdf" ><%=t("Student Profile")%></a>
+        </div>
+<% end %>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+        focusCurrentTab("studentExportAID","studentExportLiID");    
+   });
+	
+    function sectionForSelectedCourse(courseId){
+
+        var urlLink = "/students/batches_for_course";
+
+        $.ajax({
+       
+            type: "GET",
+              
+            url: urlLink ,
+            cache: false,
+            data:{"course_id" :courseId} ,
+            success: function(html){
+                $("#mg_batch_id").html(html);
+            }
+        });
+    }   
+
+
+    function class_section_data(){
+
+        var mg_time_table_id=$("#mg_time_table_id").val();
+        var course=$("#mg_course_id").val();
+        var batch=$("#mg_batch_id").val();
+        var excel="excels"
+
+        if (mg_time_table_id==''){
+            alert("Select academic year");
+        }
+        else{
+            //window.location="/students/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&mg_time_table_id="+mg_time_table_id+"&load="+excel1;
+            window.location="/class_teacher_student_exports/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&mg_time_table_id="+mg_time_table_id+"&load="+excel;
+        }
+    }
+
+    function oldpdf_generation_for_studentsold(){
+    
+        var mg_time_table_id=$("#mg_time_table_id").val();
+        var course=$("#mg_course_id").val();
+        var batch=$("#mg_batch_id").val();
+        var action_name="pdf_list"
+        var excel="excels"
+
+        if (mg_time_table_id!==''){
+            // window.location="/students/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&name="+action_name + "&load="+excel;
+            window.open("/students/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&mg_time_table_id="+mg_time_table_id+"&name="+action_name + "&load="+excel, '_blank');
+        }
+        else{
+            alert("Select academic year");
+        }
+    }
+        
+
+
+   function pdf_generation_for_students(){
+
+        var mg_time_table_id=$("#mg_time_table_id").val();
+        var course=$("#mg_course_id").val();
+        var batch= $("#mg_batch_id").val();
+        var action_name="pdf_list"
+        var excel="excels"
+
+        if (course!==''){
+            // window.location="/students/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&name="+action_name + "&load="+excel;
+            // window.open("/class_teacher_student_exports/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&mg_time_table_id="+mg_time_table_id+"&name="+action_name + "&load="+excel, '_blank');
+            window.open("/class_teacher_student_exports/excel_export.xls?"+"course_id="+course+"&batch_id="+batch + "&mg_time_table_id="+mg_time_table_id+"&name="+action_name + "&load="+excel, '_blank');
+        }
+        else{
+            alert("Select Course ");
+        }
+    }
+
+
+    function pdf_generation(){
+
+        var mg_time_table_id = $("#mg_time_table_id").val();
+        var course = $("#mg_course_id").val();
+        var batch = $("#mg_batch_id").val();
+
+        if(course==''){
+            alert("Select The Class");
+        }
+        else{
+            window.open("/students/pdf_generation_of_students?"+"course_id="+course+"&batch_id="+batch+ "&mg_time_table_id="+mg_time_table_id, '_blank');
+            // window.location="/students/pdf_generation_of_students?"+"course_id="+course+"&batch_id="+batch;
+        }
+    }
+
+    $(document).on("click", "#settings", function(e){
+        var settings = $("#settings_values").val();
+        if (settings==''){
+            alert("Configure the excel settings");
+        }
+        else{
+            class_section_data();
+        }
+    });
+
+    $(document).on("click", "#student_list_pdf", function(e){
+        var settings = $("#settings_values").val();
+        if (settings==''){
+            alert("Configure the excel settings");
+        }
+        else{
+            pdf_generation_for_students();
+        }
+    });
+
+    $(document).on("click", "#student_profile_pdf", function(e){
+        var settings = $("#settings_values").val();
+        if (settings==''){
+            alert("Configure the excel settings");
+        }
+        else{
+            pdf_generation();
+        }
+    });
+
+</script>

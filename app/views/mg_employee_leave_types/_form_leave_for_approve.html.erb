@@ -1,0 +1,88 @@
+
+<% if !flash[:notice].blank? %>
+  <div class="alert alert-info mg-success-msg">
+  <%=flash[:notice]%>
+  </div>
+<% end %>
+<% if !params[:notice].blank? %>
+  <div class="alert alert-info mg-success-msg">
+  <%= params[:notice] %>
+  </div>
+<% end %>
+
+
+<h4 class="mg-h4"><%= t('leaves')%></h4>
+<%if @leave.present?%>
+<div class="mg_pagination">
+<div class="mg-scroll-bar mg-btn-bottom-margin mg-tbl-border">
+<table class="batch-tbl mg-tbl-layout">
+          <tr>
+          <th><%=t('Employee Number')%></th>
+            <th><%= t('name')%></th>
+            <th><%= t('department')%></th>
+            <th><%= t('leave_type')%></th>
+            <th><%= t('from_date')%></th>
+            <th><%= t('to_date')%></th>
+            <th><%= t('reason')%></th>
+            <th><%= t('applied_date')%></th>
+            <th><%=t('status')%></th>
+            <th><%= t('status date')%></th> 
+            <th><%= t('actions')%></th>
+          </tr>
+        
+         
+          <%@leave.each do |l| %>
+          <% employee =MgEmployee.find_by(:id=>l.mg_employee_id) %>
+          <%if employee.present?%>
+                  <tr>
+                    <td><%=employee.employee_number%></td>
+                    <td><%= employee.first_name%>&nbsp;<%=employee.last_name %></td>
+                    <td><%=MgEmployeeDepartment.find(employee.mg_employee_department_id).department_name%></td>
+                    <td><%=MgEmployeeLeaveType.find(l.mg_employee_leave_type_id).leave_name%></td>
+                    <td><%=l.from_date.strftime(@school.date_format)%></td>
+                    <td><%=l.to_date.strftime(@school.date_format)%></td>
+                    <td><%=l.reason%></td>
+                    <td><%=l.applied_date.strftime(@school.date_format)%></td>
+						 <td><%=l.status%></td>
+                    <%if l.status_date.present?%>
+                    <%date=l.status_date.strftime(@school.date_format)%>
+                    <%else%>
+                    <%date=""%>
+
+                    <%end%>
+                    <td><%=date%></td> 
+                    <td style="width: 70px;">
+                      <button title="Approve" id="<%=l.id%>-approveLeaveForEmployeeBTNID" class="approve-leave-for-employee-cls mg-icon-btn"><i class="fa fa-check"></i></button>
+                      <button title="Reject" id="<%=l.id%>-rejectLeaveForEmployeeBTNID" class="reject-leave-for-employee-cls mg-icon-btn"><i class="fa fa-close"></i></button>
+                    </td>
+
+                  </tr>
+             <%end%>
+          <%end%>
+    </table>
+    </div>
+     <%= will_paginate @leave, :container => false %>
+  </div>
+<%else%>
+<h5>Leaves not applied.</h5>
+<%end%>
+
+    <div id="approveLeaveForEmployeeDIVID">    </div>
+    <div id="rejectLeaveForEmployeeDIVID">    </div>
+
+
+
+
+
+
+<script>
+
+$(document).ready(function () {
+focusCurrentTab("employeeLeavepplicationA ","resetLeaveApplicationLiID");
+    focusAttendance();
+
+});
+
+
+
+</script>

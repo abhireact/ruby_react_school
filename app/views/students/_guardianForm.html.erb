@@ -1,0 +1,190 @@
+<!-- Sec --> 
+<h1>Parent Details</h1>
+
+<div id="page-yield">
+
+  <div class="box">
+    
+    <%= form_for :guardian, url: guardians_path , :html => { :id => "guardianFormID" } do |f| %>
+
+<!-- url: guardians_path  :url => url_for(:controller => 'guardians', :action => 'create') -->
+
+        <%= f.hidden_field :password, :value => ""%>
+        <%= f.hidden_field :is_deleted, :value => 1%>
+        <%= f.hidden_field :user_name,:value => "G-"%> 
+        <%= f.hidden_field :student_id,:value =>@last_studentId %> <!-- @last_studentId -->
+
+
+
+      <div class="form-content">
+          <div class="form-content-inner">
+            <h4><%= t 'personaldetails' %></h4>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="student-form-cls">
+              <tbody>
+                <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="first_name"><%= t('firstname') %>
+                      <span class="required-field">*</span> 
+                    </label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                     <label for="middle_name"><%= t('middlename') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                    <label for="last_name"><%= t('lastname') %>
+                      <span class="required-field">*</span> 
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">
+                    <%= f.text_field :first_name %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :middle_name %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :last_name %>
+                  </td>
+                </tr>
+
+                <tr>
+
+                  <td width="33%" valign="bottom">
+                    <label for="ward_id"><%= t('wardid') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                    <label for="relation"><%= t('relation') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                     <label for="dob"><%= t('dateofbirth') %>
+                      <span class="required-field">*</span> 
+                     </label>
+                  </td>
+                </tr>
+                <tr>
+
+                  <td valign="top">
+                    <%= f.text_field :ward_id %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :relation %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :dob  ,:class => 'dob'%>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="occupation"><%= t('occupation') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                    <label for="income"><%= t('income') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                     <label for="education"><%= t('education') %></label>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">
+                    <%= f.text_field :occupation  ,:class => 'occupation'%>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :income  ,:class => 'income'%>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= f.text_field :education  ,:class => 'education'%>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+     <hr/>
+      <%=render :partial => 'address' , :locals => {:addresstype => "Permanent"}%>
+
+      <%=render :partial => 'address' , :locals => {:addresstype => "workAddress"}%>
+
+      <h4 style="margin-left: 15px;">Home Contact</h4>
+      <div style="display: block; padding: 0px; width: 600px;">
+          <div class="home-adrs" style="display: inline-block; ">
+              <%= render :partial => "contact" ,:locals => {:phone_types => "home"} %>
+          </div>
+
+          <div class="work-adrs-cls" style="display: inline-block; "><!-- 10px 10px 15%  margin: 10px;-->
+            <%= render "email" %>
+          </div> 
+
+      </div>
+
+      <h4 style="margin-left: 15px;"><%= t('workcontact') %></h4>
+      <div style="display: block; padding: 0px; width: 600px;">
+          <div class="home-adrs" style="display: inline-block; ">
+              <%= render "workContact" %>
+          </div>
+
+          <div class="work-adrs-cls" style="display: inline-block; "><!-- 10px 10px 15%  margin: 10px;-->
+            <%= render "workEmail" %>
+          </div> 
+
+      </div>
+
+
+      <%= submit_tag t('save'), class: "submit" %>
+
+    <% end %>
+
+        
+
+  </div>
+</div>
+
+<script >
+ 
+
+  $(document).ready(function () {
+      $("#guardianFormID").validate({
+        //debug: true,
+        rules: {
+                  "guardian[first_name]": {required: true},
+                  "guardian[last_name]": {required: true},
+                  "guardian[dob]": {required: true},
+                  "address[address_line1]": {required: true},
+                  "address[state]": {required: true}, 
+                  "address[country]": {required: true},
+                  "contact[phone_number]": {required: true}
+                  
+        }
+      });
+    });
+
+
+   $(function() {
+          $( ".dob" ).datepicker({ changeMonth: true,
+                 changeYear: true,yearRange: "-100:+0",maxDate: "0",});
+
+      });
+
+   $("#guardian_dob").on('change', function(){
+
+    var dob=$("#guardian_dob").val();
+    //alert("dob:"+dob);
+    $("#guardian_password").val(dob);
+   });
+
+
+</script>

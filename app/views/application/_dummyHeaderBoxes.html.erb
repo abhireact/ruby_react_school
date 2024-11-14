@@ -1,0 +1,187 @@
+<!-- com-->
+<%
+rlAndPer = session[:roles_permissions_data]
+index = 0;
+%>
+
+<% rlAndPer.each do   |key|  %> 
+    <% key.each do |kee, valId| %>
+      <%   puts "#{kee} ---is--- #{valId}" %>
+      <% if kee.to_s.eql?("model_id") %>
+            <% modelData =  MgModel.find(valId)  %>
+            <% mdlData =  modelData.model_name  %>
+            index++
+            
+      <% end %>
+    <% end %>
+<% end %>
+  
+
+
+
+
+
+
+
+<div class="background-box">
+        	<ul class="distributedBoxes">
+                 <li class="active">
+                  <a class="homeBox" href="#" >
+                      <div class="navBox">
+                        <i class="fa fa-home"></i>
+                        <div class="homeBoxText">HOME</div>
+                      </div>
+                  </a>
+                </li>
+         
+                <% if(mdlData == "STUDENTS")  %>
+                <li>
+            	  <a class="studentsBox" href="#">
+                  	<div class="navBox">
+                        <i class="fa fa-graduation-cap"></i>
+                        <span class="homeBoxText">STUDENTS</span>
+                    </div>
+                   </a>
+                </li>
+                <% end %>
+
+                <% if(mdlData == "EMPLOYEE")  %>
+                <li>
+                  <a class="employeesBox" href="#" >
+                  <div class="navBox">
+                  	<i class="fa fa-users"></i>
+                 	<span class="homeBoxText">EMPLOYEES</span>
+                    </div>
+                  </a>
+                </li>
+                   <% end %>
+
+                <% if(mdlData == "COURSE")  %>
+                <li>
+
+                  <a class="coursesBox" href="/courses" >
+                  <div class="navBox">
+                  	<i class="fa fa-book"></i>
+                    <span class="coursesBoxText">COURSES</span>
+                    </div>
+                  </a>
+
+                </li>
+                   <% end %>
+      
+                <% if(mdlData == "EXAMINATION")  %>
+                <li>
+                  <a class="examinationBox" href="#" >
+                  <div class="navBox">
+                  	<i class="fa fa-pencil-square-o"></i>
+                  	<span class="examinationBoxText">EXAMINATION</span>
+                    </div>
+                  </a>
+                </li>
+                   <% end %>
+
+                <% if(mdlData == "FEES")  %>
+                <li>
+                  <a class="feesBox" href="#" >
+                  <div class="navBox">
+                  	<i class="fa fa-money"></i>
+                    <span class="feesBoxText">FEES</span>
+                    </div>
+                  </a>
+                </li>
+                   <% end %>
+
+                <% if(mdlData == "SETTINGS")  %>
+                <li>
+                  <a class="settingsBox" href="/settings" >
+                  <div class="navBox">
+                  	<i class="fa fa-cog"></i>
+                  	<span class="settingsBoxText">SETTINGS</span>
+                    </div>
+                  </a>
+                </li>
+                   <% end %>
+
+                <% if(mdlData == "EVENTS")  %>
+                <li>
+                  <a class="eventsBox" href="#" >
+                  <div class="navBox">
+                    <i class="fa fa-calendar"></i>
+                  	<span class="settingsBoxText">EVENTS</span>
+                    </div>
+                  </a>
+                </li>
+                   <% end %>
+
+                <% if(mdlData == "ASSIGNMENTS")  %>
+                <li>
+                  <a class="assignmentsBox" href="#" >
+                  <div class="navBox">
+                  	<i class="fa fa-file-text"></i>
+                  	<span class="settingsBoxText">ASSIGNMENTS</span>
+                    </div>
+                  </a>
+                </li>
+                <% end %>
+                <div id="navDropDown"><i class="fa fa-caret-square-o-down" style="position:relative; top:6px;"></i></div>
+            </ul>
+       </div>
+       <div class="distributedBoxes1">
+          <ul class="distributedBoxes2">
+                    <div class="navDropDownList">
+                    	<div class="navDropDownSubList">
+                         
+                <% if(mdlData == "TRANSPORT")  %>
+                                    <li>
+                                      <a class="transportBox" href="#" >
+                                        <div class="navBox">
+                                            <i class="fa fa-bus"></i>
+                                            <span class="settingsBoxText">TRANSPORT</span>
+                                        </div>
+                                      </a>
+                                    </li>
+                                       <% end %>
+                <% if(mdlData == "TIMETABLE")  %>
+                                    <li>
+                                      <a class="timetableBox" href="#" >
+                                        <div class="navBox">
+                                            <i class="fa fa-tasks"></i>
+                                            <span class="settingsBoxText">TIMETABLE</span>
+                                        </div>
+                                      </a>
+                                    </li>
+                                       <% end %>
+                <% if(mdlData == "ATTENDANCE")  %>
+                                    <li>
+                                      <a class="attendanceBox" href="#" >
+                                        <div class="navBox">
+                                            <i class="fa fa-list"></i>
+                                            <span class="settingsBoxText">ATTENDANCE</span>
+                                        </div>
+                                      </a>
+                                    </li>
+                                       <% end %>
+                <% if(mdlData == "HUMAN RESOURCE")  %>
+                                    <li>
+                                      <a class="humanResourceBox" href="#" >
+                                        <div class="navBox">
+                                            <i class="fa fa-user"></i>
+                                            <span class="settingsBoxText">HUMAN RESOURCE</span>
+                                        </div>
+                                      </a>
+                                    </li>
+                                       <% end %>
+                <% if(mdlData == "PARENTS")  %>
+                                    <li>
+                                      <a class="parentsBox" href="#" >
+                                        <div class="navBox">
+                                            <i class="fa fa-male"></i>
+                                            <span class="settingsBoxText">PARENTS</span>
+                                        </div>
+                                      </a>
+                                    </li>
+                                  <% end %>
+                        </div>
+                    </div>
+          		</ul>
+        </div>  

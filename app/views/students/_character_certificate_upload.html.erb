@@ -1,0 +1,10 @@
+<!-- <div class="row mc-padding-20 form-section-box"> -->
+	  <%= radio_button_tag :is_chr_produced, "yes" %>
+	  <%= label_tag :is_chr_produced, t('yess'), :value => "cc_produced",:class=> "mg-rm-text-trans"%><br>
+	  <div id="chr_uploadfiles" class="previous-education-details" style="display: none; width: 220px;">
+	    <%= file_field_tag 'chr_transferfiles[]' %>
+	  </div>
+	  <%= radio_button_tag :is_chr_produced, "no" %>
+	  <%= label_tag :is_chr_produced, t('noo'), :value => "cc_not_produced" ,:class=> "mg-rm-text-trans" %><br>
+	</div>
+<!-- </div> -->

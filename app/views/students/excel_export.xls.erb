@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ss:Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <ss:Worksheet ss:Name="Sheet1">
+    <ss:Table>
+    <%for i in 0...130%>
+          <ss:Column ss:Width="150"/>  
+    <%end%>
+     
+       <ss:Row>
+        <ss:Cell ss:MergeAcross="71" ><ss:Data ss:Type="String"><%=t('Student Details')%></ss:Data></ss:Cell>
+        <ss:Cell  ss:MergeAcross="30"><ss:Data ss:Type="String"><%#=t('guardian_details')%></ss:Data></ss:Cell>
+      </ss:Row>
+       <ss:Row>
+      </ss:Row>
+      <ss:Row>
+        <ss:Cell ><ss:Data ss:Type="String"><%=t('academic_year')%></ss:Data></ss:Cell>
+        <ss:Cell ><ss:Data ss:Type="String"><%="#{@academic_year_name}"%></ss:Data></ss:Cell>
+      </ss:Row>
+      <ss:Row>
+        <ss:Cell ><ss:Data ss:Type="String"><%=t('Class & Section')%></ss:Data></ss:Cell>
+        <ss:Cell ><ss:Data ss:Type="String"><%="#{@course_batch_name}"%></ss:Data></ss:Cell>
+      </ss:Row>
+      <ss:Row>
+      </ss:Row>
+<ss:Row>
+  <% school = MgSchool.find_by(:id=>session[:current_user_school_id])  
+   date_format = school.date_format.gsub("%","").sub("d", "dd").sub("m", "mm").sub("y", "yy").sub("Y", "yyyy")
+   %>
+     
+  <%# if @fields_for_student.present? %>
+  <% @fields_to_display_stu.each do |names| %>
+      <% if names=="id" && names=="mg_user_id" %>
+      <% else %>
+
+        <% if names=="first_name"%>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('student_name')%></ss:Data></ss:Cell>
+        <% elsif names=="date_of_birth" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('date_of_birth')%><%="(#{date_format})"%></ss:Data></ss:Cell>
+        <% elsif names=="class_roll_number" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('admissionnumber')%></ss:Data></ss:Cell>
+        <% elsif names=="fee_code" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('fee_code')%></ss:Data></ss:Cell>
+        <% elsif names=="admission_number" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('user_id')%></ss:Data></ss:Cell>
+        <% elsif names=="mg_course_id" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('Course')%></ss:Data></ss:Cell>
+        <% elsif names=="mg_batch_id" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('Batch')%></ss:Data></ss:Cell>
+        <% elsif names=="gender" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('Gender')%></ss:Data></ss:Cell>
+        <% elsif names=="mg_house_details_id" %>
+          <ss:Cell ><ss:Data ss:Type="String"><%=t('house_details')%></ss:Data></ss:Cell>
+        <% elsif names=="guardian_name" %>
+          <%if @fields_for_g.present?%>
+             <ss:Cell ><ss:Data ss:Type="String"><%=t("fathername")%></ss:Data></ss:Cell>
+             <ss:Cell ><ss:Data ss:Type="String"><%=t("mothername")%></ss:Data></ss:Cell>
+             <!-- <ss:Cell ><ss:Data ss:Type="String"><%#=t("Guardian Name")%></ss:Data></ss:Cell> -->  
+          <%end%>
+        <% elsif names=="phone_number" %>
+          <%if @diff_col_phones.present?%>
+            <%@diff_col_phones.each do |names|%>
+              <ss:Cell ><ss:Data ss:Type="String"><%if names=="phone_number"%><%=t("student_phone_no")%><%end%></ss:Data></ss:Cell>
+            <%end%>
+          <%end%>
+        <% end %>
+       
+       
+      <%end%>
+  <%end%>
+  </ss:Row>
+
+
+   <% i=1 %>
+      <%@timeformat = MgSchool.find(session[:current_user_school_id])%>
+  <%if @student_details.present?%>
+    <% @student_details.each do |student|%>
+      <ss:Row>
+        <% @fields_to_display_stu.each do |names| %>
+          <% if names=="id" && names=="mg_user_id" %>
+          <% else %>
+            <%if names=="first_name"%>
+              <%if student[:first_name].present?
+                fulname = student[:first_name] +' '+ student[:middle_name].to_s+ ' '+  student[:last_name].to_s %>
+                <ss:Cell ><ss:Data ss:Type="String"><%=fulname.gsub("-","")%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"><%#=student[:first_name] +' '+ student[:middle_name].to_s+ ' '+  student[:last_name].to_s%></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="date_of_birth"%>
+              <%if student[:date_of_birth].present?%>
+                <%#date_of_birth=Date.strptime(student[:date_of_birth],@timeformat.date_format)%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student[:date_of_birth].strftime(school.date_format)%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="class_roll_number"%>
+              <%if student[:class_roll_number].present?%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student[:class_roll_number]%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"><%#=student[:class_roll_number]%></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="admission_number"%>
+              <%if student[:admission_number].present?%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student[:admission_number]%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"><%#=@fields_for_student.inspect%></ss:Data></ss:Cell>
+              <%end%>
+             <%elsif names=="fee_code"%>
+              <%if student[:fee_code].present?%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student[:fee_code]%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"><%#=@fields_for_student.inspect%></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="mg_course_id"%>
+              <%if student["course"].present?%>
+                <ss:Cell ><ss:Data ss:Type="String"><%= student["course"] %></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"><%#=student["course"]%></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="mg_batch_id"%>
+              <%if student[:mg_batch_id].present?%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student["batch_name"]%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"><%#=@fields_for_student.inspect%></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="gender"%>
+              <%if student[:gender].present?%>
+                <%#date_of_birth=Date.strptime(student[:date_of_birth],@timeformat.date_format)%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student[:gender]%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="mg_house_details_id"%>
+              <%if student["house_details"].present?%>
+                <ss:Cell ><ss:Data ss:Type="String"><%=student["house_details"]%></ss:Data></ss:Cell>
+              <%else%>
+                <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+              <%end%>
+            <%elsif names=="guardian_name"%>
+              <%if @fields_for_g.present?%>
+                <%if student["father"].present?%>
+                  <ss:Cell ><ss:Data ss:Type="String"><%=student["father"].gsub("-","")%></ss:Data></ss:Cell>
+                <%else%>
+                  <ss:Cell ><ss:Data ss:Type="String"><%#=student["guardian_name"]%></ss:Data></ss:Cell>
+                <%end%>
+                <%if student["mother"].present?%>
+                  <ss:Cell ><ss:Data ss:Type="String"><%=student["mother"].gsub("-","")%></ss:Data></ss:Cell>
+                <%else%>
+                  <ss:Cell ><ss:Data ss:Type="String"><%#=student["guardian_name"]%></ss:Data></ss:Cell>
+                <%end%>
+              <%end%>
+            <%elsif names=="phone_number"%>
+              <%if @diff_col_phones.present?%>
+                <%if student["contact_details"].present?%>
+                  <ss:Cell ><ss:Data ss:Type="String"><%=student["contact_details"]%></ss:Data></ss:Cell>
+                <%end%>
+              <%end%>
+            <%end%>
+          <%end%>
+        <%end%>
+      </ss:Row>
+    <%end%> 
+  <%end%> 
+    </ss:Table>
+  </ss:Worksheet>
+</ss:Workbook>
+

@@ -1,0 +1,72 @@
+<!-- Sec --> 
+<%= fields_for :workAddress do |adrs| %>
+
+        <%= adrs.hidden_field :address_type,:value => "work"%>
+        <div class="form-content">
+          <div class="form-content-inner">
+            <h4><%= t('workaddress') %></h4>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="student-form-cls">
+              <tbody>
+                <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="address_line1"><%= t('addressline1') %></label>
+                  </td>
+
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                    <label for="address_line2"><%= t('addressline2') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                     <label for="city"><%= t('city') %></label>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">
+                     <%= adrs.text_field :address_line1 %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= adrs.text_field :address_line2 %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= adrs.text_field :city %>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="state"><%= t('state') %></label>
+                  </td>
+
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                    <label for="pin_code"><%= t('pincode') %></label>
+                  </td>
+                  <td> </td>
+                  <td width="33%" valign="bottom">
+                     <label for="country"><%= t('country') %></label>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">
+                     <%= adrs.text_field :state %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= adrs.text_field :pin_code %>
+                  </td>
+                  <td> </td>
+                  <td valign="top">
+                    <%= adrs.text_field :country %>
+                  </td>
+                </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+      </div>        
+   
+    <% end %>  

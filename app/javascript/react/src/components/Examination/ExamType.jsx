@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { getClassSection } from "../../utils/utils.js";
 import {
   Table,
   Button,
@@ -20,7 +19,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const ExamType = ({ userData }) => {
-  console.log(getClassSection(153), "calling utilfunction");
   const [examTypes, setExamTypes] = useState(userData.examtype_data || []);
 
   const [showCreateForm, setShowCreateForm] = useState(false);

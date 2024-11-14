@@ -1,0 +1,166 @@
+
+<%
+rlAndPer = session[:roles_permissions_data]
+
+index = 0
+ary = Array.new
+userType = session[:user_type]
+@notifi = MgNotification.where(:to_user_id => session[:user_id],:status => false,mg_school_id:session[:current_user_school_id] ).all
+@noti_size = @notifi.size
+display="display:none"
+if userType == "admin" || userType == "principal" || userType == "cloudadmin" || userType == "superprincipal" || userType == "sub_admin" || session[:school_functional_incharge] == "school_users"
+    display="display:block"
+end 
+%>
+  <%#=rlAndPer.inspect%>
+  <%#=rlAndPer.inspect%>
+
+
+<% if  userType == "principal" ||   userType == "superprincipal" || session[:school_functional_incharge] == "school_users" %>
+ <%index_count=8%>
+<%end%>
+
+<% if  userType == "admin" ||   userType == "cloudadmin" || userType == "sub_admin" %>
+ <%index_count=9%>
+<%end%>
+<div class="background-box" style=<%=display%> >
+  <ul id="headerBoxID" class="distributedBoxes">
+    <%if  userType == "principal" || userType == "superprincipal" %>
+      <li class="home-box-li" id="<%=index%>">
+        <a class="homeBox home-icon" id="homeID" href="/dashboards/principal/" >
+          <div class="navBox">
+            <div class="homeBoxText">HOME</div>
+          </div>
+        </a>
+      </li>
+      <%index=index+1%>
+    <%end%>
+    <%if  userType == "cloudadmin" %>
+      <li class="home-box-li" id="<%=index%>">
+        <a class="homeBox home-icon" id="homeID" href="/dashboards/cloud_admin/" >
+          <div class="navBox">
+            <div class="homeBoxText">HOME</div>
+          </div>
+        </a>
+      </li>
+      <%index=index+1%>
+    <%end%>
+    <% if userType == "admin" || userType == "principal" ||  userType == "cloudadmin" || userType == "superprincipal" || userType == "sub_admin"  || session[:school_functional_incharge] == "school_users"%>
+      <% rlAndPer.each do |key|  %> 
+         <% key.each do |kee, valId| %>
+          <% if kee.to_s.eql?("model_name") #&& index < index_count %>
+            <%# modelData =  MgModel.find(valId)  %>
+            <% mdlData = valId# modelData.model_name  %>
+            <% if ary.include?(mdlData.to_s) %>
+
+            <% else %>
+              <%  ary.push(mdlData.to_s) %>
+              <% iconName = case mdlData
+                 when "STUDENTS" then "graduation-cap"
+                 when "CLASSES" then "book"
+                 when "ATTENDANCES" then "shield"
+                 when "SETTINGS" then "cog"
+                 when "EMPLOYEES" then "male fa-female"
+                 when "SUBJECTS" then "file-text"
+                 when "FEES" then "money"
+                 when "SCHOOLS" then "INSTITUTION"
+                 when "EXAMINATION" then "pencil-square-o"
+                 when "EVENTS" then "th-list"
+                 when "CURRICULUM" then "clipboard"
+                 when "TIMETABLE" then "tasks"
+                 when "TRANSPORT" then "bus"
+                 when "NOTIFICATIONS" then "comments"
+                 else "home"
+              end%>
+
+              <% 
+                boxName = case mdlData
+                   when "CLASSES" then "CLASS"
+                   when "MASTER_SETTINGS" then "MASTER SETTINGS"
+                    when "LIBRARIES" then "LIBRARY"
+                    when "TRANSPORTS" then "TRANSPORT"
+                    when "VEHICLES" then "VEHICLE"
+                    when "EVENT_TYPES" then "EVENTS"
+                    # when "SCHOOLS" then "COLLEGE"
+                    when "MG_STUDENT_ADMISSIONS" then "ADMISSION"           
+                    # when "canteen_managements" then "CANTEEN"                   
+                    when "PAYSLIPS" then "PAYROLL"
+                    when "FRONT_OFFICE_MANAGEMENT" then "FRONT OFFICE"
+                    # when "SCHOOLS" then "INSTITUTE"
+                    when "HEALTHCARE" then "HEALTHCARE"
+                    when "CANTEEN_MANAGEMENTS" then "CANTEEN" 
+                    when "SPORTS_MANAGEMENT" then "SPORTS"
+                    when "HOSTEL_MANAGEMENT" then "HOSTEL"
+                   when "EXAMINATION" then "EXAMINATION"
+
+                   else mdlData 
+                end
+              %>
+              <li class="home-box-li" id="<%=index%>">
+                <%if mdlData.downcase=="laboratory"%>
+                  <a class="homeBox <%=mdlData%>" href="/laboratory/subject" >
+                  <div class="navBox">
+                      <div class="homeBoxText"><%= boxName %> </div>
+                      <%#index = index + 1 %>
+                    </div>
+                  </a>
+                  
+                 <%elsif mdlData.downcase=="alumni"%>
+                  <a class="homeBox <%=mdlData%>" href="/alumni/alumni_registration_form" >
+                  <div class="navBox">
+                       <div class="homeBoxText"><%= boxName %> </div>
+                       <%#index = index + 1 %>
+                    </div>
+                </a>
+                <!-- =====================canteen======================================== -->
+                <%elsif mdlData.downcase=="canteen_managements"%>
+                  <a class="homeBox <%=mdlData%>" href="/canteen_managements" >
+                  <div class="navBox">
+                       <div class="homeBoxText"><%= boxName %> </div>
+                    </div>
+                </a> 
+                <%elsif mdlData.downcase=="curriculum"%>
+                  <a class="homeBox <%=mdlData%>" href="/curriculum/class_show" >
+                  <div class="navBox">
+                       <div class="homeBoxText"><%= boxName %> </div>
+                    </div>
+                </a>
+           
+			       	<%elsif mdlData.downcase=="front_office_management" %>
+                 <a class="homeBox <%=mdlData%>" href="/front_office_management/category" >
+                  <div class="navBox">
+                    <div class="homeBoxText"><%= boxName %> </div>
+                  </div></a>
+
+                  <%elsif mdlData.downcase=="examination" %>
+                  <%@school=MgSchool.find_by(:is_deleted=>0,:id=>session[:current_user_school_id])%>
+                  <%@gradingType=["","CCE","GPA","CWE","CBSE"]%>
+                <%if @gradingType[@school.grading_system.to_i]=="CBSE"%>
+                 <a class="homeBox <%=mdlData%>" href="/cbsc_examinations/scholascti_exam_management_index" >
+                 <%else%>
+                 <a class="homeBox <%=mdlData%>" href="/examination" >
+                 <%end%>
+                  <div class="navBox">
+                    <div class="homeBoxText"><%= boxName %> </div>
+                  </div></a>
+
+                <%else%>
+                  <a class="homeBox <%=mdlData%>" href="/<%= mdlData.downcase%>" >
+                    <div class="navBox">
+                      <div class="homeBoxText"><%= boxName %> </div>
+                       <%#index = index + 1 %>
+                    </div>
+                </a>
+                <%end%>
+              </li>
+                <%index = index + 1 %>
+            <%end%>
+
+          <%end%> <!-- if count less then 9 end -->
+          
+         <%end%> <!-- 2nd do end -->
+      <%end%> <!-- 1st do end -->
+    <%end%>  <!-- if user admin end  -->
+  </ul>
+</div>
+

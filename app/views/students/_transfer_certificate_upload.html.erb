@@ -1,0 +1,9 @@
+<!-- <div class="row mc-padding-20 form-section-box">    -->
+  <%= radio_button_tag :is_tc_produced, "yes" %>
+  <%= label_tag :is_tc_produced, t('yess'), :value => "tc_produced",:class=> "mg-rm-text-trans"%><br>
+	<div id="uploadfiles" class="previous-education-details" style="display: none; width: 220px;">
+    <%= file_field_tag 'transferfiles[]' %>
+  </div>
+  <%= radio_button_tag :is_tc_produced, "no" %>
+  <%= label_tag :is_tc_produced, t('noo'), :value => "tc_not_produced" ,:class=> "mg-rm-text-trans" %><br>
+<!-- </div> -->

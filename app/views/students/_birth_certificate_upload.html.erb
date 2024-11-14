@@ -1,0 +1,9 @@
+<!-- <div class="row mc-padding-20 form-section-box">      -->
+  <%= radio_button_tag :is_birth_cert_produced, "yes" %>
+  <%= label_tag :is_birth_cert_produced, t('yess'), :value => "cc_produced",:class=> "mg-rm-text-trans"%><br>
+  <div id="birth_uploadfiles" class="previous-education-details" style="display: none; width: 220px;">
+    <%= file_field_tag 'birth_transferfiles[]' %>
+  </div>
+  <%= radio_button_tag :is_birth_cert_produced, "no" %>
+  <%= label_tag :is_birth_cert_produced, t('noo'), :value => "cc_not_produced" ,:class=> "mg-rm-text-trans" %><br>
+<!-- </div> -->

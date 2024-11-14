@@ -1,2 +1,74 @@
-<%# navigation_add 'Students', :controller => 'students', :action => 'index' %> 
-<div id="StudentDetails" data-user="<%= @school_data.to_json %>"></div>
+<!-- Sec --> 
+
+<!-- breadcrumbs Work 
+<#% navigation_add 'Students List', students_path %>
+breadcrumbs Work -->
+
+
+<%#= render  partial: 'student_left' %>
+<%#= form_tag  :student, url: students_path  do |f| %>
+<!--   <div class="search-container">
+   Search Student:
+
+      <%#= f.text_field :searchData  %>
+
+     <%#= submit_tag t("save"), class: "submit mg-small-form-btn"  %>
+  </div>
+  <div  id="searchStudentDataID">
+  <%#= render  partial: 'index' %>
+    
+  </div>
+<br/> -->
+<%# end %> 
+   <%= form_tag students_path, :method => 'get',:id => "student_search" do %>
+       <div class="form-content" style=" width:100%; border:0px #fac94a solid; color:#000; ">
+            <div class="row mc-padding-20 form-section-box">
+                <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+     <%= text_field_tag :search, params[:search] ,placeholder: 'search',:class=>"form-control"%>
+         <i id="filtersubmit" class="fa fa-search"></i>
+       </div>
+     </div>
+     </div>
+
+     <p style="display:none">
+       <%= submit_tag "Search", :name => nil %></p>
+       </p>
+       <div id="students"><%= render 'index' %></div>
+   <% end %>
+
+<%#= render  partial: 'student_left_close' %>
+
+
+<div class="fancybox-outer mg-pop-up-padding" id="editStudentDialogID" style=" width: auto; height: auto; overflow-x: inherit;"></div>
+
+<div class="fancybox-outer" id="student_guardian_list"  style="padding: 2px; width: auto; height: auto; overflow: hidden;"></div>
+
+<script>
+
+      $(document).ready(function () {
+          focusCurrentTab("viewStudentListAId","viewStudentListLiId");
+      });
+      
+
+      $("#students th a, #students .pagination a").on("click", function() {
+        $.getScript(this.href);
+        return false;
+      });
+
+    $("#search").keyup(function(e) {
+       var textLength = $("#search").val();
+        if(e.keyCode == 8)
+          {
+           $.get($("#student_search").attr("action"), $("#student_search").serialize(), null, "script");
+          };
+          if (textLength.length >= 3 ) {
+            $.get($("#student_search").attr("action"), $("#student_search").serialize(), null, "script");
+          };
+            return false;
+        });
+
+
+
+</script>  
+            	
+

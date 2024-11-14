@@ -1,0 +1,141 @@
+<!-- Sec --> 
+<%= render  partial: 'mg_employee_leave_types_left' %>
+
+
+
+<center><a href='#', id='88' class="managerApplyLeave">Apply Leave</a></center> 
+
+
+<div  id="managerForm" style="display:none">
+
+<%= form_for :mg_employee_leave_types , url: mg_employee_leave_types_for_manager_attendence_path, :html => {
+                            :id => 'elm_id', :class => 'elm_class',
+         
+                            :style => 'elm_style' } do |f| %>
+
+  <p>
+    <%= f.label :Leave_Type, ('leavetype') %><br>
+    <%= f.collection_select(:leave_type, MgEmployeeLeaveType.all, :id, :leave_name, :prompt => 'Select Leave Type') %>
+  </p>
+
+
+  <p>
+    <%= f.label :From_Date, ('fromdate') %></br>
+    <%= f.text_field :from_date %>
+  </p>
+
+  <p>
+    <%= f.label :To_Date , ('todate')%></br>
+    <%= f.text_field :to_date %>
+  </p>
+
+		
+    <p> 
+        <%= f.label :is_halfday , ('ishalfday') %>
+        <%= f.hidden_field :is_halfday, :value => false ,:id=>"emp_halfdayfield"%>    
+        <input id="emp_attendances_halfday" type="checkbox" onclick="toggleAll();" name="employees_attendances[is_halfday]">
+   </p> 
+
+   <%= f.hidden_field :is_afternoon, :value => false ,:id=>"emp_afternoonfield"%>
+
+  <p>
+    <div id="whatever" style="display:none">
+        <%= f.label :morning  , ('morning')%>
+        <%= f.radio_button :is_afternoon, false%>
+        <%= f.label :afternoon, ('afternoon')%>
+        <%= f.radio_button :is_afternoon, true%>
+    </div>
+  </p>
+
+  <p>
+    <%= f.label :reason , ('reason')%></br>
+    <%= f.text_area :reason %>
+  </p>
+
+<p>
+    <%= f.label :is_deleted, ('status'),:class=> "mg-label"%>
+    <td><%= f.label :is_deleted, ('active') %>
+    <%= f.radio_button :is_deleted, false , :checked => true%>
+    <%= f.label :is_deleted, ('inactive') %>
+    <%= f.radio_button :is_deleted, true %>
+
+</p>
+
+
+<p>
+<input type="submit" id='save_student_data' value="<%=t('save')%>" name="commit">
+</p>
+<% end %>
+</div>
+
+<%= render  partial: 'application/common_left_close' %>
+
+
+
+
+<script type="text/javascript">
+
+function toggleAll()
+{
+     // alert("i'm in toggleAll function");
+ $("#whatever").toggle();
+}
+
+// function toggleForm()
+// {
+//      // alert("i'm in toggleAll function");
+//  $("#managerForm").toggle();
+// }
+
+
+// function hideAll()
+// {
+//   alert("i m in fullday");
+//      alert("i'm in toggleAll function");
+//  $("#whatever").hide();
+// }
+
+
+$(document).on("click", "#emp_attendances_halfday", function(){
+ 
+       var depVal = $("#emp_attendances_halfday").is(':checked')
+       $("#emp_halfdayfield").val(depVal);
+        });
+
+
+$(document).on("click", "#employees_attendances_is_afternoon_false", function(){
+
+       var depVal = $("#employees_attendances_is_afternoon_false").val();
+       //alert("i am in afternoon false");
+       $("#emp_afternoonfield").val(depVal);
+        });
+
+
+$(document).on("click", "#employees_attendances_is_afternoon_true", function(){
+    
+       var depVal = $("#employees_attendances_is_afternoon_true").val();
+   //    alert("i am in afternoon true");
+
+       $("#emp_afternoonfield").val(depVal);
+        });
+
+
+
+
+$(document).ready(function () {
+      $( "#mg_employee_leave_types_from_date" ).datepicker({ dateFormat: 'dd-mm-yy' });
+       $( "#mg_employee_leave_types_to_date" ).datepicker({ dateFormat: 'dd-mm-yy' });
+    });
+
+
+
+
+$(document).on("click", ".managerApplyLeave", function(e){
+ $("#managerForm").toggle();
+
+});  
+
+
+
+</script>
+

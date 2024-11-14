@@ -1,0 +1,66 @@
+
+<% navigation_add t('archive_guardian'),'/students/student_archive_list' %>
+<div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mc-margin-bottom-20 ">
+              <h3 class="form-section-heading mc-margin-bottom-20">
+                 <b class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><%= t("archive_guardian") %></b></h3></div></div>
+<a class="createStudentArchive" href="/students/guardian_archive/" id="createStudents_archive">
+<button id='create_student_archive' class="mg-btn-bottom-margin submit mc-margin-bottom-20 flat-button">Create Guardian Archive</button></a>
+
+
+
+<% if @guardian_list.length > 0 %>
+  <div class="mg_pagination">
+
+    <div class="student-table-div-cls">
+
+        <table class="table table-bordered table-striped">
+          <thead>
+            
+            <tr class="student-table-header">
+              <th><%=t("user_id")%></th>
+              <th><%=t("name")%></th>
+              <!-- <th><%#= t("gender") %></th> -->
+              <th><%= t("action") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <% @guardian_list.each do |student| %>
+            <tr class="even">
+            <% guardianname = student.first_name
+              if student.last_name.present?
+            guardianname = guardianname +" "+student.last_name;
+              end
+              guardianUserName=MgUser.find_by(:id=>student.mg_user_id) 
+              %>
+              <td><%= guardianUserName.user_name %></td>
+
+              <td><%=  student.first_name  %> <%= student.middle_name  %> <%= student.last_name  %></td>
+                         
+              <!-- <td class="mg-capitalize-text"><%#= student.relation %></td> -->
+              <td>
+                <!-- <span class="mg-padding-nil"> -->
+                <a href="/students/guardian_unarchive/<%=student.id %>" title="Unarchive" class="student-unarchive mg-icon-btn mg-icon-btn" style="cursor: pointer; text-decoration: none;" id="Unarchive-<%=student.id %>" onclick="return confirm('Are you sure to Unarchive?')"><i class="fa fa-file-archive-o"></i></a>
+
+                <%= link_to "<i class=\"fa fa-eye\"></i>".html_safe, {controller: "guardians", action: "show" ,id:student.id } , method: :get ,:class=>"mg-icon-btn"  , :title=>"Show"%>
+                <!-- </span> -->
+             </td>
+            </tr>
+
+            <% end %>
+          </tbody>
+           </table>
+           
+           <div class="pagination-align">
+              <%= will_paginate @guardian_list, :container => false %>
+           </div>
+      </div>
+
+      
+  </div>
+
+<% else %>
+  <h5>No Archived Guardians </h5>
+
+<% end %>

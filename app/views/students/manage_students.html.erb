@@ -1,0 +1,28 @@
+<!-- Sec --> 
+<%= render  partial: 'student_left' %>
+  <!-- <p>Work on progress</p> -->
+  <button id="addStudentCategoriesID">Add Student Category</button>
+
+  <h3>Manage Student Category</h3> 
+ <div class="student-table-div-cls">
+    <table class="batch-tbl">
+        <tr class="student-table-header">
+          
+          <td><%= t('categoryname') %></td>
+          <td><%= t('actions') %></td>
+        </tr>
+       
+        <% @student_categories.each do |category| %>
+        <tr>
+          <td><%= category.name  %></td>
+          <td> 
+          <button title="Edit" class="edit-student-category mg-icon-btn" id="editMgStudentCategoryID-<%= category.id%>"><i class="fa fa-pencil-square-o"></i></button>
+           <button title="Delete" class="delete-student-category mg-icon-btn" id="deleteStudentCategoryID-<%= category.id%>"><i class="fa fa-trash"></i></button>
+
+          </td>
+        </tr>
+
+        <% end %>
+      </table>
+  </div>
+<%= render  partial: 'student_left_close' %>

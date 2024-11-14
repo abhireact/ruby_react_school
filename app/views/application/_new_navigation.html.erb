@@ -1,0 +1,751 @@
+<%
+if (params[:controller] != "mg_student_admission_requests") && (params[:controller] != "mg_payment_details") && (params[:controller] != "mg_atom_payments") %>
+<%#if    %>
+<%
+
+rlAndPer = session[:roles_permissions_data]
+ary = Array.new
+userType = session[:user_type]
+%>
+<%#=rlAndPer%>
+<%
+	rlAndPer.each do |key| 
+		key.each do |kee, value| 
+	      if kee.to_s.eql?("model_name")
+	      		model_value=value
+	      		if ary.include?(model_value)
+	      		else
+	      			ary.push(model_value)
+	      		end
+			end
+		end
+	end
+	
+%>
+
+
+
+
+
+<ul class="menuListHome  nav panel-list" >
+	<%=puts session[:user_type]%>
+	<%=puts ary%>
+	<%if session[:user_type]=="cloudadmin" %>
+
+	<li class="myAccountMenu sms-has-menu dropdown"> 
+			<a class="dropdown-link" href="#"><i class="fa fa-cog"></i>
+				<span class="menu-text">Cloud Admin</span>
+				<span class="selected"></span>
+			</a>
+	
+			<ul class="sms-sub-menu dropdown-container"  id="master_settings_sub_menu_id" style="display: none;">
+
+					
+					<%= render partial: 'dashboards/cloud_admin_dashboard_left.html.erb' %>
+				
+			</ul>
+
+		</li>
+             <%elsif session[:user_type]=="bill_incharge" %>
+		<li class="myAccountMenu sms-has-menu dropdown"> 
+			<a class="dropdown-link" href="#"><i class="fa fa-cog"></i>
+				<span class="menu-text">Billing Management</span>
+				<span class="selected"></span>
+			</a>
+	
+			<ul class="sms-sub-menu dropdown-container"  id="master_settings_sub_menu_id" style="display: none;">
+
+					
+				<%= render partial: 'mg_agents/mg_agents_left.html.erb' %>
+				
+			</ul>
+
+		</li>
+		
+
+				
+
+					
+					<% else %>
+
+	<%if session[:user_type]=="principal" %>
+	  
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+			<a class="dropdown-link" href="#"><i class="fa fa-cog"></i>
+				<span class="menu-text">HOME</span>
+				<span class="selected"></span>
+			</a>
+	
+			<ul class="sms-sub-menu dropdown-container"  id="master_settings_sub_menu_id" style="display: none;">
+					<%= render partial: 'dashboards/principle_dashboard_left' %>
+			</ul>
+
+		</li>
+		
+
+
+
+
+   <%end%>
+
+	<%ary.each do |model_names|%>
+
+	
+		<%if model_names.eql?("MASTER_SETTINGS")%>
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-cog"></i> -->
+			    <div class="mastersettings sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">MASTER SETTINGS</span>
+				<span class="selected"></span>
+			</a>
+	
+			<ul class="sms-sub-menu dropdown-container"  id="master_settings_sub_menu_id" style="display: none;">
+
+					
+					<%= render partial: 'master_settings/master_settings_left' %>
+				
+			</ul>
+
+		</li>
+		
+
+				<%elsif model_names.eql?("SCHOOLS")%>
+					<li class="myAccountMenu sms-has-menu dropdown"> 
+						<a class="dropdown-link" href="#"><!-- <i class="fa fa-university"></i> -->
+						    <div class="schools sms-ali sms-nav-icon-width sms-float-left"></div>
+							<span class="menu-text"><%=model_names.to_s%></span>
+							<span class="selected"></span>
+						</a>
+				
+						<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+							<%= render partial: 'schools/school_left' %>
+						</ul>
+					</li>
+
+			<%elsif model_names.eql?("CLASSES")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-book"></i> -->
+				    <div class="classes sms-nav-icon-width sms-ali sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+				
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+						<%= render partial: 'classes/class_left' %>
+				</ul>
+		
+			</li>
+			<%elsif model_names.eql?("EMPLOYEES")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-book"></i> -->
+				    <div class="employees sms-nav-icon-width sms-ali sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					<!-- <span class="arrow-up">&#9650;</span>
+                    <span class="arrow-down">&#9660;</span> -->
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+				<%if session[:user_type]=="employee"%>
+					<%= render partial: 'dashboards/employee_left' %>
+					<%else%>
+					<%= render partial: 'employees/emp_left' %>
+				<%end%>
+				</ul>
+		
+			</li>
+		<%elsif model_names.eql?("TIMETABLE")%>
+				 <li class="myAccountMenu sms-has-menu dropdown" > 
+					<a class="dropdown-link" href="#"><!-- <i class="fa fa-clock-o"></i> -->
+					    <div class="timetable sms-nav-icon-width sms-ali sms-float-left"></div>
+						<span class="menu-text"><%=model_names.to_s%></span>
+						<span class="selected"></span>
+					</a>
+			 
+					<ul class="sms-sub-menu dropdown-container" id="timetable_sub_menu_id" style="display: none;">
+							<%= render partial: 'timetable/timetable_left' %>
+					</ul>
+				</li>
+
+
+
+			<%elsif model_names.eql?("MG_STUDENT_ADMISSIONS")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-child"></i> -->
+				    <div class="addmission sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text">ADMISSIONS<%#=model_names.to_s%></span>
+					<span class="selected"></span>
+					<!-- <span class="arrow-up">&#9650;</span>
+                    <span class="arrow-down">&#9660;</span> -->
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'entrance_exam_details/entrance_exam_left' %>
+				</ul>
+		
+			</li>
+
+
+
+			<%elsif model_names.eql?("SUBJECTS")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-file-text"></i> -->
+				    <div class="subjects sms-nav-icon-width sms-ali sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					<!-- <span class="arrow-up">&#9650;</span>
+                    <span class="arrow-down">&#9660;</span> -->
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'subjects/subject_left' %>
+				</ul>
+		
+			</li>
+                        <%elsif model_names.eql?("LMS")%>
+			 <li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-book"></i> -->
+				<div class="curriculums sms-ali sms-nav-icon-width sms-float-left"></div>
+
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+				</a>
+				 
+				<ul class="sms-sub-menu dropdown-container" id="notification_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_online_educations/mg_online_education_left' %>
+				</ul>
+			</li>
+                        <%elsif model_names.eql?("ONLINE_ASSESSMENT") && session[:user_type] != "employee" && session[:user_type] != "student" %>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-university"></i> -->
+				     <div class="online examinations sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%@online = "online_assesment"%>
+					<%= render partial: 'mg_online_educations/mg_online_education_left' %>
+				</ul>
+		
+			</li>
+
+			<%elsif model_names.eql?("STUDENTS")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-book"></i> -->
+				    <div class="students sms-ali sms-nav-icon-width sms-float-left"></div>
+					<%if session[:user_type]!="student" && session[:user_type]!="guardian"%>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					<%elsif session[:user_type]!="student"%>
+					<span class="menu-text">GUARDIAN</span>
+					<span class="selected"></span>
+					<%else%>
+					<span class="menu-text">STUDENT</span>
+					<span class="selected"></span>
+					<%end%>
+					<!-- <span class="arrow-up">&#9650;</span>
+                    <span class="arrow-down">&#9660;</span> -->
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+				
+
+					<%= render partial: 'students/student_left' %>
+					
+
+				</ul>
+		
+			</li>
+			<%elsif model_names.eql?("LABORATORY")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-flask"></i> --><div class="laboratorys sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'laboratory/laboratry_left' %>
+				</ul>
+		
+			</li>
+			<%elsif model_names.eql?("ATTENDANCES")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-book"></i> --> <div class="attendances sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_employee_leave_types/mg_employee_leave_types_left' %>
+				</ul>
+		
+			</li>
+			
+			<%elsif model_names.eql?("LIBRARY")%>
+		
+			 <li class="myAccountMenu sms-has-menu dropdown"> 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-university"></i> -->
+				     <div class="libararys sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+					
+				</a>
+		
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					
+					<%= render partial: 'library/library_left' %>
+				</ul>
+		
+			</li>
+			<%elsif model_names.eql?("NOTIFICATIONS")%>
+			 <li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-bell"></i> -->
+				   <div class="notification sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+				</a>
+				 
+				<ul class="sms-sub-menu dropdown-container" id="notification_sub_menu_id" style="display: none;">
+						<%= render partial: 'notifications/notification_left' %>
+				</ul>
+			</li>
+			<%elsif model_names.eql?("PAYSLIPS")%>
+			 <li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#">
+					<!-- <i class="fa fa-money" aria-hidden="true"></i> -->
+					<div class="payslip  sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+				</a>
+				 
+				<ul class="sms-sub-menu dropdown-container" id="notification_sub_menu_id" style="display: none;">
+						<%= render partial: 'payslips/payslip_left' %>
+				</ul>
+			</li>
+			<%elsif model_names.eql?("CURRICULUM")%>
+			 <li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-book"></i> -->
+				<div class="curriculums sms-ali sms-nav-icon-width sms-float-left"></div>
+
+					<span class="menu-text"><%=model_names.to_s%></span>
+					<span class="selected"></span>
+				</a>
+				 
+				<ul class="sms-sub-menu dropdown-container" id="notification_sub_menu_id" style="display: none;">
+					<%= render partial: 'curriculum/curr_left' %>
+				</ul>
+			</li>
+		<%elsif model_names.eql?("EVENT_TYPES")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-calendar"></i> -->
+			    <div class="events sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">EVENTS</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'events/events_left' %>
+			</ul>
+	
+		</li>
+
+
+		<%elsif model_names.eql?("FEES")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+			     <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">FEES</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'fees/fee_left' %>
+			</ul>
+	
+		</li>
+
+		<%elsif model_names.eql?("INVENTORY")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" >
+		 	<%if session[:user_type]=="store_manager"%>
+			<a class="dropdown-link" href="#"><i class="fa fa-calendar"></i> 
+			    <!-- <div class="inventory sms-ali sms-nav-icon-width sms-float-left"></div> -->
+				<span class="menu-text">STORE MANAGER</span>
+				<span class="selected"></span>
+			</a>
+			<%else%>
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-calendar"></i> -->
+			    <div class="inventory sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">INVENTORY</span>
+				<span class="selected"></span>
+			</a>
+			<%end%>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'inventory/inventory_left' %>
+			</ul>
+	
+		</li>
+		<%elsif model_names.eql?("FRONT_OFFICE_MANAGEMENT")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-calendar"></i> -->
+			    <div class="front-office sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">FRONT OFFICE</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'front_office_management/front_office_management_left' %>
+			</ul>
+	
+		</li>
+
+		<%elsif model_names.eql?("KIOSK")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><i class="fa fa-calendar"></i>
+				<span class="menu-text">Library</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'library/library_left' %>
+				</ul>
+	
+		</li>
+		<%elsif model_names.eql?("TRANSPORTS")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-exchange "></i> -->
+			    <div class="transports sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">TRANSPORT</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'transports/transport_left' %></ul>
+	
+		</li>
+		<%elsif model_names.eql?("ACCOUNTS")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-usd "></i> -->
+			    <div class="account sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">ACCOUNT</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'accounts/accounts_left' %></ul>
+	
+		</li>
+		
+		<%elsif model_names.eql?("ALUMNI")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-graduation-cap"></i> --> <div class="alumni_sms sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">ALUMNI</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'alumni/alumni_left' %>
+				</ul>
+	
+		</li>
+		<%elsif model_names.eql?("CANTEEN_MANAGEMENTS")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-coffee"></i> --><div class="canteen sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">CANTEEN MANAGEMENTS</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'canteen_managements/canteen_management_left' %>
+				</ul>
+	
+		</li>
+		<%elsif model_names.eql?("VEHICLES")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-bus"></i> -->
+			     <div class="vehicles sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">VEHICLE</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'vehicles/vehicle_left' %></ul>
+	
+		</li>
+		<%elsif model_names.eql?("HEALTHCARE_ADMIN")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-stethoscope" aria-hidden="true"></i> --><div class="healthcare sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text"><%=model_names.to_s%></span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'healthcare/healthcare_left' %></ul>
+	
+		</li>
+		<%elsif model_names.eql?("HOSTEL_MANAGEMENT")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-bed" aria-hidden="true"></i> --><div class="hostel sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">HOSTEL MANAGEMENT</span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'hostel_management/hostel_management_left' %></ul>
+	
+		</li>
+		
+
+		<%elsif model_names.eql?("EXAMINATION")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+		 <%@school=MgSchool.find_by(:is_deleted=>0,:id=>session[:current_user_school_id])%>
+                  <%@gradingType=["","CCE","GPA","CWE","CBSE", "UP", "CISCE"]%>
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-calendar"></i> -->
+			     <div class="examinations sms-nav-icon-width sms-ali sms-float-left"></div>
+				<span class="menu-text">EXAMINATION</span>
+				<span class="selected"></span>
+			</a>
+			<%if @gradingType[@school.grading_system.to_i]=="CBSE" || @gradingType[@school.grading_system.to_i]=="CISCE" %>
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'cbsc_examinations/cbsc_examination_left' %>
+			</ul>
+			<%else%>
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'examination/examination_table_left' %>
+			</ul>
+			<%end%>
+		</li>
+
+		<%elsif model_names.eql?("SPORT_MANAGEMENT")%>
+		 <li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-stethoscope" aria-hidden="true"></i> --><div class="sports sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text"><%=model_names.to_s%></span>
+				<span class="selected"></span>
+			</a>
+		
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: 'sports_management/sports_left' %></ul>
+	
+		</li>
+	        
+                <%elsif model_names.eql?("EXPENSE_MANAGEMENT")%>
+  <%if session[:user_type]=="admin" || session[:user_type]=="library_incharge" || session[:user_type]=="laboratory_incharge" || session[:user_type]=="principal" || session[:user_type] == "AdmissionIncharge" %>
+ 		<li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-calendar"></i> -->
+		    <div class="events sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text"><%=t('expense_management')%></span>
+				<span class="selected"></span>
+			</a>
+			<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+				<%= render partial: '/mg_expense_entries/expense_left' %>
+			</ul>
+			
+		</li>
+	<%end%>	
+
+          <%elsif model_names.eql?("ASSIGNMENTS")%>
+			<%if session[:user_type]=="homework_incharge"%>
+		 		<li class="myAccountMenu sms-has-menu dropdown" > 
+					<a class="dropdown-link" href="#">
+						<span class="menu-text"><%=t('Home Work')%></span>
+						<span class="selected"></span>
+					</a>
+					<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+						<%= render partial: '/mg_homework_incharges/mg_homework_incharge_left' %>
+					</ul>
+			
+				</li>
+   			<%end%>
+            <%elsif model_names.eql?("FEE_REPORTS")%>
+	 		<li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#">
+					<div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=t('fee_report')%></span>
+					<span class="selected"></span>
+				</a>
+				<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: '/mg_fee_reports/mg_fee_report_left' %>
+				</ul>
+		
+			</li>
+            <%elsif model_names.eql?("OTHER_RECEIVABLES")%>
+		 	<li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+				    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text">OTHER RECEIVABLES</span>
+					<span class="selected"></span>
+				</a>
+			
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_add_fee_collections/additional_fee_left' %>
+				</ul>
+		
+			</li>
+
+               <%elsif model_names.eql?("BILL_MANAGEMENT")%>
+			<li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+				    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text">BILL MANAGEMENT</span>
+					<span class="selected"></span>
+				</a>
+			
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_agents/mg_agents_left' %>
+				</ul>
+		
+			</li>
+
+
+		 <%elsif model_names.eql?("Admission Reports")%> 
+			<li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+				    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text">Student Registration</span>
+					<span class="selected"></span>
+				</a>
+			
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_student_admission_reports/admission_reports_left' %>
+				</ul> 
+		
+			</li>
+
+			<li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+				    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text">1st Semester Fee</span>
+					<span class="selected"></span>
+				</a>
+			
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_student_admission_reports/semester_fee_left' %>
+				</ul> 
+		
+			</li>
+
+			
+
+		<%end%>
+	<%end%>
+	<%end%>
+</ul>
+<%else%>
+<ul class="menuListHome  nav panel-list" >
+	<%if session[:user_type] == "school_incharge" || session[:user_type] == "AdmissionIncharge"%>
+		<li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+			    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">Student Registration</span>
+				<span class="selected"></span>
+			</a>
+			<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+				<%= render partial: 'mg_student_admission_reports/admission_reports_left' %>
+			</ul>
+		</li>
+		<li class="myAccountMenu sms-has-menu dropdown" > 
+			<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+			    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">1st Semester Fee</span>
+				<span class="selected"></span>
+			</a>
+			<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+				<%= render partial: 'mg_student_admission_reports/semester_fee_left' %>
+			</ul>
+		</li>
+         <li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-money"></i> -->
+				    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text">OTHER RECEIVABLES</span>
+					<span class="selected"></span>
+				</a>
+			
+				<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+					<%= render partial: 'mg_add_fee_collections/additional_fee_left' %>
+				</ul>
+		
+			</li>
+
+
+	 <%if session[:user_type] == "AdmissionIncharge"%>
+	 		<li class="myAccountMenu sms-has-menu dropdown" > 
+				<a class="dropdown-link" href="#"><!-- <i class="fa fa-calendar"></i> -->
+			    <div class="events sms-ali sms-nav-icon-width sms-float-left"></div>
+					<span class="menu-text"><%=t('expense_management')%></span>
+					<span class="selected"></span>
+				</a>
+				<ul class="sms-sub-menu dropdown-container" id="event_sub_menu_id" style="display: none;">
+					<%= render partial: '/mg_expense_entries/expense_left' %>
+				</ul>
+				
+			</li>
+		<%end%>	
+	<%else%>
+		<li class="myAccountMenu  dropdown" > 
+			<!-- <a class="dropdown-link" href="#"> -->
+			<a class="dropdown-link" href="#">
+			    <div class="fees sms-ali sms-nav-icon-width sms-float-left"></div>
+				<span class="menu-text">ADMISSION FORM</span>
+				<!-- <span class="selected"></span> -->
+			</a>
+			<ul class="sms-sub-menu dropdown-container" id="class_sub_menu_id" style="display: none;">
+				<%= render partial: 'mg_student_admission_requests/mg_student_admission_requests_left' %>
+			</ul>
+			
+			
+		</li>
+	<%end%>
+</ul>
+<%end%>
+
+<script type="text/javascript">
+ $(".sms-sidebar-toggle").click(function(){
+        $('#sms-container[sms-lpanel-effect="shrink"] , #sms-header[sms-lpanel-effect="shrink"]').toggleClass('sms-minimized-lpanel');
+    });
+
+    $("a.dropdown-link").click(function(e) {
+      e.preventDefault();
+      var $div = $(this).next('.dropdown-container');
+      $(".dropdown-container").not($div).hide();
+        if ($div.is(":visible")) {
+            $div.hide()
+        }  else {
+           $div.show();
+        }
+    });
+
+    $("dropdown-menu").click(function(){
+    	$(this).addclass("active");
+
+    });
+    
+
+$(".menuListHome li").on('mouseenter mouseleave', function (e) {
+    var submenu = $('ul:first', this);
+    var submenuTop = submenu.offset().top;
+    var submenuHeight = submenu.height();
+    var viewportHeight = $(window).height();
+
+    var isOverflowing = (submenuTop + submenuHeight > viewportHeight);
+
+    if (isOverflowing) {
+        submenu.css("top", $(this).height() - submenuHeight);
+    } else {
+        submenu.css("top", 0);
+    }
+});
+</script>
+

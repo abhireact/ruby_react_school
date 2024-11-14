@@ -1,0 +1,377 @@
+<%= fields_for :language do |f| %>
+
+        <%= f.hidden_field :is_deleted, :value => 0 %>
+        <%= f.hidden_field :mg_school_id, :value => session[:current_user_school_id] %>
+        <%= f.hidden_field :mg_user_id, :value => session[:user_id] %>
+       <div class="row mc-padding-20 form-section-box">
+                
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: 0px;">
+          <tbody>
+                <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="language_known[]"  class="mg-label"><%= t('languages') %>
+                      <span class="required-field"></span> 
+                    </label>
+                  </td>
+                  </tr>
+                  <tr>
+                    <td valign="top">
+                      <input  class="mg-lang-text-field form-control" type="text" name="language[language_name][]">
+                    </td>
+                  </tr>
+
+                  <tr>
+                  <td width="33%" valign="bottom">
+                    <label for="middle_name" class="mg-label"><%= t('speak') %></label>
+                  </td>
+                
+                  <td width="33%" valign="bottom">
+                    <label for="last_name" class="mg-label"><%= t('read') %>
+                    <span class="required-field"></span>
+                    </label>
+                  </td>
+                  <td width="33%" valign="bottom">
+                    <label for="last_name" class="mg-label"><%= t('write') %>
+                    <span class="required-field"></span>
+                    </label>
+                  </td>
+                </tr> 
+                <tr>
+                    
+                    <td valign="top">
+                     <input  class="checkbox-speak-cls mg-language-speak-checkbox" type="checkbox" name="language[speak][]" value="speak">
+                    </td>
+                    <td valign="top">
+
+                     <input  class="checkbox-read-cls mg-language-read-checkbox" type="checkbox" name="language[read][]" value="read">
+                    </td>
+                  
+                    <td valign="top">
+                      <input  class="checkbox-write-cls mg-language-write-checkbox" type="checkbox" name="language[write][]" value="write">
+                    </td>
+                    
+                  </tr>
+                  <tr>
+                                  
+                   <td valign="top">
+
+                    <div  class="language-Student-Div-Class  mg-language-speak-radio">
+
+                            <label for="language_status3_true" class="mg-label-inner-form"><%=t('beginner')%>
+                            </label>
+                            <input type="checkbox" name="status3[]" value="Beginner" /> 
+
+                            <label for="language_status3_false" class="mg-label-inner-form"><%=t('intermediate')%>
+                            </label>
+                            <input type="checkbox"  name="status3[]" value="Intermediate"/>
+
+                            <label for="language_status3_false" class="mg-label-inner-form"><%=t('advanced')%>
+                            </label>
+                            <input type="checkbox"  name="status3[]" value="Advanced"/>
+
+                        </div>
+
+                  </td>
+
+
+                  <td valign="top">
+                    <div class="language-Student-Div-Class  mg-language-read-radio">
+
+                      <label for="language_status1_true" class="mg-label-inner-form"><%=t('beginner')%>
+                      </label>
+                      <input type="checkbox" name="status1[]" value="Beginner" /> 
+
+                      <label for="language_status1_false" class="mg-label-inner-form"><%=t('intermediate')%>
+                      </label>
+                      <input type="checkbox"  name="status1[]" value="Intermediate"/>
+
+                      <label for="language_status1_false" class="mg-label-inner-form"><%=t('advanced')%>
+                      </label>
+                      <input type="checkbox"  name="status1[]" value="Advanced"/>
+
+                  </div>
+                  </td>
+                
+                  <td valign="top">
+                            <div class="language-Student-Div-Class  mg-language-write-radio">
+
+                            <label for="language_status2_true" class="mg-label-inner-form"><%=t('beginner')%>
+                            </label>
+                            <input type="checkbox" name="status2[]" value="Beginner" /> 
+
+                            <label for="language_status2_false" class="mg-label-inner-form"><%=t('intermediate')%>
+                            </label>
+                            <input type="checkbox"  name="status2[]" value="Intermediate"/>
+
+                            <label for="language_status2_false" class="mg-label-inner-form"><%=t('advanced')%>
+                            </label>
+                            <input type="checkbox"  name="status2[]" value="Advanced"/>
+
+                        </div>
+                  </td>
+
+                 
+                </tr>
+          </tbody> 
+        </table>
+    </div>
+    <%end%>
+<!-- <br/> -->
+<!-- </div> -->
+<div id="appendHereId">
+</div>
+<script>
+  $(document).ready(function(){
+      
+
+      // Read work start here
+
+    //   $(document).on('change','.mg-language-speak-radio input[type="checkbox"]', function() {
+
+    //     alert("Hello speak BIA");
+    //      $(this).siblings('.mg-language-speak-radio input[type="checkbox"]').not(this).prop('checked', false);
+
+    //       var labelText = $(this).prev('label').text();
+    //       var trRow = $(this ).parent().parent().parent().prev('tr').children('td');
+    //       var currFlag = trRow.children('.mg-language-speak-checkbox').prop('checked');
+
+    //       if(!currFlag){
+    //          var parentInputValue = $(this ).parent().parent().parent().prev('tr').prev('tr').prev('tr').children('td').children('input').val(); 
+
+    //          if(parentInputValue.length == 0){
+    //           $(this).prop('checked',false)
+    //           alert("Please enter Language Name");
+              
+    //           return;
+    //          }
+    //          else{
+
+    //         trRow.children('.mg-language-speak-checkbox').val(parentInputValue +"$" +labelText.trim());
+
+    //          }
+    //         trRow.children('.mg-language-speak-checkbox').prop('checked',true);
+    //         // and set the value
+    //         // console.log();
+    //       }else{
+
+    //         if ($(this).prop('checked')) {
+    //                       var currentValue = trRow.children('input').val();
+
+    //             if(currentValue.length > 0){
+    //               console.log("Inside true ");
+    //               var changeTo = currentValue.split("$");
+    //               trRow.children('.mg-language-speak-checkbox').val(changeTo[0] +"$" +labelText.trim());
+    //             }else{
+    //               console.log("Inside else speak");
+
+    //             }
+
+    //         }else{
+    //         trRow.children('.mg-language-speak-checkbox').prop('checked',false);
+    //         trRow.children('.mg-language-speak-checkbox').val("");
+
+    //         }
+           
+
+    //       }
+
+
+
+    //   });
+
+    // $(document).on("change",".mg-language-speak-checkbox",function(event){
+    //     event.preventDefault();
+
+    //     // console.log("Read Check box parent Step -- 1 ");
+    //     alert("Hello speak");
+    //       var currentFlagIS = $(this).prop('checked');
+    //       if(currentFlagIS){
+    //              var langName = $(this).parent().parent().prev('tr').prev('tr').children('td').children('input').val();
+
+        
+    //         if(langName.length > 0){
+
+    //           var tagName = $(this ).parent().parent().next().children(':nth-child(1)').children(':nth-child(1)').children(':nth-child(2)').prop('checked',true);
+    //           $(this).val(langName+"$"+"Beginner");
+
+    //         }else{
+    //           alert("Please enter Language name.");
+    //           $(this).prop( "checked", false );
+    //         }
+
+    //       }else{
+
+    //           var tagName = $(this ).parent().parent().next().children(':nth-child(1)').children(':nth-child(1)').children(':nth-child(2)').prop('checked',false);
+    //           var tagName = $(this ).parent().parent().next().children(':nth-child(1)').children(':nth-child(1)').children(':nth-child(4)').prop('checked',false);
+    //           var tagName = $(this ).parent().parent().next().children(':nth-child(1)').children(':nth-child(1)').children(':nth-child(6)').prop('checked',false);
+
+    //           console.log($(this ).parent().parent().next().children(':nth-child(1)').children(':nth-child(1)'));
+    //           $(this).val("");
+    //       }
+        
+
+    // });
+
+    // // End read work
+
+    // // Start read work
+
+    //   $(document).on('change','.mg-language-read-radio input[type="checkbox"]', function() {
+
+    //              $(this).siblings('.mg-language-read-radio input[type="checkbox"]').not(this).prop('checked', false);
+
+    //               var labelText = $(this).prev('label').text();
+    //               var trRow = $(this ).parent().parent().parent().prev('tr').children('td :nth-child(2)');
+
+    //               var currFlag = trRow.children('.mg-language-read-checkbox').prop('checked');
+
+    //               if(!currFlag){
+    //                 var parentInputValue = $(this ).parent().parent().parent().prev('tr').prev('tr').prev('tr').children('td').children('input').val();
+    //                              console.log(parentInputValue.length);
+    //                    if(parentInputValue.length == 0){
+    //                     $(this).prop('checked',false)
+    //                     alert("Please enter Language Name");
+                        
+    //                     return;
+    //                    }
+    //                    else{ 
+    //                     console.log(trRow.html())  
+    //                     trRow.children('.mg-language-read-checkbox').val(parentInputValue +"$" +labelText.trim());
+
+    //                    }
+    //                    trRow.children('.mg-language-read-checkbox').prop('checked',true);
+
+
+    //               }else{
+                    
+    //                    if ($(this).prop('checked')) {
+    //                       var currentValue = trRow.children('input').val();
+
+    //                       if(currentValue.length > 0){
+    //                         console.log("Inside true ");
+    //                         var changeTo = currentValue.split("$");
+    //                         trRow.children('.mg-language-read-checkbox').val(changeTo[0] +"$" +labelText.trim());
+    //                       }else{
+    //                         console.log("Inside else read");
+
+    //                       }
+
+    //                   }else{
+    //                   trRow.children('.mg-language-read-checkbox').prop('checked',false);
+    //                   trRow.children('.mg-language-read-checkbox').val("");
+
+    //                   }
+    //               }
+    //           });
+
+    //         $(document).on("change",".mg-language-read-checkbox",function(event){
+    //             event.preventDefault();
+
+    //             var currentFlagIS = $(this).prop('checked');
+    //             if(currentFlagIS){
+
+    //               var langName = $(this ).parent().parent().parent().children(':nth-child(2)').children('td').children('input').val();
+              
+    //               if(langName.length > 0){
+    //                 // Change this line according to jquery
+    //                 //var writeElement = event.target.parentElement.parentElement.parentElement.children[2].cells[2].children[0]
+                    
+    //                 var tagName = $(this ).parent().parent().next().children(':nth-child(2)').children(':nth-child(1)').children(':nth-child(2)').prop('checked',true);
+    
+    //                 $(this).val(langName+"$"+"Beginner");
+    //               }else{
+    //                 alert("Please enter language name.");
+    //                 $(this).prop( "checked", false );
+    //               }
+    //             }else{
+    //                   var tagName = $(this ).parent().parent().next().children(':nth-child(2)').children(':nth-child(1)').children(':nth-child(2)').prop('checked',false);
+    //                   var tagName = $(this ).parent().parent().next().children(':nth-child(2)').children(':nth-child(1)').children(':nth-child(4)').prop('checked',false);
+    //                   var tagName = $(this ).parent().parent().next().children(':nth-child(2)').children(':nth-child(1)').children(':nth-child(6)').prop('checked',false);
+
+    //                   $(this).val("");
+
+    //             }
+
+
+    //         });
+
+    // // end write work
+
+    // // Start speak work
+
+    //       $(document).on('change','.mg-language-write-radio input[type="checkbox"]', function() {
+    //               $(this).siblings('.mg-language-write-radio input[type="checkbox"]').not(this).prop('checked', false);
+
+    //               var labelText = $(this).prev('label').text();
+    //            //   var trRow = $(this ).parent().parent().parent().prev('tr').children('td');
+    //               var trRow = $(this ).parent().parent().parent().prev('tr').children('td :nth-child(3)');
+
+    //               var currFlag = trRow.children('.mg-language-write-checkbox').prop('checked');
+
+    //               if(!currFlag){
+    //                 var parentInputValue = $(this ).parent().parent().parent().prev('tr').prev('tr').prev('tr').children('td').children('input').val();
+    //                              console.log(parentInputValue.length);
+    //                    if(parentInputValue.length == 0){
+    //                     $(this).prop('checked',false)
+    //                     alert("Please enter Lang Name");
+                        
+    //                     return;
+    //                    }
+    //                    else{ 
+    //                     console.log(trRow.html())  
+    //                     trRow.children('.mg-language-write-checkbox').val(parentInputValue +"$" +labelText.trim());
+
+    //                    }
+    //                    trRow.children('.mg-language-write-checkbox').prop('checked',true);
+
+
+    //               }else{
+    //                                        if ($(this).prop('checked')) {
+    //                       var currentValue = trRow.children('input').val();
+
+    //                       if(currentValue.length > 0){
+    //                         console.log("Inside true ");
+    //                         var changeTo = currentValue.split("$");
+    //                         trRow.children('.mg-language-write-checkbox').val(changeTo[0] +"$" +labelText.trim());
+    //                       }else{
+    //                         console.log("Inside else read");
+
+    //                       }
+
+    //                   }else{
+    //                   trRow.children('.mg-language-write-checkbox').prop('checked',false);
+    //                   trRow.children('.mg-language-write-checkbox').val("");
+
+    //                   }
+    //               }
+    //           });
+
+    //         $(document).on("change",".mg-language-write-checkbox",function(event){
+    //             event.preventDefault();
+
+    //             var currentFlagIS = $(this).prop('checked');
+    //             if(currentFlagIS){
+
+    //                 var langName =  $(this ).parent().parent().parent().children(':nth-child(2)').children('td').children('input').val();
+
+    //                 if(langName.length > 0){
+                     
+    //                 var tagName = $(this ).parent().parent().next().children(':nth-child(3)').children(':nth-child(1)').children(':nth-child(2)').prop('checked',true);
+
+    //                   $(this).val(langName+"$"+"Beginner");
+    //                 }else{
+    //                   alert("Please enter language name.");
+    //                   $(this).prop( "checked", false );
+    //                 }
+
+    //             }else{
+
+    //                   var tagName = $(this ).parent().parent().next().children(':nth-child(3)').children(':nth-child(1)').children(':nth-child(2)').prop('checked',false);
+    //                   var tagName = $(this ).parent().parent().next().children(':nth-child(3)').children(':nth-child(1)').children(':nth-child(4)').prop('checked',false);
+    //                   var tagName = $(this ).parent().parent().next().children(':nth-child(3)').children(':nth-child(1)').children(':nth-child(6)').prop('checked',false);
+
+    //                   $(this).val("");
+    //             }
+    //         });
+  });
+</script>

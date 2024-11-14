@@ -1,0 +1,51 @@
+<!-- #version1.1(for admission number in student details 28/05/2018 Mamtha) -->
+
+<%#= render  partial: 'student_left' %>
+  
+  <%= form_tag 'student_archive_list', :method => 'get', :id => "student_archive_search" do %>
+<!--       <div class="row mc-padding-20 form-section-box">
+                <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <%#= text_field_tag :search, params[:search] ,placeholder: 'search',:class=>"form-control"%>
+       <i id="filtersubmit" class="fa fa-search"></i>
+       </div>
+     </div> -->
+   
+
+       <div id="students"><%= render  partial: 'student_archive_list' %></div>
+   <% end %>
+
+
+   
+
+<%#= render  partial: 'student_left_close' %>
+
+
+<div class="fancybox-outer mg-pop-up-padding" id="editStudentDialogID" style=" width: auto; height: auto; overflow-x: inherit;"></div>
+
+<div class="fancybox-outer" id="student_guardian_list"  style="padding: 2px; width: auto; height: auto; overflow: hidden;"></div>
+
+<script>
+       $( document ).ready(function() {
+ 		  focusCurrentTab("studentArchiveAID","studentArchiveLiID");
+		});
+
+      $("#students th a, #students .pagination a").on("click", function() {
+        $.getScript(this.href);
+        return false;
+    });
+
+    $("#search").keyup(function(e) {
+       var textLength = $("#search").val();
+    if(e.keyCode == 8)
+      {
+       $.get($("#student_archive_search").attr("action"), $("#student_archive_search").serialize(), null, "script");
+      };
+      if (textLength.length >= 3 ) {
+    	    $.get($("#student_archive_search").attr("action"), $("#student_archive_search").serialize(), null, "script");
+      };
+        return false;
+    });
+
+
+
+</script>  

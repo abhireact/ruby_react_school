@@ -1,0 +1,28 @@
+<%if @employee_list.present?%>
+ <div class="mg-scroll-employee-bar">
+ <table class="batch-tbl" border="">
+ <tr class="subject-table-header table table-striped">
+	 <th>Employee ID / User Name</th>
+	 <th>First Name</th>
+	 <th>Last Name</th>
+	 <th>Employee Type</th>
+	 <th>Employee Department</th>
+	 <th>Actions</th>
+ </tr>
+
+<%@employee_list.each do |t|%>
+                                          
+<tr>
+	<td><%=t.employee_number%></td>
+	<td><%=t.first_name%></td>
+	<td><%=t.last_name%></td>
+	<td><%=t.category_names%></td>
+	<td><%=t.dept_name%></td>
+	<td class="mg-align-center"><a id="<%=t.id%>" title="Reset" class="mg-employee-leave-types-individual-employee-leave-reset mg-icon-btn"><i class="fa fa-refresh"></i></a></td>
+</tr>
+<%end%>
+</table>
+</div>
+<%else%>
+<h5>Employees not found...</h5>
+<%end%>

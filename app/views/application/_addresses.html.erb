@@ -1,0 +1,105 @@
+<!-- Sec --> 
+     <%= fields_for (addresstype) do |adrs| %>
+         <div class="form-content">
+          <div class="form-content-inner">         
+        <%if addresstype=="Correspondance"%>
+
+        <%= adrs.hidden_field :address_type, :value => "Correspondance" %>
+         
+        <%end%>
+        
+        <%if addresstype=="Permanent"%>
+        <%= adrs.hidden_field :address_type, :value => "Permanent" %>
+        
+        <%end%>
+         <%if addresstype=="workAddress"%>
+        <%= adrs.hidden_field :address_type, :value => "workAddress" %>
+         <h4 class="mg-h4" ><%= t('officeaddress') %> </h4>
+        <%end%>
+        <%if addresstype=="Temporary"%>
+        <%= adrs.hidden_field :address_type, :value => "Temporary" %>
+        <%end%>
+
+       <%= adrs.hidden_field :is_deleted, :value => 0 %>
+       <%= adrs.hidden_field :mg_school_id, :value =>session[:current_user_school_id]%>
+       <div class="row mc-padding-20 form-section-box">
+           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+              <label   for="address_line1"><%= t('addressline1') %>
+                
+              </label>
+               <%= adrs.text_field :address_line1, :class=>"form-control" %>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <label   for="address_line2"><%= t('addressline2') %></label>
+                    <%= adrs.text_field :address_line2, :class=>"form-control" %>
+                  </div>
+            
+            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+              <label   for="city"><%= t('city') %></label>
+              <%= adrs.text_field :city, :class=>"form-control" %>
+            </div>
+        </div>
+        <div class="row mc-padding-20 form-section-box">
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <label  for="state"><%= t('state') %>
+                    </label>
+                     <%= adrs.text_field :state, :class=>"form-control" %>
+                  </div>
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <label  for="pin_code"><%= t('pincode') %></label>
+                    <%= adrs.text_field :pin_code, :class=>"form-control" %>
+                  </div>
+
+            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                     <label  for="country"><%= t('country') %>
+                     </label>
+                    <%= adrs.text_field :country, :class=>"form-control" %>
+                  </div>
+        </div>
+        <div class="row mc-padding-20 form-section-box">
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <label  for="landmark"><%= t('landmark') %>
+            </label>
+            <%= adrs.text_field :landmark, :class=>"form-control" %>
+            </div>
+        </div>
+        </div>
+      </div>        
+   
+  <!-- <hr/> -->
+    <% end %>  
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+      $('#same_as_current_adress').change(function(){
+      if ($(this).is(':checked')) {
+        checked = true;
+      } else {
+        checked = false;
+      } 
+      if (checked == true){
+        $('input[name="Permanent[address_line1]"]').val($("#Temporary_address_line1").val());
+        $('input[name="Permanent[address_line2]"]').val($("#Temporary_address_line2").val());
+        $('input[name="Permanent[city]"]').val($("#Temporary_city").val());
+        $('input[name="Permanent[state]"]').val($("#Temporary_state").val());
+        $('input[name="Permanent[pin_code]"]').val($("#Temporary_pin_code").val());
+        $('input[name="Permanent[country]"]').val($("#Temporary_country").val());
+        $('input[name="Permanent[landmark]"]').val($("#Temporary_landmark").val());
+      }
+      else{
+        $('input[name="Permanent[address_line1]"]').val("");
+        $('input[name="Permanent[address_line2]"]').val("");
+        $('input[name="Permanent[city]"]').val("");
+        $('input[name="Permanent[state]"]').val("");
+        $('input[name="Permanent[pin_code]"]').val("");
+        $('input[name="Permanent[country]"]').val("");
+        $('input[name="Permanent[landmark]"]').val("");
+      }
+    });
+  });
+
+</script>

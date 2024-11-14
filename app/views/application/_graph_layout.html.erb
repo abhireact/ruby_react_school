@@ -1,0 +1,378 @@
+<ul class="menuListHome  nav panel-list" >
+	<li class="myAccountMenu sms-has-menu dropdown"> 
+		<a class="dropdown-link" href="#"><i class="fa fa-pie-chart"></i>
+			<span class="menu-text">Reports</span>
+				<span class="selected"></span>
+			</a>
+	
+			<ul class="sms-sub-menu dropdown-container"  id="chairman_sub_menu_id" style="display: none;">
+<!-- Fees -->
+			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('fees') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/fee_graph"><i class="fa fa-money">&nbsp;&nbsp;</i>Fees</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/fee_collection_by_program"><i class="fa fa-money">&nbsp;&nbsp;</i>Fees Collection By Wings</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	  <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/fee_collection_by_program_break_by_sem_monthly"><i class="fa fa-money">&nbsp;&nbsp;</i>Fees Collection By Wing and Classes Monthly</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	  <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/fee_collection_by_program_break_by_sem_quarterly"><i class="fa fa-money">&nbsp;&nbsp;</i>Fees Collection By Wing and Classes Quarterly</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	  <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/fee_deafaulter_by_program_break_by_sem_monthly"><i class="fa fa-money">&nbsp;&nbsp;</i>Fees Deafulter By Wing and Classes Monthly</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	  <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/fee_deafaulter_by_program_break_by_sem_quarterly"><i class="fa fa-money">&nbsp;&nbsp;</i>Fees Deafulter By Wing and Classes Quarterly</a>
+                	 	<span class="selected"></span>
+                	 </li>
+                </ul>
+
+            </li>
+ <!-- Student -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('student') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/student_graph"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>Student</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/rte_students_details"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>RTE Student</a>
+                	 	<span class="selected"></span>
+                	 </li>
+                	  
+                </ul>
+
+            </li>
+ <!-- Employee -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('employee') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/employee_non_teaching_staff"><i class="fa fa-id-badge">&nbsp;&nbsp;</i>Employee Non Teaching Staff</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/employee_teaching_staff"><i class="fa fa-id-badge">&nbsp;&nbsp;</i>Employee Teaching Staff</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/employee_total_number"><i class="fa fa-id-badge">&nbsp;&nbsp;</i>Total Number Of Employee</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/employee_dept_wise"><i class="fa fa-id-badge">&nbsp;&nbsp;</i>Number of Employee in Dept Wise</a>
+                	 	<span class="selected"></span>
+                	 </li>
+                	  
+                </ul>
+
+            </li>
+ <!-- Hostel -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('hostel') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/hostel_graph"><i class="fa fa-bed">&nbsp;&nbsp;</i>Hostel</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	  
+                </ul>
+
+            </li>
+<!-- Admission -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('admission') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/admission_year_by_year"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>Admission Centers</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- Attendance -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('attendance') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/attendance_for_students"><i class="fa fa-pencil">&nbsp;&nbsp;</i>Student Attendance</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/uninformed_leaves"><i class="fa fa-pencil">&nbsp;&nbsp;</i>Uninformed Leaves</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/student_absent_class"><i class="fa fa-pencil">&nbsp;&nbsp;</i>Student Absent For Class</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/employee_deptWise_leaves"><i class="fa fa-pencil">&nbsp;&nbsp;</i>Employee Dept. Wise Leaves</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- Payroll -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('payroll') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_month_year"><i class="fa fa-money">&nbsp;&nbsp;</i>Payroll For Year</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_department_by_department"><i class="fa fa-money">&nbsp;&nbsp;</i>Payroll By Department</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_total"><i class="fa fa-money">&nbsp;&nbsp;</i>Total Payroll</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_employee_type"><i class="fa fa-money">&nbsp;&nbsp;</i>Payroll Employee Type</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_deduction_report_by_month_year"><i class="fa fa-money">&nbsp;&nbsp;</i>Payroll Deduction For Year</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_deduction_report_by_department"><i class="fa fa-money">&nbsp;&nbsp;</i>Payroll Deduction By Department</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_deduction_report_for_total"><i class="fa fa-money">&nbsp;&nbsp;</i>Total Payroll Deduction</a>
+                	 	<span class="selected"></span>
+                	 </li>
+
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/payroll_deduction_by_employee_type"><i class="fa fa-money">&nbsp;&nbsp;</i>Payroll Deduction Employee Type</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- Library -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('library') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/library_graph"><i class="fa fa-book">&nbsp;&nbsp;</i>Resource Details</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/library_book_purchase"><i class="fa fa-book">&nbsp;&nbsp;</i>Library Books Purchase</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/library_book_lost"><i class="fa fa-book">&nbsp;&nbsp;</i>Resource Lost</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/library_damaged_books"><i class="fa fa-book">&nbsp;&nbsp;</i>Damaged Resources</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- Alumni -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('alumni') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/alumni_graph"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>Alumni</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/alumni_graph_for_new_registration"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>Alumni New Registration</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/alumni_graph_total_amount"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>Alumni Amount Collected</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/alumni_location"><i class="fa fa-graduation-cap">&nbsp;&nbsp;</i>Alumni Current Location</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- FOM -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('FOM') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/faq_graph"><i class="fa fa-question">&nbsp;&nbsp;</i>FOM</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- Stationery -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('stationery') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/stationary_stock_register"><i class="fa fa-book">&nbsp;&nbsp;</i>Stationery Stock register</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+<!-- Finance -->
+
+ 			<li class="myAccountMenu sms-has-menu dropdown-submenu">
+                <a href="#">
+                    <span class="menu-text accordion"><%= t('finance') %></span>
+                    
+                </a>
+                <ul class="mg-left-sub-menu-title sms-sub-menu   dropdown-menu">
+                	 <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/finance_graph"><i class="fa fa-money">&nbsp;&nbsp;</i>Finance Analysis</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/cash_book"><i class="fa fa-money">&nbsp;&nbsp;</i>Cash Book</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+               	    <li id="schoolInformationLiID"><a class="menuItemsActivities"  href="/graph/account_transaction"><i class="fa fa-money">&nbsp;&nbsp;</i>Account Details</a>
+                	 	<span class="selected"></span>
+                	 </li>
+               	    
+
+                </ul>
+
+            </li>
+
+
+		</ul>
+	</li>
+</ul>
+
+
+				<!-- <div class="dropdown">
+					<li>Placement</li>
+						<div class="dropdown-content">
+							<li><a href="/graph/placement_by_program">Placement by Program</a></li>
+							<li><a href="/graph/placement_by_company_per_year">Placement by Company per Year</a></li>
+						</div>
+				</div> -->
+
+
+
+				<!-- <div class="dropdown">
+					<li>Acount</li>
+					<div class="dropdown-content">
+						<li><a href="/graph/account_transaction_in_month">Account Transfer</a></li>
+					</div>
+				</div> -->
+
+				<!-- Khem
+					remove placement link
+				 -->
+				 <!-- Placement -->
+				
+				<!-- Attendance -->				
+				
+				<!-- Payroll -->
+				
+				<!-- added by deepak starts -->
+
+				
+
+				<!-- added by deepak ends -->
+
+<script type="text/javascript">
+ $(".sms-sidebar-toggle").click(function(){
+        $('#sms-container[sms-lpanel-effect="shrink"] , #sms-header[sms-lpanel-effect="shrink"]').toggleClass('sms-minimized-lpanel');
+    });
+
+    $("a.dropdown-link").click(function(e) {
+      e.preventDefault();
+      var $div = $(this).next('.dropdown-container');
+      $(".dropdown-container").not($div).hide();
+        if ($div.is(":visible")) {
+            $div.hide()
+        }  else {
+           $div.show();
+        }
+    });
+
+    $("dropdown-menu").click(function(){
+    	$(this).addclass("active");
+
+    });
+    
+
+$(".menuListHome li").on('mouseenter mouseleave', function (e) {
+    var submenu = $('ul:first', this);
+    var submenuTop = submenu.offset().top;
+    var submenuHeight = submenu.height();
+    var viewportHeight = $(window).height();
+
+    var isOverflowing = (submenuTop + submenuHeight > viewportHeight);
+
+    if (isOverflowing) {
+        submenu.css("top", $(this).height() - submenuHeight);
+    } else {
+        submenu.css("top", 0);
+    }
+});
+</script>

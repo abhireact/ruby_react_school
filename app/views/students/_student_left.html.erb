@@ -1,0 +1,238 @@
+
+<%if session[:user_type]!="student"  &&  session[:user_type]!= "guardian"%>
+                            <li class="myAccountMenu sms-has-menu dropdown-submenu">
+                                <a href="#" >
+                                    <span class="menu-text"><%= t('managestudent') %></span>
+                                    <!-- <span class="selected pull-right">&#187</span> -->
+                                </a>
+                                <ul class="mg-left-sub-menu-title sms-sub-menu dropdown-menu" >
+                                    <div class =  "left-link-scroll-drop-down">         
+                                    <li id="viewStudentListLiId">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length " href="/students" id="viewStudentListAId">
+                                            <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%= t('studentlist') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                     </li>
+                                    <li id="createNewStudentLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/new" id="createNewStudentAID" >
+                                            <div class="setMenu"><i class="fa fa-plus-square-o">&nbsp;&nbsp;</i><%= t('createnewstudent') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                    <li id="createNewStudentLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/student_rollnumber_new" id="create_stud_roll_numAID" >
+                                            <div class="setMenu"><i class="fa fa-list-ol">&nbsp;&nbsp;</i><%= t('roll_number_entry') %>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                     <!-- <li id="newAdmissionListLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/new_admission_list" id="StudentAID" >
+                                            <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%#= t('StudentAdmissionList') %><i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li> -->
+                                    <li id="studentArchiveLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/student_archive_list" id="studentArchiveAID" >
+                                            <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('archive_student') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+				    <li id="studentArchiveLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/get_school_id_card/index" id="studentArchiveAID" >
+                                            <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('school_idcard') %>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+				      <li id="studentArchiveLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/student_measurements" id="studentArchiveAID" >
+                                            <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('Physical Measurement') %>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+
+				    <li id="studentArchiveLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/archive_student_reports" id="studentArchiveAID" >
+                                          <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('archive_data_export') %>
+                                          </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                    <li id="studentExportLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/excel_export" id="studentExportAID" >
+                                            <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('Export Student Data') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                    
+                                <li id="student_promotion_LID">
+                                    <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/cbsc_examinations/student_promotion_new" id="student_promotion_AID">
+                                        <div class="setMenu"><i class="fa fa-line-chart">&nbsp;&nbsp;</i><%= t('student_promotion') %>
+                                        </div>
+                                        <span class="selected"></span>
+                                    </a>
+                                </li>
+
+				<li id="caste_report_LID">
+                                    <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/caste_reports" id="caste_report_AID">
+                                        <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('caste_report') %>
+                                         </div>
+                                         <span class="selected"></span>
+                                     </a>
+                                  </li>
+                                  <li id="certificate_tracker_LID">
+                                    <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/mg_student_certificate_trackers" id="certificate_tracker_AID">
+                                        <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;  </i><%= t('certificate_tracker') %>
+                                        </div>
+                                        <span class="selected"></span>
+                                    </a>
+                                </li>
+				<li id="stu-photo-upload_tracker_LID">
+                                    <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/bulk_photo_uploads" id="stu-photo-upload_AID">
+                                        <div class="setMenu"><i class="fa fa-cloud-upload">&nbsp;&nbsp;  </i><%= t('student_photo_upload') %>
+                                        </div>
+                                        <span class="selected"></span>
+                                    </a>
+                                </li> 
+                                <%#if session[:current_user_school_id] == 51 %>
+                                    <li id="student_promotion_LID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/mg_student_promotion_demotions" id="student_promotion_AID">
+                                            <div class="setMenu"><i class="fa fa-line-chart">&nbsp;&nbsp;</i><%= t('section_change') %>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                   <!--  <li id="stu_detail_reports">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/mg_student_class_lists" id="student_deatil_AID">
+                                            <div class="setMenu"><i class="fa fa-line-chart">&nbsp;&nbsp;</i><%#= t('STUDENT_CLASS_LIST') %>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li> -->
+                               <%#end%>
+                            </div>
+                                </ul>
+                            </li>
+                      
+                        <li class="myAccountMenu sms-has-menu dropdown-submenu">
+                            <a href="#" >
+                                <span class="menu-text"><%= t('manageguardian') %></span>
+                                <!-- <span class="selected pull-right">&#187</span> -->
+                            </a>
+                            <ul class="mg-left-sub-menu-title sms-sub-menu dropdown-menu">
+                                <li id="viewGuardiantListLiId">
+                                    <a class="menuItemsActivities" href="/guardians" id="viewGuardiantListAId">
+                                        <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%= t('guardianlist') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                        </div>
+                                        <span class="selected"></span>
+                                    </a>
+                                </li>
+                                <li id="guardianArchiveLiID">
+                                    <a class="menuItemsActivities" href="/students/guardian_archive_list" id="guardianArchiveAID" >
+                                        <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('archive_guardian') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                        </div>
+                                        <span class="selected"></span>
+                                    </a>
+                                </li>
+				<li id="viewGuardiantListLiId">
+                                    <a class="menuItemsActivities" href="/guardian_exports/export" id="viewGuardiantListAId">
+                                        <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%= t('guardian_export') %>
+                                        </div>
+                                        <span class="selected"></span>
+                                    </a>
+                                </li> 
+                            </ul>
+                        </li>
+
+
+
+                        <li class="myAccountMenu sms-has-menu dropdown-submenu">
+                            <a href="#" >
+                                <span class="menu-text"><%= t('student report') %></span>
+                                <!-- <span class="selected pull-right">&#187</span> -->
+                            </a>
+                            <ul class="mg-left-sub-menu-title sms-sub-menu dropdown-menu">
+                                     <% if session[:current_user_school_id] == 73 || session[:current_user_school_id] == 80 %>
+                                     <li id="studentExportLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/barcode/index" id="studentExportAID" >
+                                            <div class="setMenu"><i class="fa 
+                                                fa-barcode">&nbsp;&nbsp;</i><%= t('Export Student Barcode') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                <% end %>
+                                
+                                    <li id="studentExportLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/excel_export" id="studentExportAID" >
+                                            <div class="setMenu"><i class="fa fa-archive">&nbsp;&nbsp;</i><%= t('Export Student Data') %><!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                    <li id="stu_detail_reports">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/mg_student_class_lists" id="student_deatil_AID">
+                                            <div class="setMenu"><i class="fa fa-line-chart">&nbsp;&nbsp;</i><%= t('STUDENT_CLASS_LIST') %>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                    <li id="newAdmissionListLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/students/new_admission_list" id="StudentAID" >
+                                            <div class="setMenu"><i class="fa fa-list">&nbsp;&nbsp;</i><%= t('StudentAdmissionList') %><i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i>
+                                            </div>
+                                            <span class="selected"></span>
+                                        </a>
+                                    </li>
+                                    <li id="feeScheduleLiID">
+                                        <a class="menuItemsActivities left-link-scroll-drop-down-length" href="/mg_list_of_overviews" id="feeScheduleID">
+                                            <div class="setMenu"><i class="fa fa-file-text-o">&nbsp;&nbsp;</i>Overview Of Student Data<!-- <i class="fa fa-caret-left" style="color:#d5d8d9; position: absolute; right: 0px; transform: translateY(33%);"></i> -->
+                                            </div>
+                                        </a>
+                                    </li>
+                               
+                            </ul>
+                        </li>
+
+
+ <%elsif  session[:user_type]=="student" %>
+
+  <%= render partial: 'dashboards/student_dashboard_left' %>
+
+  <%else%>
+
+ <%= render partial: 'dashboards/guardian_dashboard_left' %>
+
+<% end%>
+
+
+
+
+
+
+                        <!-- Sec -->  
+ 
+                                
+
+ 
+                    
+                         
+                   
+           
+
+             <%#= render 'layouts/messages' %> 
+
+<script>
+$( document ).ready(function() {
+    collapseLeftMenu();
+    focusStudentHeaderBox();
+
+});
+</script>

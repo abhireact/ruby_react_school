@@ -1,0 +1,126 @@
+<!-- Sec --> 
+<h4 class="form-section-heading">Employee Leave Types</h4>
+<%if @mg_employee_leave_types.present?%>
+  <!-- <div class="mg_pagination"> -->
+  <div class="mg-scrl-width-bar mg-tbl-border mg-btn-bottom-margin">
+<table  class="batch-tbl mg-tbl-layout table-striped table-bordered table">  
+<thead>
+  <tr class="subject-table-header">
+              <th><%= t('leavename')%></th>
+              <th><%= t('leavecode')%></th>
+              <th class="mg-rm-text-trans"><%= t('maxleavecount')%></th>
+              <th><%= t('resetperiod')%></th>
+
+              <th><%= t('gender')%></th>
+              <th><%= t('employeetype')%></th>
+              <th><%= t('marital_status ')%></th>
+              <th><%= t('actions')%></th>
+            </tr></thead>
+            <% @mg_employee_leave_types.each do |sub| %>
+              <tr>
+                <td><%= sub.leave_name %></td>
+                <td><%= sub.leave_code %></td>
+
+                <td><%= sub.max_leave_count %></td>
+
+                <%if sub.reset_period==1%>
+                    <td>Monthly</td>
+                <%elsif sub.reset_period==6%>
+                    <td>Quarterly</td>
+                <%elsif sub.reset_period==12%>
+                    <td>Yearly</td>
+                <%else%>
+                    <td>Not Defined</td>
+                <%end%>
+                <td class="mg-capitalize-text"><%= sub.gender %></td>
+                <%@id=MgEmployeeType.find(sub.mg_employee_type_id)%>
+                 <td class="mg-capitalize-text"><%= @id.employee_type %></td>
+                 <td class="mg-capitalize-text"><%=sub.marital_status%></td>
+            
+                <td>
+                <!-- <button title="Show" class="showLeaveClass mg-icon-btn" id="showID-<%#= sub.id%>"><i class="fa fa-eye"></i></button> -->
+                <%= link_to "<i class=\"fa fa-eye\"></i>".html_safe, {:controller => "mg_employee_leave_types", :action => "show",:id =>sub.id } ,:title=>"Show" ,:class=>" linkto"%>
+
+                
+                <%= link_to "<i class=\"fa fa-pencil-square-o\"></i>".html_safe, {:controller => "mg_employee_leave_types", :action => "edit",:id =>sub.id } ,:title=>"Edit" ,:class=>" linkto"%>
+                <button title="Delete" class="deleteLeaveClass mg-icon-btn" id="deleteID-<%= sub.id%>"><i class="fa fa-trash"></i></button>
+              </td>
+              </tr>
+
+            <% end %>
+          </table>
+          </div>
+
+<%else%>
+<h5>Please add some leave type</h5>
+            <% end %>
+
+          
+
+      <!--     "Monthly" ,"1"],["Quarterly" ,"6"],["Yearly","12"] -->
+<div id="editEmployeeLeaveTypeDialogDivID"></div>
+<div id="leaveTypeShowDilogID"></div>
+
+
+<script type="text/javascript">
+
+
+
+// $(document).on("click", ".editLeaveClass", function(e){
+//    e.preventDefault();
+// // alert("abc");
+//         var myID =$(this).attr('id');
+//          // alert(myID);
+
+//        var splString = myID.split("-");
+//      //  alert(splString);
+//         //var urlLink = "/student_categories/"+studentCategoryID+"/edit";
+//         var urlLink = "/mg_employee_leave_types/"+splString[1]+"/edit/";
+//     // alert(urlLink);
+//         $.ajax({
+//             url: urlLink ,
+//             cache: false,
+//             success: function(html){
+//                   $('<div class="fancybox-outer" style="padding: 15px; width: auto; height: auto;"></div>').dialog({
+//                     modal: true,
+//                     title: "Edit Employee Leave Types",
+//                     open: function () {
+                        
+//                         $(this).html(html);
+//                     }
+//                 }); 
+               
+//             }
+//         });
+// });
+// //delete
+
+//  $(document).on("click", ".deleteLeaveClass", function(e){
+//         var myID =$(this).attr('id');
+
+//         var splString = myID.split("-");
+//          // alert(splString);
+//         var retVal = confirm("Are you sure to delete course?");
+//         if(retVal){
+//           //  alert(retVal);
+//              var urlLink = "/mg_employee_leave_types/delete/"+splString[1];
+
+//               $.ajax({
+//                 url: urlLink ,
+//                 cache: false,
+//                 success: function(html){
+//                    window.location.reload();
+                               
+//                 }
+//             });
+
+//         }else{
+//            // alert(retVal);     
+//            return false;
+//         }
+
+// }); 
+</script>
+
+
+

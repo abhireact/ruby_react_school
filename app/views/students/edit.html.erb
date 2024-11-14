@@ -1,0 +1,672 @@
+<% navigation_add t('students_list'),students_path %>
+<% navigation_add t('Edit'),'/students/edit/'+@id.to_s %>
+
+<%= render  partial: 'student_form' ,:locals => {:form => "edit"} %>
+
+<!-- 
+<span class="mg-cncl-btn-align">
+      <button class="cancel-form-dialog btn btn-delete"><%#= t('cancel') %></button>
+</span> -->
+
+
+
+<script type="text/javascript">
+
+ $(document).ready(function(){
+  focusCurrentTab("createNewStudentAID","createNewStudentLiID");
+   var date = new Date();
+      var cur_date = date.getFullYear(); 
+
+      //category js starts
+      var categoryvalue=$( ".mg-category-class option:selected" ).text();
+      if (categoryvalue=="Employee Child")
+      {
+        $('#studentEmployeeChildId').show();
+      }
+      if (categoryvalue=="Management")
+      {
+        $('#studentManagementQuotaId').show();
+      }
+      if (categoryvalue=="On Scholarship")
+      {
+        $('#studentScholarshipId').show();
+      }
+
+      $(".mg-category-class").change(function(){
+              var category=$( ".mg-category-class option:selected" ).text();
+              if (category=="Employee Child")
+              {
+                if ($('#studentManagementQuotaId').is(':visible')) 
+                {   
+                  //$(".mg-management-field").val('');
+                  $('#studentManagementQuotaId').hide();
+                  //$('#studentEmployeeChildId').show();
+                }
+                if ($('#studentScholarshipId').is(':visible')) 
+                {   
+                  //$(".mg-scholarship-field").val('');
+                  $('#studentScholarshipId').hide();
+                  //$('#studentEmployeeChildId').show();
+                }
+                // else 
+                // {
+                  $('#studentEmployeeChildId').show();
+                // };
+              }
+              if (category=="Management")
+              {
+                if ($('#studentEmployeeChildId').is(':visible')) 
+                {   
+                  $('#studentEmployeeChildId').hide();
+                  //$(".mg-emp-child-field").val('');
+                  //$('#studentManagementQuotaId').show();
+                }
+
+                if ($('#studentScholarshipId').is(':visible')) 
+                {   
+                  $('#studentScholarshipId').hide();
+                  //$(".mg-scholarship-field").val('');
+                  //$('#studentManagementQuotaId').show();
+                }
+                // else 
+                // {
+                  $('#studentManagementQuotaId').show();
+                // };
+              }
+              if (category=="On Scholarship")
+              {
+                if ($('#studentEmployeeChildId').is(':visible')) 
+                {   
+                  $('#studentEmployeeChildId').hide();
+                  //$(".mg-emp-child-field").val('');
+                 // $('#studentScholarshipId').show();
+                }
+
+                if ($('#studentManagementQuotaId').is(':visible')) 
+                {   
+                  $('#studentManagementQuotaId').hide();
+                  //$(".mg-manahttp://localhost:3000/gement-field").val('');
+                 // $('#studentScholarshipId').show();
+                }
+
+                // else 
+                // {
+                  $('#studentScholarshipId').show();
+                // };
+              }
+              if (category=="General")
+              {
+                if ($('#studentEmployeeChildId').is(':visible')) 
+                {   
+                  $('#studentEmployeeChildId').hide();
+                  //$(".mg-emp-child-field").val('');
+                 // $('#studentScholarshipId').show();
+                }
+
+                if ($('#studentManagementQuotaId').is(':visible')) 
+                {   
+                  $('#studentManagementQuotaId').hide();
+                  //$(".mg-management-field").val('');
+                 // $('#studentScholarshipId').show();
+                }
+
+                if ($('#studentScholarshipId').is(':visible')) 
+                {   
+                  $('#studentScholarshipId').hide();
+                 //$(".mg-scholarship-field").val('');
+                 // $('#studentScholarshipId').show();
+                }
+
+                // else 
+                // {
+                  //$('#studentScholarshipId').show();
+                // };
+              }
+             
+            });
+
+
+
+
+// category js ends
+
+
+         dateFormatStr =  getJsDateFormat();
+         // alert(!isNaN($(".dateofbirth").val()))
+
+
+              //   if ($("#student_admission_date").val() != "")
+              //   {
+
+              //   }else{
+              //             $( "#student_admission_date" ).val(" ");
+              // }
+
+                $( ".dateofbirth" ).datepicker({ 
+                    changeMonth: true,
+                    changeYear: true,yearRange: "-100:+0",
+                    maxDate: "0",dateFormat: dateFormatStr,
+                    onSelect: function(dateText, obj) {
+                        var selectedDate = $(this).datepicker('getDate');
+                        var currentDate=new Date();
+                        var age_difference = $("#minimum_age").val();
+                        var b_check=getYearDifference(selectedDate,currentDate, dateFormatStr,age_difference);
+                        if(b_check){
+                          $( ".dateofbirth" ).val("");
+                          alert("Please check the age");
+                        }
+                    }
+                });
+
+
+        $( ".dateofbirth" ).datepicker({ 
+            changeMonth: true,
+            changeYear: true,yearRange: "-100:+0",maxDate: "0",
+            dateFormat: dateFormatStr,
+            onSelect: function(dateText, obj) {
+                var selectedDate = $(this).datepicker('getDate');
+                var currentDate=new Date();
+                var age_difference = $("#minimum_age").val();
+                var b_check=getYearDifference(selectedDate,currentDate, dateFormatStr,age_difference);
+                if(b_check){
+                  $( ".dateofbirth" ).val("");
+                  alert("Please check the age.");
+                }else{
+
+                var admission_date=$("#student_admission_date").val();
+                if(admission_date){
+                  /*if(compareDate($(this).val(), admission_date, dateFormatStr)==false){
+                    alert("Date of Birth should be earlier than Admission Date");
+                    document.getElementById('student_date_of_birth').value ="";
+                  }*/
+
+                  // alert(admission_date);
+                  if(getDateStudentObj($(this).val(),dateFormatStr) >getStudentAdmissionDateObj(admission_date,dateFormatStr)){
+                        alert("Please check the age");
+                        document.getElementById('student_date_of_birth').value ="";
+                    }
+                }
+              }
+            }
+      });
+if ($("#student_date_of_birth").val() != "")
+{
+}
+else{
+  $('#student_date_of_birth').val("");
+}
+
+         $( "#student_admission_date" ).datepicker({ changeMonth: true,
+                changeYear: true,yearRange: "-50:+5",dateFormat: dateFormatStr});
+         var admission_date =  $.datepicker.formatDate(dateFormatStr,new Date($('#student_admission_date').val()));
+
+          if (!isNaN($("#student_admission_date").val()))
+                {
+                    $( "#student_admission_date" ).val("");
+                }else{
+          $('#student_admission_date').val(admission_date);
+        }
+
+
+        var dobDate =  $.datepicker.formatDate(dateFormatStr,new Date($('.dateofbirth').val()));
+
+        
+        if(Date.parse( $('#scholarship_start_date').val() ) ) {
+          var scholarshipStartDate =  $.datepicker.formatDate(dateFormatStr,new Date($('#scholarship_start_date').val()));
+          $('#scholarship_start_date').val(scholarshipStartDate); 
+        }
+
+        if(Date.parse( $('#scholarship_end_date').val() ) ) { 
+
+          var scholarshipEndDate =  $.datepicker.formatDate(dateFormatStr,new Date($('#scholarship_end_date').val()));
+          $('#scholarship_end_date').val(scholarshipEndDate); 
+        }
+
+        if(Date.parse( $('#sibling_admission_date').val() ) ) { 
+          var siblingAdDate =  $.datepicker.formatDate(dateFormatStr,new Date($('#sibling_admission_date').val()));
+          $('#sibling_admission_date').val(siblingAdDate); 
+        }
+
+        if(Date.parse( $('#managementquota_joining_date').val() ) ) { 
+          var mgtJoiningDate =  $.datepicker.formatDate(dateFormatStr,new Date($('#managementquota_joining_date').val()));
+          $('#managementquota_joining_date').val(mgtJoiningDate); 
+        }   
+
+        if(Date.parse( $('#employeechild_joining_date').val() ) ) { 
+          var empChildJoiningDate =  $.datepicker.formatDate(dateFormatStr,new Date($('#employeechild_joining_date').val()));
+          $('#employeechild_joining_date').val(empChildJoiningDate); 
+        }
+
+        if (!isNaN($(".dateofbirth").val()))
+                {
+                    $( ".dateofbirth" ).val("");
+                }else{
+              $('.dateofbirth').val(dobDate);
+
+                }
+
+        $(document).on("change","#scholarship_start_date",function(e){
+        var end_date=$("#scholarship_end_date").val();
+        var start_date=$(this).val();
+
+        if(start_date && end_date){
+             if(!compareDate(start_date,end_date,dateFormatStr)){
+                alert("Start Date should be lesser than End Date");
+                document.getElementById('scholarship_start_date').value ="";
+              }
+        }      
+
+     });
+     $(document).on("change","#scholarship_end_date",function(e){
+      
+        var end_date=$(this).val();
+        var start_date=$("#scholarship_start_date").val();
+        if(start_date && end_date){
+          if(!compareDate(start_date,end_date,dateFormatStr)){
+            alert("End Date should be greater than Start Date");
+            document.getElementById('scholarship_end_date').value ="";
+          }
+        }  
+     });
+
+
+
+    $(function () {
+    $.validator.addMethod('dateFormat',
+    function (value, element) {
+      dateFormatStr =  getJsDateFormat();
+        if (this.optional(element)) {
+            return true;
+        }
+        var ok = true;
+        try {
+            $.datepicker.parseDate(dateFormatStr, value);
+        }
+        catch (err) {
+            ok = false;
+        }
+        return ok;
+    },
+      "Please enter a date in the format "+ getDateFormat(dateFormatStr) +".");
+      dateFormatStr =  getJsDateFormat();
+
+    $(".datefield").datepicker({ dateFormat: dateFormatStr, changeYear: true });
+});
+$("#studentFormID").validate({
+          //debug: true,
+            rules: {
+                      "student[admission_date]": {dateFormat: true},
+                      "student[first_name]": {required: true, maxlength: 20, name_validate: true},
+                      "student[middle_name]": {name_validate: true},
+                      "student[last_name]": {maxlength: 20, name_validate: true},
+                      // "student[id]": {required: true}, 
+                      "student[date_of_birth]": {dateFormat: true},
+                      "student[mg_batch_id]": {required: true},
+
+                      "student[language]": {character_validate: true},
+                      "student[religion]": {character_validate: true},
+
+                      "student[student_birth_place]": {maxlength: 25, character_validate: true},
+                     // "student[mg_student_catagory_id]": {required: true},
+
+                      "sibling[name]": {name_validate: true},
+                      "sibling[relation]": {character_validate: true},
+                      "employeechild[employee_name]": {maxlength: 25, name_validate: true},
+                      "employeechild[employee_type]": {maxlength: 25, character_validate: true},
+
+                      "scholarship[name]": {maxlength: 25, name_validate: true},
+                      "scholarship[amount]": {number: true},
+                      "scholarship[frequency]": {maxlength: 25, character_validate: true},
+
+                      "managementquota[name]": {maxlength: 25, name_validate: true},
+                      "managementquota[position]": {maxlength: 25, character_validate: true},
+
+                      // "Temporary[address_line1]": {required: true},
+                      // "Temporary[state]": {required: true}, 
+                      "Temporary[pin_code]": { number: true, minlength: 6,maxlength: 6}, 
+                      // "Temporary[country]": {required: true},
+                      // "Temporary[city]": {required: true},    
+                      
+
+
+                      "previous_education[school_name]": {name_validate: true},
+                      // "previous_education[course]": {required: true},
+                      "previous_education[year]": {number: true, min:2000,max:cur_date},
+                      "previous_education[marks_obtained]": {number: true, min:0},
+                      "previous_education[total_marks]": {number: true, min:0},
+
+                      // "Permanent[address_line1]": {required: true},
+                      // "Permanent[state]": {required: true}, 
+                      "Permanent[pin_code]": { number: true, minlength: 6,maxlength: 6}, 
+                      // "Permanent[country]": {required: true},
+                       // "student[avatar]": {required: true},
+                      "mobile[phone_number]": {required: true, number: true, minlength: 10,maxlength: 10},
+                      "phone[phone_number]": {number: true, maxlength: 10},
+                      "email[mg_email_id]": { email: "Your email must be in the format of name@domain.com"}
+              },
+       messages: {
+        "Temporary[pin_code]": {minlength: "Please enter 6 digits.",maxlength: "Please enter only 6 digits"},
+        "Permanent[pin_code]": {minlength: "Please enter 6 digits.",maxlength: "Please enter only 6 digits"},
+        "mobile[phone_number]": {minlength: "Please enter 10 digits.",maxlength: "Please enter only 10 digits"},
+        "phone[phone_number]": {maxlength: "Please enter only 10 digits"},
+        "previous_education[year]": {minlength: "Please enter 4 digits.",maxlength: "Please enter only 4 digits"},
+        "previous_education[year]": {maxlength: "Please enter 4 digits.",maxlength: "Please enter only 4 digits"}
+          },
+
+        });
+
+});
+
+$(document).on("click", ".delete-operation", function(e){
+    var myID =$(this).attr('id');
+    //alert(myID)
+
+    var splString = myID.split("-");
+    var retVal = confirm("Are you sure to delete?");
+    if(retVal){
+       // alert(retVal);
+         var urlLink = "students/delete_record"
+
+          $.ajax({
+            url: urlLink ,
+            cache: false,
+            data:{"documentID":myID},
+
+            success: function(html){
+              alert("SuccessFully Deleted");
+              console.log("$(this)");
+           console.log($("#"+myID));
+           console.log("$(this).parent()");
+           console.log($("#"+myID).parent().parent());
+           $("#"+myID).parent().parent().hide();
+            }
+        });
+    }else{
+       // alert(retVal);     
+       return false;
+    }
+});   
+
+function validateStudent(inputFile, that) {
+  var maxFileSize = $("#student_avatar").data('max-file-size');
+  var maxExceededMessage = "This file exceeds the maximum allowed file size (300 kB)";
+  
+
+
+  if ( that.files && that.files[0]) {
+    //alert("inside if");
+    var size=that.files[0].size
+    var reader = new FileReader();
+    reader.onload = imageIsLoaded;
+    reader.readAsDataURL(that.files[0]);
+  }
+  if (size>maxFileSize){
+        window.alert(maxExceededMessage);
+        $("#student_avatar").val('');
+        $('#studentImageTagID').hide();
+ }
+ else{
+
+ }
+  var allowedExtension = ["jpg", "jpeg", "gif", "png"];
+  var extName = inputFile.split(/\.(?=[^\.]+$)/);
+  var extNames = extName[1].toLowerCase(); 
+  if ($.inArray(extNames, allowedExtension) == -1){
+     window.alert("Only image file with extension: .jpg, .jpeg, .gif or .png is allowed");
+     $("#student_avatar").val('');
+     $('#studentImageTagID').hide();
+  }
+  else{
+    // $("#schoolImageTagID").attr("src","ssc.jpeg.url");
+
+  }
+ 
+}
+
+function imageIsLoaded(e) {
+    $('#studentImageTagID').attr('src', e.target.result);
+};
+
+$(document).on("change","#previous_education_total_marks",function(){
+  var marks_obtained=$("#previous_education_marks_obtained").val();
+  var total_marks=$(this).val();
+  validateMarks(marks_obtained, total_marks, $(this) );
+});
+
+$(document).on("change","#previous_education_marks_obtained",function(){
+  var total_marks=$("#previous_education_total_marks").val();
+  var marks_obtained=$(this).val();  
+  validateMarks(marks_obtained, total_marks ,$(this) );
+  
+});
+
+
+function validateMarks(marks_obtained, total_marks, currentObj ){
+  //alert(marks_obtained+"/"+total_marks);
+  if(parseInt(marks_obtained) > parseInt(total_marks)){
+    alert("Total marks should be greater than marks obtained ");
+    currentObj.val("");
+   //document.getElementById('previous_education_total_marks').value="";
+  }
+}
+
+
+
+  $( function() {
+    function split( val ) {
+      return val.split( / \s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+    $( ".autocomplete" )
+      .on( "keydown", function( event ) {
+      if ( event.keyCode === $.ui.keyCode.TAB &&
+          $( this ).autocomplete( "instance" ).menu.active ) {
+        event.preventDefault();
+      }
+    })
+    .autocomplete({
+      minLength: 0,
+      source: function( request, response ) {
+        var selected_value = $("#hobby_auto_suggestion").val();
+        $.ajax({
+          url: "/students/get_hobbies_edit/",
+          data: {
+              term: extractLast(request.term),selected_value: selected_value
+          },
+          dataType: "json",
+          type: "GET",
+          success: function(data) {
+            response(data[0]);
+          },
+          error: function() {
+              response($.ui.autocomplete.filter(
+                  ["opt1","opt2"]
+                  , extractLast(request.term)));
+          }
+        });
+      },
+      focus: function() {
+        return false;
+      },
+      select: function( event, ui ) {
+        var all_terms = $(this).val();
+        var all_terms_arr = all_terms.split(/[ ]+/);
+        all_terms_arr.pop();
+        all_terms_arr.push("");
+        all_terms_arr.push(ui.item.value);
+        this.value = all_terms_arr.join(" ");
+        return false;
+      }
+    });
+
+    $( ".autocomplete_for_extra_curricular" )
+      .on( "keydown", function( event ) {
+      if ( event.keyCode === $.ui.keyCode.TAB &&
+          $( this ).autocomplete( "instance" ).menu.active ) {
+        event.preventDefault();
+      }
+    })
+    .autocomplete({
+      minLength: 0,
+      source: function( request, response ) {
+        var selected_value = $("#auto_suggestion").val();
+        $.ajax({
+          url: "/students/get_extra_curricular_edit/",
+          data: {
+              term: extractLast(request.term),selected_value: selected_value
+          },
+          dataType: "json",
+          type: "GET",
+          success: function(data) {
+            response(data[0]);
+          },
+          error: function() {
+              response($.ui.autocomplete.filter(
+                  ["opt1","opt2"]
+                  , extractLast(request.term)));
+          }
+        });
+      },
+      focus: function() {
+        return false;
+      },
+      select: function( event, ui ) {
+        var all_terms = $(this).val();
+        var all_terms_arr = all_terms.split(/[ ]+/);
+        all_terms_arr.pop();
+        all_terms_arr.push("");
+        all_terms_arr.push(ui.item.value);
+        this.value = all_terms_arr.join(" ");
+        return false;
+      }
+    });
+
+    $( ".autocomplete_for_sports" )
+      .on( "keydown", function( event ) {
+      if ( event.keyCode === $.ui.keyCode.TAB &&
+          $( this ).autocomplete( "instance" ).menu.active ) {
+        event.preventDefault();
+      }
+    })
+    .autocomplete({
+      minLength: 0,
+      source: function( request, response ) {
+        var selected_value = $("#sports_auto_suggestion").val();
+        $.ajax({
+          url: "/students/get_sports_edit/",
+          data: {
+              term: extractLast(request.term),selected_value: selected_value
+          },
+          dataType: "json",
+          type: "GET",
+          success: function(data) {
+            response(data[0]);
+          },
+          error: function() {
+              response($.ui.autocomplete.filter(
+                  ["opt1","opt2"]
+                  , extractLast(request.term)));
+          }
+        });
+      },
+      focus: function() {
+        return false;
+      },
+      select: function( event, ui ) {
+        var all_terms = $(this).val();
+        var all_terms_arr = all_terms.split(/[ ]+/);
+        all_terms_arr.pop();
+        all_terms_arr.push("");
+        all_terms_arr.push(ui.item.value);
+        this.value = all_terms_arr.join(" ");
+        return false;
+      }
+    });
+
+    
+  });
+
+ var save_data= [];
+  var sports_data = [];
+  var hobby_data = [];
+$('#editStudentRecordID').click(function(){
+  // var data=""
+   // $("ul.token-input-list-facebook").find("li").each(function()
+  $("table.employee-form-cls").find("td#extra_id").find("ul.token-input-list-facebook").find("li").each(function()
+    {
+       var $li=$(this);
+       save_data.push($li.text().replace('×', ''))
+       // data+=$li.text().replace('×', '')
+       // data+=",";
+    });
+  document.getElementById('extra_suggestion').value = save_data
+  $("#auto_suggession_update_").val(save_data);
+  $("table.employee-form-cls").find("td#sports_id").find("ul.token-input-list-facebook").find("li").each(function(){
+
+    var $li=$(this);
+    sports_data.push($li.text().replace('×', ''))
+
+  });
+  document.getElementById('sports_autocomplete').value = sports_data
+  $("table.employee-form-cls").find("td#hobby_id").find("ul.token-input-list-facebook").find("li").each(function(){
+
+    var $li=$(this);
+    hobby_data.push($li.text().replace('×', ''))
+
+  });
+  document.getElementById('hobby_autocomplete').value = hobby_data
+
+$(this).closest('form').submit()
+ });
+
+  function validateStudentImage(inputFile, that) {
+    var maxFileSize = $("#student_avatar").data('max-file-size');
+    var maxExceededMessage = "This file exceeds the maximum allowed file size (300 kB)";
+     
+    
+   if ( that.files && that.files[0]) {
+    // alert("inside if");
+    var size=that.files[0].size
+   
+
+    var reader = new FileReader();
+    reader.onload = imageIsLoaded;
+    reader.readAsDataURL(that.files[0]);
+  }
+ if (size>maxFileSize){
+        window.alert(maxExceededMessage);
+        $("#student_avatar").val('');
+        $('#studentImageTagID').hide();
+ }
+ else{
+
+ }
+  
+  var allowedExtension = ["jpg", "jpeg", "gif", "png","JPG","JPEG","GIF","PNG"];
+  var extName = inputFile.split(/\.(?=[^\.]+$)/); 
+  var extNames = extName[1].toLowerCase(); 
+  if ($.inArray(extNames, allowedExtension) == -1){
+     window.alert("Only image file with extension: .jpg, .jpeg, .gif or .png is allowed");
+     $("#student_avatar").val('');
+     $('#studentImageTagID').hide();
+  }
+  else{
+    // $("#schoolImageTagID").attr("src","ssc.jpeg.url");
+
+  }
+ 
+} 
+</script>
+<style>
+.forms-textbox {
+
+height: 26px !important;
+
+width: -1px !important;
+
+font-size: 14px !important;
+
+}
+</style>

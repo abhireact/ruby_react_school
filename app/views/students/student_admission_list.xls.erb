@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ss:Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+   <%
+    if @student_details.present?%>
+  <ss:Worksheet ss:Name="Report">
+    <ss:Table>
+    <% for i in 0...20 %>
+      <ss:Column ss:Width="150"/>
+    <% end %>
+    <ss:Row >
+      <ss:Cell ss:MergeAcross="55"><ss:Data ss:Type="String"><b>Student Admission Report</b></ss:Data></ss:Cell>
+    </ss:Row>
+    <ss:Row>
+      <!-- <ss:Cell><ss:Data ss:Type="String"><%#=t('Class & Section')%></ss:Data></ss:Cell> -->
+       <!-- <ss:Cell ><ss:Data ss:Type="String"><%#="#{@course_batch}"%></ss:Data></ss:Cell> -->
+    </ss:Row>
+    <ss:Row>
+      <ss:Cell ss:MergeAcross="55" ><ss:Data ss:Type="String">Student Admission Report From  <%="#{params[:start_date]}"%> To <%="#{params[:end_date]}"%>
+      </ss:Data></ss:Cell>
+    </ss:Row>
+     <ss:Row></ss:Row>
+    <ss:Row>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('SNo.')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Date of Admission')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Admission Number')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Student Name')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Class & Section')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('User ID')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Father’s Name')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Acadamic Year')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Admission Fee')%></ss:Data></ss:Cell>
+    </ss:Row>
+    <%grand_total=0%>
+    <%s_no=1%>
+     <%@student_details.each do |stud|%>
+      <ss:Row>
+         <ss:Cell ><ss:Data ss:Type="String"><%=s_no%></ss:Data></ss:Cell>
+         <ss:Cell ><ss:Data ss:Type="String"><%=stud["date_of_admission"]%></ss:Data></ss:Cell>
+          <ss:Cell ><ss:Data ss:Type="String"><%=stud["admission_number"]%></ss:Data></ss:Cell>
+         <ss:Cell ><ss:Data ss:Type="String"><%=stud["student_name"]%></ss:Data></ss:Cell>
+          <ss:Cell ><ss:Data ss:Type="String"><%=stud["class_section"]%></ss:Data></ss:Cell>
+          <ss:Cell ><ss:Data ss:Type="String"><%=stud["user_id"]%></ss:Data></ss:Cell>
+          <ss:Cell ><ss:Data ss:Type="String"><%=stud["guardian_name"]%></ss:Data></ss:Cell>
+          <ss:Cell ><ss:Data ss:Type="String"><%=stud["academic_year"]%></ss:Data></ss:Cell>
+          <ss:Cell ><ss:Data ss:Type="String"><%=stud["admission_fee"]%></ss:Data></ss:Cell>
+         <%grand_total+=stud["admission_fee"].to_i %>
+       <%s_no+=1%>
+      </ss:Row>
+    <% end %>
+    <ss:Row>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=t('Grand Total')%></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%=grand_total%></ss:Data>
+      </ss:Cell>
+    </ss:Row>
+
+    <ss:Row>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"></ss:Data></ss:Cell>
+      <ss:Cell ><ss:Data ss:Type="String"><%grand_total%></ss:Data></ss:Cell>
+    </ss:Row>
+    </ss:Table>
+  </ss:Worksheet>
+   <%else%>
+  <ss:Row></ss:Row>
+  <%end%>
+</ss:Workbook>

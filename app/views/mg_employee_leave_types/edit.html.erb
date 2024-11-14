@@ -1,0 +1,419 @@
+ <!-- #version1.1(for casecmp for static values in drop down 20/04/2018/mamatha) -->
+<!-- #version1.2(for adding late come deduction fields   03/08/2018/Mamatha) -->
+<!-- #version1.3(for adding  half yearly to acummulation period   06/08/2018/Mamatha) -->
+<!-- #version1.4(for defects in deduction of paysacle based on latecome 08/08/2018/Mamatha) -->
+
+
+<!-- Sec --> 
+<% navigation_add 'Employee Leave Type', mg_employee_leave_types_path %>
+<% navigation_add 'Edit', new_mg_employee_leave_type_path %>
+<%= form_for :mg_employee_leave_types, url: mg_employee_leave_type_path(@mg_employee_leave_types), method: :patch, :html => {
+                            :id => 'editMgEmployeeLeaveTypesID' } do |f| %>
+
+  <div class="row mc-padding-20 form-section-box">
+    <div class="row">
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :leave_name, t('leavename'),:class=>"mg-label"%><span class="required-field"> *</span><br>
+<%= f.text_field :leave_name ,:class=>"mg-text-field form-control"%></div>
+
+
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :leave_code , t('leavecode'),:class=>"mg-label"%><span class="required-field"> *</span><br>
+    <%= f.text_field :leave_code ,:class=>"mg-text-field form-control"%></div>
+
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+   <%= f.label :employee_type,:class=> "mg-label"%><span class="required-field"> *</span>
+    <%@employeetype=MgEmployeeType.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).pluck(:employee_type,:id)%>
+    <%=f.select :mg_employee_type_id,options_for_select(@employeetype,:selected=>@mg_employee_leave_types.mg_employee_type_id),{:prompt=>"Select Employee Type"},:onchange=>"mycourseFunction(this.value)",:class=>"form-control"%></div>
+    </div>
+ <div class="row">
+ <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :min_leave_count,t('minleavecount'),:class=> "mg-label"%><span class="required-field"> *</span><%= f.text_field :min_leave_count ,:class=>"mg-text-field form-control"%></div>
+
+
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :max_leave_count, t('maxleavecount') ,:class=>"mg-label mg-rm-text-trans"%><span class="required-field"> *</span><br><%= f.text_field :max_leave_count ,:class=>"mg-text-field form-control"%></div>
+
+<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :monthly_limit, t('monthly_limit'),:class=> "mg-label  mg-rm-text-trans"%><span class="required-field"> *</span>
+    <%= f.text_field :monthly_limit ,:class=>"mg-text-field form-control"%>
+  </div>
+
+
+             
+</div>
+
+<div class="row">
+
+<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :minimum_year_experience, t('minimumyearexperience'),:class=> "mg-label"%><span class="required-field"> *</span>
+     <%@remainder= @mg_employee_leave_types.minimum_month_experience%12 %>
+  <%@experience_in_year=(@mg_employee_leave_types.minimum_month_experience-@remainder)/12 %>
+  <%=text_field_tag :minimum_year_experience,@experience_in_year,:class=>"mg-text-field form-control"%>
+</div>
+
+          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+  <%= f.label :minimum_month_experience, t('minimummonthexperience'),:class=> "mg-label"%><span class="required-field"> *</span>
+    <%@experience_in_month=@mg_employee_leave_types.minimum_month_experience%12 %>
+ <%=text_field_tag :minimum_month_experience,@experience_in_month,:class=>"mg-text-field form-control"%>
+</div>
+           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :gender, t('gender'),:class=> "mg-label"%><span class="mg-label"> *</span><br>
+<% #added by mamtha 
+                     if @mg_employee_leave_types.gender != nil
+                    if @mg_employee_leave_types.gender.to_s.casecmp("male")==0
+                    gender = "male"
+                    elsif @mg_employee_leave_types.gender.to_s.casecmp("female")==0
+                      gender = "female"
+                      elsif @mg_employee_leave_types.gender.to_s.casecmp("all")==0
+                      gender = "all"
+                    else
+                      gender = ""
+                    end
+                  else 
+                    gender = ""
+                  end
+                  #added by mamtha
+
+                     %>
+  <%=f.select :gender, options_for_select([["All","all"],["Male" ,"male"],["Female" ,"female"]],:selected=>gender),{},:class=>"form-control" %>
+</div>
+</div>
+<div class="row">
+             <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :marital_status, t('marital_status'),:class=> "mg-label "%><span class="required-field">&nbsp;*</span>  <br>
+ <% #added by mamtha 
+                     if @mg_employee_leave_types.marital_status != nil
+                    if @mg_employee_leave_types.marital_status.casecmp("single")==0
+                    marital_status = "single"
+                    elsif @mg_employee_leave_types.marital_status.casecmp("married")==0
+                      marital_status = "married"
+                      elsif @mg_employee_leave_types.marital_status.casecmp("divorced")==0
+                      marital_status = "divorced"
+                      elsif @mg_employee_leave_types.marital_status.casecmp("widowed")==0
+                      marital_status = "widowed"
+                      elsif @mg_employee_leave_types.marital_status.casecmp("all")==0
+                      marital_status = "all"
+                    else
+                      marital_status = ""
+                    end
+                  else 
+                    marital_status = ""
+                  end
+                  #added by mamtha
+
+                     %>
+ <%= f.select :marital_status , options_for_select([[t("All"), "all"], [t("single"), "single"], [t("married"), "married"], [t("divorced"), "divorced"], [t("widowed"), "widow/widowed"]], :selected => marital_status),{},:class=>"form-control"%> </div>
+
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+   <%= f.label :should_leave_not_be_deducted,:class=> "mg-label"%><br> <%= f.check_box :is_leave_should_not_be_deducted%>
+ </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+   <%= f.label :is_showable, t('is_showable'),:class=> "mg-label "%><br>
+     <%= f.check_box :is_showable%> 
+</div>
+
+
+</div>
+
+<div class="row">
+
+
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :Accumulation,:class=> "mg-label"%> <br><%= f.check_box :is_accumilation%></div>
+
+
+
+
+
+ <div id="accumilationperiods" class="accumulation_period_count" style="display: none;">
+                     <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+    <%= f.label :Accumilation_Period,t('accumilationPeriod'),:class=> "mg-label"%>
+    <div id="accumulationperiod" class="accumulation_period_count" style="display: none;">
+     <%=f.select :accumilation_period, options_for_select([["Monthly" ,"1"],["Quarterly" ,"3"],["Half Yearly" ,"6"],["Yearly","12"]],:selected => @mg_employee_leave_types[:accumilation_period]), {:prompt => 'Select'} ,:class=>"form-control"%>
+     </div></div>
+   </div>
+     
+     <div id="Accumulationcount" class="accumulation_period_count" style="display: none;">
+                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+     <%= f.label :Accumilation_Count,t('accumilationcount'),:class=> "mg-label"%><span class="mg-label"> *</span>  
+  <div id="accumilationcounts" class="accumulation_period_count" style="display: none;">
+  <%= f.text_field :accumilation_count ,:class=>"mg-text-field form-control"%>
+  </div>
+  </div>
+</div>
+                               <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+              <%= f.label :is_auto_reset, t('isautoreset'),:class=> "mg-label"%><br>
+   <%= f.check_box :is_auto_reset%></div>
+
+
+
+ <div id="resetperiods" class="carryforward-employee-Divs-Class" style="display: none;">
+   <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+  <%= f.label :reset_period, t('resetperiod'),:class=> "mg-label"%>
+  
+
+    <div id="resetperiod" class="carryforward-employee-Divs-Class" style="display: none;">
+    <%= f.select :reset_period, options_for_select([["Monthly" ,"1"],["Quarterly" ,"6"],["Yearly","12"]], :selected => @mg_employee_leave_types[:reset_period]), :prompt => 'Select',:class=>"mg-select-btn form-control" %>
+    </div>
+  </div>
+</div>
+
+
+  <div id="resetstartdate" class="carryforward-employee-Divs-Class" style="display: none;">
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+
+   <%= f.label :Reset_start_date,t('reset'),:class=> "mg-label"%><span class="mg-label"> *</span>
+    
+    <div id="resetstartdates" class="carryforward-employee-Divs-Class" style="display: none;">
+    <%= f.text_field :reset_date,:value=>@mg_employee_leave_types.reset_date.present? ? @mg_employee_leave_types.reset_date.strftime(@school.date_format) : '', :id => 'resetDateID' ,:class=>"mg-text-field form-control"%>
+    </div>
+   </div>
+ </div>
+         <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12 " style="height: 59.5px;"> 
+<%= f.label :is_carry_forward, t('iscarryforward'),:class=> "mg-label"%><br>
+<%= f.check_box :is_carry_forward%></div>
+    
+    <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+ <div id="carryforwardlimits" class="carryforward-employee-Div-Class" style="display: none;">
+    <%= f.label :carry_forward_limit,t('carry_forward_limit'),:class=> "mg-label"%><span class="mg-label"> *</span></div>
+   <div id="carryforwardlimit" class="carryforward-employee-Div-Class" style="display: none;">
+   <%=f.text_field :carry_forward_limit,:class=>"form-control"%>
+   </div>
+</div>
+</div>
+
+<div class="row">
+
+<div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<%= f.label :delay_deduction, t('delay_deduction'),:class=> "mg-label "%><br>
+    <%= f.check_box :delay_deduction%></div>
+    <!-- <td>
+     <%#= f.label :is_carry_forward, t('iscarryforward'),:class=> "mg-label "%>
+  
+    </td><td><%#= f.check_box :is_carry_forward, {}, true, false %></td>
+     -->
+
+  
+<div id="delaydeductionfields" class="delay_deduction_fields" style="display: none;">
+
+ <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+    <%= f.label :delay_time,'Delay Time(min)',:class=> "mg-label "%><span class="required-field">&nbsp;*</span>
+   <div id="delay_time_id" class="delay_deduction_fields" style="display: none;">
+   <%=f.text_field :delay_time ,:class=>"mg-text-field form-control"%>
+   </div>
+ </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+    <%= f.label :delay_days,t('delay_days'),:class=> "mg-label "%><span class="required-field">&nbsp;*</span>
+   <div id="delay_days_id" class="delay_deduction_fields" style="display: none;">
+   <%=f.text_field :delay_days ,:class=>"mg-text-field form-control"%>
+   </div>
+ </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+    <%= f.label :leave_deduction_count,t('leave_deduction_count'),:class=> "mg-label "%><span class="required-field">&nbsp;*</span>
+   <div id="leave_deduction_count_id" class="delay_deduction_fields" style="display: none;">
+   <%=f.text_field :leave_deduction_count ,:class=>"mg-text-field form-control"%>
+   </div>
+ </div>
+
+
+
+</div>
+</div>
+
+   
+
+
+<!--ended -->
+
+
+
+
+
+
+
+  
+
+     <%#= f.label :is_deleted,t('status') ,:class=> "mg-label"%>
+      <%#= f.label :is_deleted, t('active') ,:class=> "mg-label-inner-form"%>
+      <%#= f.radio_button :is_deleted, false , :checked => true%>
+      <%#= f.label :is_deleted, t('inactive'),:class=> "mg-label-inner-form"%>
+      <%#= f.radio_button :is_deleted, true %>
+
+</div>
+   <%=f.hidden_field :updated_by, :value=>session[:user_id]%>
+<br>
+ <%#= f.submit t('save') ,:class=>"mg-small-form-btn mg-right-align" ,:style=>"margin-top: 1em;"%>
+      <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+<a onclick="$(this).closest('form').submit()" class="mc-margin-bottom-20 flat-button mg-right-align"><%=t("save")%></a>
+ <%#= link_to t('cancel'), mg_employee_leave_types_path, {:class=>"mg-small-form-btn cancel-form-dialog"} %>
+<%= link_to t('cancel'),{:controller=>"mg_employee_leave_types",:action=>"index"}, {:class=>"mg-small-form-btn cancel-form-dialog flat-button  margin-left-10"} %>
+ 
+</div>
+<% end %>
+
+<% if @mg_employee_leave_types.is_accumilation%> 
+      <script type="text/javascript">
+      $(document).ready(function () {
+
+      $(".accumulation_period_count").toggle();
+      // document.getElementById("is_accumilation").checked = true;
+
+     
+    });
+      </script>
+
+  <%end%>
+<% if @mg_employee_leave_types.is_auto_reset%> 
+      <script type="text/javascript">
+      $(document).ready(function () {
+
+      $(".carryforward-employee-Divs-Class").toggle();
+// 
+      // document.getElementById("is_accumilation").checked = true;
+
+    });
+      </script>
+
+  <%end%>
+
+  <% if @mg_employee_leave_types.is_carry_forward%> 
+      <script type="text/javascript">
+      $(document).ready(function () {
+
+      $(".carryforward-employee-Div-Class").toggle();
+// 
+      // document.getElementById("is_accumilation").checked = true;
+
+    });
+      </script>
+
+  <%end%>
+  <% if @mg_employee_leave_types.delay_deduction%> 
+      <script type="text/javascript">
+      $(document).ready(function () {
+
+      $(".delay_deduction_fields").toggle();
+      // document.getElementById("is_accumilation").checked = true;
+
+     
+    });
+      </script>
+
+  <%end%>
+
+
+
+
+
+
+
+
+ <script type="text/javascript">
+$(document).ready(function () {
+      focusCurrentTab("EmployeeLeaveTypes","EmployeeLeaveTypesLiID");
+
+  dateFormatStr =  getJsDateFormat();
+
+
+  
+      $( "#resetDateID" ).datepicker({ dateFormat: dateFormatStr });
+      $(function () {
+    $.validator.addMethod('dateFormat',
+    function (value, element) {
+      dateFormatStr =  getJsDateFormat();
+        if (this.optional(element)) {
+            return true;
+        }
+        var ok = true;
+        try {
+            $.datepicker.parseDate(dateFormatStr, value);
+        }
+        catch (err) {
+            ok = false;
+        }
+        return ok;
+    },
+      "Please enter a date in the format "+ getDateFormat(dateFormatStr) +".");
+      dateFormatStr =  getJsDateFormat();
+
+    $(".datefield").datepicker({ dateFormat: dateFormatStr, changeYear: true });
+});
+
+
+
+
+
+    $("#editMgEmployeeLeaveTypesID").validate({
+
+        rules: {
+        // "mg_employee_leave_types[leave_name]": {required: true},
+        // "mg_employee_leave_types[leave_code]": {required: true},
+        // "mg_employee_leave_types[max_leave_count]": {required: true, number: true},
+        // "mg_employee_leave_types[reset_period]": {required: true},
+
+        // "mg_employee_leave_types[reset_date]": {required: true},
+
+        // // "mg_employee_type_id": {required: true},
+        // "mg_employee_leave_types[min_leave_count]": {required: true,number: true},
+"mg_employee_leave_types[leave_code]": {required: true},
+      "mg_employee_leave_types[max_leave_count]": {required: true, number: true, min:0},
+      "mg_employee_leave_types[reset_date]": {required: true,dateFormat: true},
+      "mg_employee_leave_types[leave_name]": {required: true},
+      "mg_employee_leave_types[reset_period]": {required: true},
+      "mg_employee_leave_types[mg_employee_type_id]": {required: true},
+      "mg_employee_leave_types[min_leave_count]": {required: true,number: true, min:0},
+      "mg_employee_leave_types[accumilation_period]": {required: true},
+      "mg_employee_leave_types[accumilation_count]": {required: true,number: true, min:0},
+      "mg_employee_leave_types[reset_period]": {required: true},
+      "mg_employee_leave_types[reset_date]": {required: true},
+      "mg_employee_leave_types[carry_forward_limit]": {required: true,number: true, min:0},
+      "mg_employee_leave_types[accumilation_period]": {required: true},
+      "minimum_year_experience": {required: true},
+      "minimum_month_experience": {required: true},
+      "mg_employee_leave_types[marital_status]": {required: true},
+      "mg_employee_leave_types[monthly_limit]": {required: true, number: true},
+            "mg_employee_leave_types[delay_time]": {required: true, number: true},
+            "mg_employee_leave_types[delay_days]": {required: true, number: true},
+            "mg_employee_leave_types[leave_deduction_count]": {required: true, number: true}
+
+        }
+    });
+
+
+});
+
+
+
+
+$("#mg_employee_leave_types_is_accumilation").change(function(){
+ 
+$(".accumulation_period_count").toggle();
+});
+
+
+$("#mg_employee_leave_types_is_carry_forward").change(function(){
+ 
+$(".carryforward-employee-Div-Class").toggle();
+});
+
+$("#mg_employee_leave_types_delay_deduction").change(function(){
+ 
+$(".delay_deduction_fields").toggle();
+});
+
+
+$("#mg_employee_leave_types_is_auto_reset").change(function(){
+ 
+$(".carryforward-employee-Divs-Class").toggle();
+});
+
+   
+ </script>
+

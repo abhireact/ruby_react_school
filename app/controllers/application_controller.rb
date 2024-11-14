@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  include JsonResponseHelper
   allow_browser versions: :modern
 
   def get_course
@@ -17,7 +18,6 @@ class ApplicationController < ActionController::Base
     render :json=> {courses: courses, courses_batches: courses_batches, employee_courses_batches:employee_courses_batches}, :layout => false
   end
 
-  
   def get_wing_course
     courses = MgCourse.where(mg_wing_id:params[:mg_wing_id],mg_time_table_id:params[:mg_time_table_id],is_deleted:0,mg_school_id:session[:current_user_school_id]).pluck(:course_name,:id) if params[:mg_wing_id].present?
     render :json => {:courses => courses}

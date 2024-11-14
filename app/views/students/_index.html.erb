@@ -1,0 +1,163 @@
+<!-- #Base Vesrion1.0 -->
+<%#version 1.1(16/04/2018 conflict resolved given @mamtha ) %>
+<!-- #version1.2(for password_reset 18/04/2018$@$!) -->
+<!-- #version1.3(for admission number in student details 28/05/2018 Mamtha) -->
+<!-- #version1.4(for removing "-" and double space from in student name 20/06/2018 Mamtha) -->
+<!-- version 1.8 student certificate link added by praveen on 31/01/2019 -->
+<% navigation_add t('students_list'),students_path %>
+
+<%if flash[:error].present?%>
+
+<%#= flash[:error]%>
+
+  <%end%>
+
+<!-- Student Search-->
+<%= hidden_field_tag :direction, params[:direction] %>
+<%= hidden_field_tag :sort, params[:sort] %>
+
+
+
+<!-- Student Search end-->
+<!-- List of students -->
+  <!--  <table>
+        <tr>
+          <th><%#= sortable "first_name" %></th>
+          <th><%#= sortable "admission_number" %></th>
+        </tr>
+   </table> -->
+   <h4 class="form-section-heading mc-margin-bottom-20"><%= t("studentslist") %></h4>
+<% if @student_list.length > 0 %>
+ <!-- for dependancy Added By Deepak Starts -->
+
+
+<%if @table_array.present? %>
+<div class="alert alert-danger">
+<% count = 0 
+student = MgStudent.find(@id)
+%>
+
+<p> <%= student.student_name %> Have Following Dependancies <% @table_array.each do |table_array| %>
+  <%link = get_dependent_student_models(table_array,@id)%> 
+  <%if link.present?%> 
+  <%if count == 1 %>
+    ,
+  <%end%>
+  <a href="<%=link[0]%>" target="_blank"><%= link[1] %></a>
+  <% count = 1%>
+  <%end%>
+  <%end%>
+</p>
+</div>
+
+ 
+<%end%>
+    <!--  for dependancy Added By Deepak Ends -->
+  <div class="mg_pagination">
+    
+
+    <div class="student-table-div-cls">
+
+        <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="student-table-header">
+              <th class="border-none"><%= sortable "first_name","Student Name"%></th>
+              <th class="border-none"><%= sortable "id","Admission Number" %></th>
+              <th class="border-none"><%= sortable "id","User Id" %></th>
+              <th class="border-none"><%= sortable "mg_batch_id","Class & Section" %></th>
+              <!-- <th class="border-none"><%#= sortable "mg_course_id","Class&Section" %></th> -->
+
+              <th><%= t("gender") %></th>
+              <th><%= t("actions") %></th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+             
+            <% @student_list.each do |student| %>
+            <tr class="even">
+
+              <% middle_name = student.try(:middle_name) != nil ? student.try(:middle_name).gsub("-","").gsub("  "," ") : student.try(:middle_name)
+
+              last_name = student.try(:last_name) != nil ? student.try(:last_name).gsub("-","").gsub("  "," ") : student.try(:last_name)
+              ful_name = "#{student.try(:first_name)}"+" "+"#{middle_name}"+" "+"#{last_name}"  %>
+              <td><%=  ful_name %></td>
+              <td><%=  student.class_roll_number %></td>
+
+              <td>
+
+                <%@admission=MgUser.find_by(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id],:id=>student.mg_user_id)
+                if @admission.present?%>
+                <%=@admission.user_name%>
+                  <% end %>
+                </td>
+
+              <% @batch_name = MgBatch.find_by_id(student.mg_batch_id)
+                if( !@batch_name.nil?)
+                 @course_name = MgCourse.find_by_id(@batch_name.mg_course_id)
+
+                 @batch_name = (@course_name.course_name) + "-"+@batch_name.name
+
+               end
+
+              %>
+              
+              <%#= @batch_name %>
+               
+              <% if !@batch_name.nil? %>
+                <td>
+                   <%= @batch_name %>
+                </td>
+             <%else%>
+                <td>--</td>
+            <%end%>   
+              
+              
+              <td class="mg-capitalize-text"><%= student.gender %></td>
+              <td>
+                        <%user=MgUser.find_by(:id=>student.mg_user_id)%>
+                <%= link_to "<i class=\"fa fa-exchange\"></i>".html_safe, {:controller => "employees", :action => "user_password",:id =>student.id,:user=>user.user_type} , :method=>'get' ,:title=>"Change Password" ,:class=>"mg-icon-btn"%>
+                 <%= link_to "<i class=\"fa fa-eye\"></i>".html_safe, {controller: "students", action: "show" ,id:student.id } ,:title=>"Show" ,:class=>"mg-icon-btn" %>
+                 
+                 <%=link_to "<i class=\"fa fa-user\"></i>".html_safe, {controller: "guardians", action: "student_guardian_show", id: student.id },:title=>"Manage Guardian" ,:class=>"mg-icon-btn" ,:style=>"margin-right: 3px;"%>
+                
+                  <%= link_to "<i class=\"fa fa-pencil-square-o\"></i>".html_safe, edit_student_path(student.id) ,:title=>"Edit",:class=>"mg-icon-btn" %>
+
+                  <%= link_to "<i class=\"fa fa-file-o\"></i>".html_safe,"/fees/student_certificates?admission_number=#{student.class_roll_number}&mg_student_id=#{student.id}", {:class=>"mg-icon-btn",:title=>"Student certificates"}%>
+                 
+                <%= link_to "<i class=\"fa fa-trash\"></i>".html_safe, {:controller => "students", :action => "delete",:id =>student.id }, :method=>'post' ,:title=>"Delete" ,:class=>"mg-icon-btn",data: { confirm: 'Are you sure to delete?' } %>
+             
+
+             </td>
+            </tr>
+
+            <% end %>
+            </tbody>
+           </table>
+           
+           <div class="pagination-align">
+              <%= will_paginate @student_list, :container => false %>
+           </div>
+      </div>
+
+      
+  </div>
+
+<% else %>
+  <h5>No Data... </h5>
+
+<% end %>
+<style>
+  .sort{
+    border: none;
+  }
+      .mg_pagination a {
+    padding: 0.2em 0.5em;
+    display: inline-block !important;
+    /*float: none !important;*/
+    margin-right: 0 !important;
+  }
+</style>
+            	
+
