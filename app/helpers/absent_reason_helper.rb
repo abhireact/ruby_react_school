@@ -1,0 +1,2 @@
+module AbsentReasonHelper
+end

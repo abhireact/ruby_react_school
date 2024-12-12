@@ -66,7 +66,8 @@
             { name: "Academic", link: "/academics" },
             { name: "Wings", link: "/wings" },
             { name: "Greeting Messages", link: "/mg_greeting_messages" },
-            { name: "Holiday List", link: "/attendances/holiday_lists" }
+            { name: "Holiday List", link: "/attendances/holiday_lists" },
+            { name: "Upload Set", link: "/upload_excel/upload_file" }
           ]
         },{name: "Student Settings",
             submodules: [
@@ -97,6 +98,12 @@
           submodules: [{name: "Manage Examination",
             submodules: [
               { name: "Exam Type", link: "/cbsc_examinations" },
+              { name: "Other Particular", link: "/other_particular" },
+              { name: "Other Grade", link: "/other_grade" },
+              { name: "Scholastic Grade", link: "/scholastic_grade" },
+              { name: "Absent Reason", link: "/absent_reason" },
+              { name: "Sub Subject", link: "/sub_subject" },
+              { name: "Remarks Entry", link: "/remarks_entry" },
       
             ]
           }]},
@@ -130,7 +137,8 @@
             submodules: [
               { name: "Addmission Date", link: "/addmissions" },
             ]
-          }]}] %>
+          }]}
+          ] %>
             <% modules.each do |module_item| %>
             <li class="nav-item">
               <% is_active_module = request.path == module_item[:link] || 

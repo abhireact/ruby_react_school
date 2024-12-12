@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
+ 
+
 
   def draw(routes_name)
     instance_eval(Rails.root.join("config/routes/#{routes_name}.rb").read)
   end
-
+  draw :upload_excel
   draw :sessions
   draw :wings
   draw :schools
@@ -14,18 +16,24 @@ Rails.application.routes.draw do
   draw :dashboards
   draw :addmissions
   draw :mg_admission_settings
-
-
-
+  draw :upload_excel_set_one
+  draw :upload_excel_set_four
+  draw :upload_excel_set_three
+  draw :upload_excel_set_five
+  draw :other_particular
   draw :cbsc_examinations
   draw :classes
-  
+  draw :remarks_entry
   draw :mg_employee_departments
   draw :mg_employee_positions
   draw :mg_employee_weekdays
   draw :batches
   draw :attendances
   draw :mg_employee_leave_types
+
+  draw :other_grade
+  draw :scholastic_grade
+  draw :absent_reason
   #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -33,6 +41,8 @@ Rails.application.routes.draw do
 
   draw :application
   draw :emp_subjects
+  draw :sub_subject
+ 
 
   # Reveal health status on /up
   get 'up' => 'rails/health#show', as: :rails_health_check
@@ -50,6 +60,7 @@ Rails.application.routes.draw do
   resources :mg_greeting_messages
   resources :demos
   resources :dummy
+  
 
 
   

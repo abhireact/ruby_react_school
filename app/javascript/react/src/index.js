@@ -32,6 +32,17 @@ import BatchSubjectsIndex from "./components/batch_subject";
 import SelectSubject from "./components/batch_subject/create";
 import StudentAttendance from "./components/attendance/student_attendance";
 import MgEmployeeLeaveTypeIndex from "./components/attendance/employee_leave_type";
+import UploadSet from "./components/Upload/UploadSet";
+import OtherParticular from "./components/Examination/OtherParticular";
+
+import OtherGrade from "./components/Examination/OtherGrade";
+import ScholasticGrade from "./components/Examination/ScholasticGrade";
+import AbsentReason from "./components/Examination/AbsentReason";
+import SubSubject from "./components/Examination/SubSubject";
+import RemarksEntry from "./components/Examination/RemarksEntry";
+
+
+
 // Mapping of element IDs to components
 const componentMapping = {
   reactRender: Home,
@@ -62,6 +73,13 @@ const componentMapping = {
   SelectSubject: SelectSubject,
   StudentAttendance: StudentAttendance,
   MgEmployeeLeaveTypeIndex: MgEmployeeLeaveTypeIndex,
+  UploadSet:UploadSet,
+  OtherParticular:OtherParticular,
+  OtherGrade,
+  ScholasticGrade,
+  AbsentReason,
+  SubSubject,
+  RemarksEntry
 };
 
 // Function to render a component

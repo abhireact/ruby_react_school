@@ -84,6 +84,28 @@ def get_class_section
 	Arel.sql("mg_courses.mg_time_table_id")
   )
 end
+def get_section_class
+	current_date = Date.today
+	MgBatch.where(
+	  is_deleted: 0,
+	  mg_school_id: session[:current_user_school_id]
+	).joins(:mg_course).pluck(
+	  Arel.sql("CONCAT(mg_courses.course_name, '-', mg_batches.name)"),
+	  Arel.sql("mg_batches.id"),
+	  Arel.sql("mg_courses.mg_time_table_id"),
+	
+	  Arel.sql("mg_courses.id") # Add mg_course_id here
+	).map do |name, mg_batch_id, mg_time_table_id, mg_course_id|
+	  {
+		name: name,
+		mg_batch_id: mg_batch_id,
+		mg_time_table_id: mg_time_table_id,
+		mg_course_id: mg_course_id # Include mg_course_id in the result
+	  }
+	end
+  end
+  
+  
 	def get_course_batch_name_all
 		#current_date =  Date.today
 		MgBatch.where(:is_deleted=>0,:mg_school_id=>session[:current_user_school_id]).joins(:mg_course).pluck("CONCAT(mg_courses.course_name,'-',mg_batches.name)","id")

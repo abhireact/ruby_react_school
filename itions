@@ -1,0 +1,15 @@
+
+[1mFrom:[0m /home/abhijit/ruby_react_school/app/controllers/upload_excel_controller.rb:623 UploadExcelController#upload_employees:
+
+    [1;34m618[0m:       }, [33m:unprocessable_entity[0m)
+    [1;34m619[0m:     [32mend[0m
+    [1;34m620[0m:   
+    [1;34m621[0m:     [1;34m# Process employees[0m
+    [1;34m622[0m:     employees_data = params[[33m:data[0m]
+ => [1;34m623[0m:     binding.pry
+    [1;34m624[0m:     employees_data.each_with_index [32mdo[0m |employee_data, index|
+    [1;34m625[0m:       row_number = index + [1;34m1[0m
+    [1;34m626[0m:       
+    [1;34m627[0m:       [32mbegin[0m
+    [1;34m628[0m:         [1;34m# Find or create related entities with proper error handling[0m
+

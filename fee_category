@@ -1,0 +1,15 @@
+
+[1mFrom:[0m /home/abhijit/ruby_react_school/app/controllers/upload_excel_set_four_controller.rb:80 UploadExcelSetFourController#upload_fee_category:
+
+    [1;34m75[0m:             [35mcreated_by[0m: user_id,
+    [1;34m76[0m:             [35mupdated_by[0m: user_id,
+    [1;34m77[0m:             [35mcreated_at[0m: current_time,
+    [1;34m78[0m:             [35mupdated_at[0m: current_time
+    [1;34m79[0m:           )
+ => [1;34m80[0m:           binding.pry
+    [1;34m81[0m:           [1;34m# Create the particular if it doesn't already exist[0m
+    [1;34m82[0m:           [32munless[0m [1;34;4mMgParticularType[0m.exists?(
+    [1;34m83[0m:             [35mparticular_name[0m: particulars,
+    [1;34m84[0m:             [35mmg_fee_category_id[0m: fee_category.id,
+    [1;34m85[0m:             [35mmg_school_id[0m: school_id,
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
   create_table "actions", id: :integer, charset: "latin1", force: :cascade do |t|
     t.text "sms_activity", size: :long, collation: "utf8_general_ci"
     t.datetime "created_at", precision: nil
@@ -18,34 +18,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "mg_module_id"
     t.integer "mg_school_id"
     t.boolean "is_deleted"
-  end
-
-  create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
-    t.bigint "byte_size", null: false
-    t.string "checksum"
-    t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
-
-  create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "blacklisted_tokens", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -89,6 +61,20 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "updated_by"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
+  end
+
+  create_table "email_configurations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "email_gateway"
+    t.string "email_address"
+    t.string "outgoing_smtp"
+    t.integer "server_port"
+    t.string "username"
+    t.string "password"
+    t.boolean "active"
+    t.boolean "use_ssl_tls"
+    t.integer "mg_school_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "fullcalendar_engine_event_series", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -347,6 +333,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["mg_user_id", "mg_school_id"], name: "mg_user_id"
   end
 
   create_table "mg_admission_documents", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -385,6 +372,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "dob_certi_content_type"
     t.integer "dob_certi_file_size"
     t.datetime "dob_certi_updated_at", precision: nil
+    t.string "family_photo_file_name"
+    t.string "family_photo_content_type"
+    t.integer "family_photo_file_size"
+    t.datetime "family_photo_updated_at", precision: nil
     t.index ["mg_school_id"], name: "index_mg_admission_documents_on_mg_school_id"
     t.index ["mg_student_admission_id"], name: "index_mg_admission_documents_on_mg_student_admission_id"
   end
@@ -464,6 +455,23 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "mg_time_table_id"
+  end
+
+  create_table "mg_admit_card_settings", id: :integer, charset: "latin1", force: :cascade do |t|
+    t.integer "mg_time_table_id"
+    t.integer "mg_course_id"
+    t.integer "mg_batch_id"
+    t.integer "mg_subject_id"
+    t.datetime "date", precision: nil
+    t.boolean "is_applicable"
+    t.integer "mg_school_id"
+    t.boolean "is_deleted"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
   end
 
   create_table "mg_agents", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -1040,7 +1048,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "updated_at", precision: nil
     t.integer "second_mg_employee_id"
     t.index ["mg_school_id"], name: "mg_school_id"
-    t.index ["mg_school_id"], name: "mg_school_id_2"
   end
 
   create_table "mg_bed_assignments", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -1572,6 +1579,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "obtained_marks"
     t.text "grade_comment"
     t.index ["mg_school_id", "mg_batch_id"], name: "mg_school_id_2"
+    t.index ["mg_school_id", "mg_student_id"], name: "mg_school_id_3"
     t.index ["mg_school_id"], name: "mg_school_id"
   end
 
@@ -2020,6 +2028,22 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "updated_at", precision: nil
   end
 
+  create_table "mg_consolidated_subjects", id: :integer, charset: "latin1", force: :cascade do |t|
+    t.integer "mg_time_table_id"
+    t.integer "mg_course_id"
+    t.integer "mg_batch_id"
+    t.integer "mg_subject_id"
+    t.string "subject_name"
+    t.string "weightage"
+    t.boolean "consolidated"
+    t.boolean "is_deleted"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+  end
+
   create_table "mg_course_observation_groups", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "mg_observation_group_id"
     t.integer "mg_course_id"
@@ -2213,6 +2237,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "upload_type"
     t.string "cloud_url"
     t.integer "original_file_id"
+    t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["mg_user_id", "mg_school_id"], name: "mg_user_id"
   end
 
   create_table "mg_document_trackers", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -2277,6 +2303,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["mg_user_id", "mg_school_id"], name: "mg_user_id"
   end
 
   create_table "mg_employee_attendances", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -2511,6 +2538,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "delay_days"
     t.integer "leave_deduction_count"
     t.integer "monthly_limit"
+    t.index ["mg_school_id"], name: "mg_school_id"
   end
 
   create_table "mg_employee_leaves", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -2539,7 +2567,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "updated_by"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.boolean "physical_measurement"
   end
 
   create_table "mg_employee_pay_deductions", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -2713,6 +2740,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.date "archive_date"
     t.boolean "sms_access"
     t.boolean "other_mark_entry_access"
+    t.index ["mg_school_id"], name: "mg_school_id"
   end
 
   create_table "mg_entrance_exam_details", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -2877,7 +2905,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "guardian_release_date", precision: nil
     t.datetime "school_reopen_date", precision: nil
     t.date "due_date"
-    t.integer "paid_fee_amount_percentage"
+    t.string "paid_fee_amount_percentage"
     t.datetime "employee_release_date", precision: nil
     t.index ["mg_batch_id"], name: "index_mg_examination_report_release_dates_on_mg_batch_id"
     t.index ["mg_school_id"], name: "index_mg_examination_report_release_dates_on_mg_school_id"
@@ -3174,6 +3202,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "updated_by"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
+    t.index ["mg_fee_collection_id", "mg_school_id"], name: "mg_fee_collection_id"
     t.index ["mg_school_id"], name: "mg_school_id"
   end
 
@@ -3193,6 +3222,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "updated_at", precision: nil
     t.boolean "ignore_late_fee"
     t.index ["mg_fee_collection_id", "mg_student_id"], name: "mg_fee_collection_particular_index"
+    t.index ["mg_school_id"], name: "mg_school_id"
   end
 
   create_table "mg_fee_collections", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -3759,6 +3789,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "mg_employee_category_id"
     t.string "applicable_for"
     t.integer "mg_time_table_id"
+    t.string "holiday_code"
+    t.text "mg_wing_id"
+    t.boolean "payable"
   end
 
   create_table "mg_homework_categories", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -4809,6 +4842,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "updated_by"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
+    t.index ["to_user_id", "mg_school_id"], name: "to_user_id"
   end
 
   create_table "mg_notification_documentations", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5001,6 +5035,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "device_type"
     t.string "merchant_name"
     t.string "mcc_code"
+    t.index ["mg_school_id", "mg_wing_id"], name: "mg_school_id"
+    t.index ["mg_school_id"], name: "mg_school_id_2"
   end
 
   create_table "mg_online_question_types", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5220,6 +5256,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["mg_user_id", "mg_school_id"], name: "mg_user_id"
   end
 
   create_table "mg_placement_student_details", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5441,20 +5478,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "updated_at", precision: nil
   end
 
-  create_table "mg_rbacs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "mg_role_id"
-    t.string "module_name"
-    t.string "sub_module_name"
-    t.boolean "status"
-    t.integer "mg_user_id"
-    t.integer "mg_school_id"
-    t.boolean "is_deleted"
-    t.integer "created_by"
-    t.integer "updated_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "mg_registration_fee_collections", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "student_name"
     t.integer "mg_fee_registration_id"
@@ -5548,6 +5571,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "updated_at", precision: nil
     t.integer "mg_cbsc_exam_type_id"
     t.boolean "subjects"
+    t.boolean "subject_two"
   end
 
   create_table "mg_report_front_page_settings", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5767,6 +5791,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "mg_school_id"
     t.boolean "is_subsim"
     t.boolean "dashboard"
+    t.index ["mg_school_id"], name: "mg_school_id"
   end
 
   create_table "mg_roles_permissions", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5795,6 +5820,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "calculation_type"
     t.integer "percentage"
     t.string "belong_to_calculation"
+    t.index ["mg_school_id"], name: "mg_school_id"
   end
 
   create_table "mg_scholastic_exam_components", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5842,6 +5868,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "rank_type"
     t.string "absent_reason"
     t.boolean "grade_particular"
+    t.boolean "consolidated"
+    t.boolean "graph"
   end
 
   create_table "mg_scholastic_grades_stores", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5988,6 +6016,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "reset_password_type"
     t.boolean "due_date_check"
     t.integer "fee_by_range"
+    t.index ["subdomain"], name: "subdomain"
   end
 
   create_table "mg_section_details", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -6054,6 +6083,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.index ["mg_sms_configuration_id"], name: "index_mg_sms_addion_attributes_on_mg_sms_configuration_id"
   end
 
+  create_table "mg_sms_additional_attributes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "key"
+    t.string "value"
+    t.integer "is_deleted"
+    t.integer "mg_school_id"
+    t.integer "sms_configuration_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "mg_sms_configerations", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "url"
     t.boolean "support_multiple_sms"
@@ -6102,6 +6141,30 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.boolean "is_deleted"
+    t.index ["mg_school_id"], name: "mg_school_id"
+  end
+
+  create_table "mg_sms_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "mg_sms_request_id"
+    t.string "user_name"
+    t.integer "to_user_id"
+    t.integer "from_user_id"
+    t.date "date"
+    t.text "response"
+    t.string "status", default: "Pending"
+    t.string "mobile_number"
+    t.string "from_module"
+    t.boolean "is_deleted", default: false
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_user_id"], name: "index_mg_sms_details_on_from_user_id"
+    t.index ["mg_school_id"], name: "index_mg_sms_details_on_mg_school_id"
+    t.index ["mg_sms_request_id"], name: "index_mg_sms_details_on_mg_sms_request_id"
+    t.index ["to_user_id"], name: "index_mg_sms_details_on_to_user_id"
   end
 
   create_table "mg_sms_priorities", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -6116,6 +6179,26 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.string "vendor_name"
+  end
+
+  create_table "mg_sms_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "from_user_id"
+    t.string "sms_type"
+    t.text "message"
+    t.integer "mg_school_id"
+    t.string "status"
+    t.string "receiver_type"
+    t.integer "receiver_id"
+    t.integer "template_id"
+    t.integer "pe_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "is_deleted"
+    t.index ["from_user_id"], name: "index_mg_sms_requests_on_from_user_id"
+    t.index ["mg_school_id"], name: "index_mg_sms_requests_on_mg_school_id"
   end
 
   create_table "mg_specializations", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -6628,6 +6711,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.float "family_annual_income"
     t.string "form_no"
     t.boolean "is_f_m_student_of_this_institution"
+    t.string "height"
+    t.string "father_office_address"
+    t.string "father_whatsapp_number"
+    t.string "nature_of_family"
+    t.string "emergency_contact_details"
+    t.string "emergency_contact_name"
+    t.string "mother_tongue"
   end
 
   create_table "mg_student_appear_exams", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -6677,7 +6767,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "updated_by"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.index ["mg_school_id", "mg_student_id"], name: "mg_school_id_2"
+    t.integer "no_of_back_days"
+    t.index ["mg_school_id", "mg_batch_id"], name: "mg_school_id_2"
     t.index ["mg_school_id"], name: "mg_school_id"
   end
 
@@ -6696,6 +6787,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "from_academic_year"
     t.string "to_academic_year"
     t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["mg_student_id", "mg_school_id"], name: "mg_student_id"
   end
 
   create_table "mg_student_batch_history_bkps", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -6792,6 +6884,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.datetime "updated_at", precision: nil
     t.boolean "primary_contact"
     t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["mg_student_id", "mg_school_id"], name: "mg_student_id"
   end
 
   create_table "mg_student_hobbies", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -6908,6 +7001,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "rank_max_marks"
     t.string "final_grade"
     t.string "subjects"
+    t.string "subject_two"
   end
 
   create_table "mg_student_scholarships", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -7016,6 +7110,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.integer "mg_archive_reason_id"
     t.string "fee_code"
     t.string "pen_number"
+    t.string "height"
     t.index ["mg_school_id"], name: "mg_school_id"
   end
 
@@ -7088,6 +7183,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.boolean "is_archive"
     t.integer "index"
     t.string "scoring_type"
+    t.string "display_name"
   end
 
   create_table "mg_syllabus_trackers", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -7347,6 +7443,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.string "reset_password"
     t.boolean "need_to_reset_password"
     t.index ["mg_school_id"], name: "mg_school_id"
+    t.index ["user_name"], name: "user_name"
   end
 
   create_table "mg_vaccination_details", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -7460,13 +7557,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.index ["user_id"], name: "index_refresh_tokens_on_user_id"
   end
 
-  create_table "report_cards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.integer "mg_student_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "sessions", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
@@ -7476,6 +7566,83 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_065015) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  create_table "sms_configurations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "vendor_name"
+    t.string "url"
+    t.string "msg_attribute"
+    t.string "unicode_key"
+    t.string "unicode_value"
+    t.string "request_type"
+    t.string "sender_id"
+    t.string "sender_id_value"
+    t.string "mobile_number_attribute"
+    t.string "english_key"
+    t.string "english_value"
+    t.boolean "support_multiple_sms", default: false
+    t.integer "max_sms_support"
+    t.integer "mg_school_id"
+    t.boolean "is_deleted", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sms_temps", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "action_id"
+    t.text "message"
+    t.integer "is_deleted"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.integer "mg_module_id"
+    t.string "module_name"
+    t.string "pe_id"
+    t.string "template_id"
+    t.string "vendor_name"
+    t.string "activity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "student_measurements", id: :integer, charset: "latin1", force: :cascade do |t|
+    t.integer "mg_time_table_id"
+    t.integer "mg_school_id"
+    t.integer "mg_course_id"
+    t.integer "mg_batch_id"
+    t.integer "mg_student_id"
+    t.integer "mg_cbsc_exam_type_id"
+    t.string "height"
+    t.string "weight"
+    t.boolean "is_deleted"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+  end
+
+  create_table "templates", id: :integer, charset: "latin1", force: :cascade do |t|
+    t.integer "action_id"
+    t.text "message", size: :long, collation: "utf8_general_ci"
+    t.integer "is_deleted"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "mg_module_id"
+    t.string "pe_id"
+    t.string "template_id"
+    t.string "vendor_name"
+  end
+
+  create_table "whitelisted_tokens", id: :integer, charset: "latin1", force: :cascade do |t|
+    t.string "jti"
+    t.integer "user_id"
+    t.string "user_type"
+    t.datetime "exp", precision: nil
+    t.datetime "iat", precision: nil
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["jti"], name: "index_whitelisted_tokens_on_jti", unique: true
+    t.index ["user_id"], name: "index_whitelisted_tokens_on_user_id"
+  end
 end

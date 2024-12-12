@@ -11,15 +11,19 @@ import {
   Offcanvas,
 } from "react-bootstrap";
 import { Edit, Trash, Search } from "lucide-react";
+import { message } from 'antd';
+import { Popconfirm } from 'antd';
+import { selectClasses } from "@mui/material";
 
 const validationSchema = Yup.object().shape({
   exam_type_name: Yup.string().required("Exam type name is required"),
-  description: Yup.string().required("Description is required"),
+  description: Yup.string(),
   mg_time_table_id: Yup.string().required("Academic Year is required"),
 });
 
 const ExamType = ({ userData }) => {
   const [examTypes, setExamTypes] = useState(userData.examtype_data || []);
+   console.log(userData,"user Data")
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,11 +31,16 @@ const ExamType = ({ userData }) => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingExamType, setEditingExamType] = useState(null);
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState("");
+  const [selectedTableAcademicYear, setSelectedTableAcademicYear] = useState(userData.academicYearsData[userData.academicYearsData.length - 1].id.toString());
+
 
   const [academicYearData, setAcademicYearData] = useState(userData.academicYearsData || []);
-
   const filteredExamTypes = useMemo(() => {
-    return examTypes.filter((examType) =>
+    let result = examTypes;
+
+    // Filter by search term
+    result = result.filter((examType) =>
       Object.entries(examType).some(([key, value]) => {
         if (typeof value === "string") {
           return value.toLowerCase().includes(searchTerm.toLowerCase());
@@ -39,7 +48,16 @@ const ExamType = ({ userData }) => {
         return false;
       })
     );
-  }, [examTypes, searchTerm]);
+
+    // Filter by academic year if selected
+    if (selectedTableAcademicYear) {
+      result = result.filter(
+        (examType) => examType.mg_time_table_id.toString() === selectedTableAcademicYear
+      );
+    }
+
+    return result;
+  }, [examTypes, searchTerm, selectedTableAcademicYear]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -94,33 +112,43 @@ const ExamType = ({ userData }) => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this exam type?")) {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
-      axios
-        .delete(`/cbsc_examinations/${id}`, {
-          headers: {
-            "X-CSRF-Token": csrfToken,
-          },
-        })
-        .then((response) => {
-          if (response.data.status === "success") {
-            // Remove the deleted item from the state
-            setExamTypes((prevExamTypes) => prevExamTypes.filter((examType) => examType.id !== id));
-            // Optional: Show success message
-            alert(response.data.message);
-          } else {
-            throw new Error(response.data.message);
-          }
-        })
-        .catch((error) => {
-          // Handle both network errors and server-returned errors
-          const errorMessage = error.response?.data?.message || error.message;
-          alert(errorMessage);
-          console.error("Error deleting exam type:", error);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  
+    // Show loading message
+    const msgKey = 'deletingExamType';
+    message.loading({ content: 'Deleting Exam Type...', key: msgKey });
+  
+    axios
+      .delete(`/cbsc_examinations/${id}`, {
+        headers: {
+          "X-CSRF-Token": csrfToken,
+        },
+      })
+      .then((response) => {
+        if (response.data.status !== 200) {
+          // Remove the deleted item from the state
+          message.success({
+            content: 'Exam Type deleted successfully!',
+            key: msgKey,
+          });
+  
+          // Update local state and reload
+          window.location.reload();
+        } else {
+          throw new Error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        // Handle both network errors and server-returned errors
+        const errorMessage = error.response?.data?.message || error.message;
+        // Error message
+        message.error({
+          content: `Failed to delete Exam Type: ${errorMessage}`,
+          key: msgKey,
         });
-    }
+      });
   };
+  
 
   const handleEditClick = (examType) => {
     // Set the academic year first
@@ -182,7 +210,7 @@ const ExamType = ({ userData }) => {
           throw new Error("Network response was not ok");
         }
         setShowEditForm(false);
-        // window.location.reload();
+         window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -192,7 +220,7 @@ const ExamType = ({ userData }) => {
         setSubmitting(false);
       });
   };
-  const [selectedAcademicYear, setSelectedAcademicYear] = useState("");
+ 
   const [filteredClassSections, setFilteredClassSections] = useState([]);
   const [selectedClass, setSelectedClass] = useState([]);
   useEffect(() => {
@@ -210,6 +238,10 @@ const ExamType = ({ userData }) => {
   const handleAcademicYearChange = (e) => {
     const yearId = e.target.value;
     setSelectedAcademicYear(yearId);
+  };
+  const handleTableAcademicYearChange = (e) => {
+    const yearId = e.target.value;
+    setSelectedTableAcademicYear(yearId);
   };
 
   const handleSelectChange = (e) => {
@@ -231,28 +263,31 @@ const ExamType = ({ userData }) => {
               variant="info"
               size="sm"
               className="me-2"
-              onClick={() => setShowCreateForm(true)}
+              onClick={() =>{setShowCreateForm(true)
+                setSelectedClass([])}
+              }
             >
               + New Exam Type
             </Button>
           </div>
         </div>
         <div className="card-body px-0 pb-2">
-          <div className="d-flex justify-content-between align-items-center px-3 mb-3">
-            <div className="d-flex align-items-center">
-              <span>Show</span>
+        <div className="d-flex justify-content-between align-items-center px-3 mb-3">
+            <div className="col-md-4">
+            <label>Academic Year</label>
               <BootstrapForm.Select
-                size="sm"
-                className="mx-2"
-                value={entriesPerPage}
-                onChange={(e) => setEntriesPerPage(Number(e.target.value))}
+              
+                value={selectedTableAcademicYear}
+                onChange={handleTableAcademicYearChange}
+                className="form-control"
               >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
+                <option value="">Choose Academic Years</option>
+                {academicYearData.map((year) => (
+                  <option key={year.id} value={year.id}>
+                    {year.name}
+                  </option>
+                ))}
               </BootstrapForm.Select>
-              <span>entries</span>
             </div>
             <InputGroup className="w-auto">
               <InputGroup.Text>
@@ -287,13 +322,21 @@ const ExamType = ({ userData }) => {
                     >
                       <Edit size={18} />
                     </Button>
+                    <Popconfirm
+                    title="Are you sure you want to delete this exam type?"
+                    description="This action cannot be undone"
+                    onConfirm={() => handleDelete(item.id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
                     <Button
                       variant="link"
                       className="text-danger p-0"
-                      onClick={() => handleDelete(item.id)}
+                      
                     >
                       <Trash size={18} />
                     </Button>
+                    </Popconfirm>
                   </td>
                 </tr>
               ))}
@@ -418,10 +461,10 @@ const ExamType = ({ userData }) => {
                 </div>
                 {selectedAcademicYear && (
                   <div className="row">
-                    <h3>Select Classes and Sections</h3>
+                    <h5>Select Classes and Sections</h5>
                     <div
                       style={{
-                        maxHeight: "300px",
+                        maxHeight: "200px",
                         overflowY: "scroll",
                         border: "1px solid #ccc",
                         padding: "10px",
@@ -547,10 +590,10 @@ const ExamType = ({ userData }) => {
                   </div>
                   {selectedAcademicYear && (
                     <div className="row">
-                      <h3>Select Classes and Sections</h3>
+                      <h5>Select Classes and Sections</h5>
                       <div
                         style={{
-                          maxHeight: "300px",
+                          maxHeight: "200px",
                           overflowY: "scroll",
                           border: "1px solid #ccc",
                           padding: "10px",

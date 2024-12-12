@@ -772,7 +772,7 @@ const [showNewSectionForm, setShowNewSectionForm] = useState(false);
                   start_date: "",
                   end_date: ""
                 }}
-                validationSchema={sectionValidationSchema}
+                // validationSchema={}
                 onSubmit={handleCreateSection}
               >
                 {({ errors, touched, isSubmitting }) => (

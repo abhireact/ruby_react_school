@@ -1,0 +1,2 @@
+module OtherParticularHelper
+end

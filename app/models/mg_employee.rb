@@ -18,7 +18,7 @@ class MgEmployee < ApplicationRecord
   delegate :department_name, to: :mg_employee_department
   delegate :category_name, to: :mg_employee_category
   delegate :user_name, to: :mg_user
-  belongs_to(:mg_bank_detail)
+  belongs_to :mg_bank_detail, optional: true
   has_many :mg_employee_grade_components,  dependent: :destroy 
   has_one :mg_employee_bank,  dependent: :destroy 
   has_many :mg_bank_account_details,  dependent: :destroy 
