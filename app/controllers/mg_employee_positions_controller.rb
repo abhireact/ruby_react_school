@@ -1,4 +1,5 @@
 class MgEmployeePositionsController < ApplicationController
+  include JsonResponseHelper # Include the concern
   before_action :login_required
   layout "mindcom"
   
@@ -62,6 +63,11 @@ class MgEmployeePositionsController < ApplicationController
       render json: { errors: 'Failed to delete the position.' }, status: :unprocessable_entity
     end
   end
+  def show_positions
+    @profiles_data = MgEmployeePosition.where(is_deleted: '0', mg_school_id: session[:current_user_school_id])
+    
+    render_json_response(@profiles_data)
+    end
   
 
   private

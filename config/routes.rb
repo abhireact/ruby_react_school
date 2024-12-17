@@ -30,10 +30,13 @@ Rails.application.routes.draw do
   draw :batches
   draw :attendances
   draw :mg_employee_leave_types
-
   draw :other_grade
   draw :scholastic_grade
   draw :absent_reason
+  draw :exam_report_releases
+  draw :other_marks_entry
+ 
+
   #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -1,27 +1,4 @@
-<!-- Sec --> 
-
-
-<!-- breadcrumbs Work -->
-<% navigation_add 'Employee Profile', mg_employee_positions_path %>
-
-<!-- breadcrumbs Work -->
-
-
-
-<!-- Partial left content -->
-<%#= render  partial: 'master_settings/master_settings_left.html' %>
-<!-- Partial Index -->
-<%= render partial: 'index' %>
-<!-- Partial Section close-->
-<%#= render partial: 'application/emp_section_close' %>
-
-
-<script type="text/javascript">
-$(document).ready(function(){
-    focusCurrentTab("manageEmployeePosition","createManPosLiID");
-});
-</script>
-
+<div id="EmployeeProfile" data-user="<%= @react_data.to_json %>"></div>
 
 
 

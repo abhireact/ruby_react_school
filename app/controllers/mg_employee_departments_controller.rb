@@ -1,4 +1,5 @@
 class MgEmployeeDepartmentsController < ApplicationController
+  include JsonResponseHelper # Include the concern
   before_action :login_required
   layout "mindcom"
 
@@ -9,6 +10,11 @@ class MgEmployeeDepartmentsController < ApplicationController
   def new
     @employee_department = MgEmployeeDepartment.new
   end
+  def show_departments
+    @departments_data = MgEmployeeDepartment.where(is_deleted: '0', mg_school_id: session[:current_user_school_id])
+    
+    render_json_response(@departments_data)
+    end
 
   def create
     @emp_dep = MgEmployeeDepartment.new(employee_department_params)

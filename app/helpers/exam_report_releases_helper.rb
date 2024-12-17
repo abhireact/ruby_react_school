@@ -1,0 +1,2 @@
+module ExamReportReleasesHelper
+end

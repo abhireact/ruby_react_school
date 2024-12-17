@@ -25,6 +25,7 @@ class MgEmployeeLeaveTypesController < ApplicationController
 		 
 		end
 
+
 		def create
 			mg_school_id=session[:current_user_school_id]
 			school=MgSchool.find(mg_school_id)

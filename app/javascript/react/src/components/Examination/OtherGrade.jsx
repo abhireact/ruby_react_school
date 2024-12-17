@@ -20,6 +20,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const OtherGrade = ({ userData }) => {
+  console.log(userData)
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState(userData.batches_data || []);
   const [academicYears, setAcademicYears] = useState(
@@ -34,6 +35,7 @@ const OtherGrade = ({ userData }) => {
   const fetchGrades = () => {
     axios.get(`other_grade/show_other_grades`)
       .then(response => {
+         console.log(response.data,"response data")
         setClasses(response.data);
       })
       .catch(error => {

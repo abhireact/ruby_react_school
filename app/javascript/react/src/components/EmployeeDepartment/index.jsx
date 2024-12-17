@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { message } from 'antd';
+import { Popconfirm } from 'antd';
 import {
     Table,
     Button,
@@ -25,11 +27,22 @@ const editValidationSchema = Yup.object().shape({
 
 
 
-const DepartmentIndex = ({ userData }) => {
+const EmployeeDepartment = ({ userData }) => {
     console.log(userData, "user data");
 
     const [departmentData, setDepartmentData] = useState(userData || []);
-
+  
+    const fetchData = () => {
+        axios.get(`mg_employee_departments/show_departments`)
+          .then(response => {
+             console.log(response.data,"response data")
+             setDepartmentData(response.data);
+          })
+          .catch(error => {
+            console.error("Error while fetching data", error);
+          });
+      };
+      useEffect(()=>{fetchData();},[])
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -68,16 +81,16 @@ const DepartmentIndex = ({ userData }) => {
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content");
 
-        fetch("/mg_employee_position/create", {
+        fetch("/mg_employee_departments/create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": token,
             },
             body: JSON.stringify({
-                mg_employee_position: {
-                    mg_employee_category_id: values.mg_employee_category_id,
-                    position_name: values.position_name,
+                mg_employee_department: {
+                    department_name: values.department_name,
+                    department_code: values.department_code,
                     status: values.status
                 }
             }),
@@ -85,14 +98,15 @@ const DepartmentIndex = ({ userData }) => {
             .then((response) => response.json())
             .then((data) => {
                 setShowCreateForm(false);
-                window.location.reload();
+                message.success("Created Successfully")
+                fetchData();
             })
             .catch((error) => console.error("Error:", error))
             .finally(() => setSubmitting(false));
     };
 
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this Department?")) {
+
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
@@ -104,14 +118,15 @@ const DepartmentIndex = ({ userData }) => {
                     },
                 })
                 .then(() => {
-                    window.location.reload();
+                    fetchData();
+                    message.success("Deleted Successfully")
                     // Optionally, you can add a success message here
                 })
                 .catch((error) => {
                     console.error("Error Deleting Department:", error);
 
                 });
-        }
+        
     };
 
 
@@ -151,7 +166,8 @@ const DepartmentIndex = ({ userData }) => {
             .then((data) => {
 
                 setShowEditForm(false);
-                window.location.reload();
+                message.success("Updated Successfully")
+                fetchData();
             })
             .catch((error) => console.error("Error:", error))
             .finally(() => setSubmitting(false));
@@ -184,12 +200,7 @@ const FormikSwitch = ({ field, form }) => (
                             >
                                 + New Department
                             </Button>
-                            <Button variant="outline-info" size="sm" className="me-2">
-                                Import
-                            </Button>
-                            <Button variant="outline-info" size="sm">
-                                Export
-                            </Button>
+                     
                         </div>
                     </div>
                 </div>
@@ -246,13 +257,20 @@ const FormikSwitch = ({ field, form }) => (
                                         >
                                             <Edit size={18} />
                                         </Button>
-                                        <Button
-                                            variant="link"
-                                            className="text-danger p-0"
-                                            onClick={() => handleDelete(departmentItem.id)}
-                                        >
-                                            <Trash size={18} />
-                                        </Button>
+                                                <Popconfirm
+                                                                        title="Are you sure you want to delete this Department?"
+                                                                        description="This action cannot be undone"
+                                                                        onConfirm={() => handleDelete(departmentItem.id)}
+                                                                        okText="Yes"
+                                                                        cancelText="No"
+                                                                      >
+                                                                        <Button
+                                                                          variant="link"
+                                                                          className="text-danger p-0"
+                                                                        >
+                                                                          <Trash size={18} />
+                                                                        </Button>
+                                                                      </Popconfirm>
 
 
                                     </td>
@@ -466,4 +484,4 @@ const FormikSwitch = ({ field, form }) => (
     );
 };
 
-export default DepartmentIndex;
+export default EmployeeDepartment;

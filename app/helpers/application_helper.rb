@@ -265,7 +265,41 @@ def get_section_class
 		
     	return student_list
   	end
-
+	def get_students_by_current_academic_year(school_id)
+		# Fetch the current academic year for the given school
+		current_academic_year = get_current_academic_year(school_id)
+	  
+		# Initialize the student list
+		student_list = nil
+	  
+		# Retrieve students in active batches for the current academic year
+		batch_student_ids = MgStudent.where(
+		  is_deleted: 0,
+		  mg_school_id: school_id,
+		  is_archive: 0
+		).order(:first_name).pluck(:id)
+	  
+		# Retrieve students promoted into active batches for the current academic year
+		promotion_student_ids = MgStudentBatchHistory.where(
+		  from_academic_year: current_academic_year,
+		  mg_school_id: school_id,
+		  is_deleted: false
+		).pluck(:mg_student_id)
+	  
+		# Combine and deduplicate student IDs from both sources
+		student_ids = (batch_student_ids + promotion_student_ids).uniq
+	  
+		# Fetch the final list of students
+		student_list = MgStudent.where(
+		  id: student_ids,
+		  is_deleted: 0,
+		  mg_school_id: school_id,
+		  is_archive: 0
+		)
+	  
+		return student_list
+	end
+	  
   	def get_students_detail_for_selected_student(academic_year, batch_id, school_id,student_id)
 
 		current_academic_year = get_current_academic_year(session[:current_user_school_id]) 

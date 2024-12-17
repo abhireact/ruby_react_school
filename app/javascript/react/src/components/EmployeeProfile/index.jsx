@@ -12,6 +12,8 @@ import {
     Modal,
 } from "react-bootstrap";
 import {Edit, Trash, Search} from "lucide-react";
+import { message } from 'antd';
+import { Popconfirm } from 'antd';
 
 
 const validationSchema = Yup.object().shape({
@@ -25,8 +27,10 @@ const editValidationSchema = Yup.object().shape({
 
 
 
-const DepartmentIndex = ({ userData }) => {
+const EmployeeProfile = ({ userData }) => {
     console.log(userData, "user data");
+    
+  
     const convertedData = userData.categoryData.map(([category_name, category_id]) => ({ category_id, category_name }));
 
 
@@ -36,13 +40,25 @@ const DepartmentIndex = ({ userData }) => {
     });
 
     const [categoryData,SetCategoryData] = useState(convertedData|| []);
-    const [profileData, setProfileData] = useState(userData?.positionData.map(item => {
-        return {
-            ...item,
-            mg_employee_category_id: categoryMap[item.mg_employee_category_id] || "Unknown"
-        };
-    })
-    || []);
+    console.log(categoryData,"category data")
+    const [profileData, setProfileData] = useState([]);
+    const fetchData = () => {
+        axios.get(`mg_employee_positions/show_positions`)
+          .then(response => {
+             console.log(response.data,"response data")// userData.positionData
+             setProfileData(response.data.map(item => {
+                return {
+                    ...item,
+                    mg_employee_category_id: categoryMap[item.mg_employee_category_id] || "Unknown"
+                };
+            })
+            || []);
+          })
+          .catch(error => {
+            console.error("Error while fetching data", error);
+          });
+      };
+      useEffect(()=>{fetchData();},[])
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -98,14 +114,15 @@ const DepartmentIndex = ({ userData }) => {
             .then((response) => response.json())
             .then((data) => {
                 setShowCreateForm(false);
-                window.location.reload();
+                fetchData();
+                message.success("Created Successfully")
             })
             .catch((error) => console.error("Error:", error))
             .finally(() => setSubmitting(false));
     };
 
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this Department?")) {
+      
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
@@ -117,14 +134,15 @@ const DepartmentIndex = ({ userData }) => {
                     },
                 })
                 .then(() => {
-                    window.location.reload();
+                    fetchData();
+                      message.success("Deleted Successfully")
                     // Optionally, you can add a success message here
                 })
                 .catch((error) => {
                     console.error("Error Deleting Department:", error);
 
                 });
-        }
+      
     };
 
 
@@ -137,9 +155,15 @@ const DepartmentIndex = ({ userData }) => {
     // ... (keep existing functions)
 
     const handleEditClick = (profileItem) => {
-        setEditingProfile(profileItem);
+        setEditingProfile({
+            ...profileItem,
+            mg_employee_category_id: Object.keys(categoryMap).find(
+                key => categoryMap[key] === profileItem.mg_employee_category_id
+            )
+        });
         setShowEditForm(true);
     };
+    
 
     const handleEditSubmit = (values, { setSubmitting }) => {
         const token = document
@@ -164,7 +188,8 @@ const DepartmentIndex = ({ userData }) => {
             .then((data) => {
 
                 setShowEditForm(false);
-                window.location.reload();
+                message.success("Updated Successfully")
+                fetchData();
             })
             .catch((error) => console.error("Error:", error))
             .finally(() => setSubmitting(false));
@@ -197,12 +222,7 @@ const FormikSwitch = ({ field, form }) => (
                             >
                                 + New Profile
                             </Button>
-                            <Button variant="outline-info" size="sm" className="me-2">
-                                Import
-                            </Button>
-                            <Button variant="outline-info" size="sm">
-                                Export
-                            </Button>
+     
                         </div>
                     </div>
                 </div>
@@ -259,13 +279,21 @@ const FormikSwitch = ({ field, form }) => (
                                         >
                                             <Edit size={18} />
                                         </Button>
-                                        <Button
+                       
+                                                      <Popconfirm
+                                          title="Are you sure you want to delete this Position?"
+                                          description="This action cannot be undone"
+                                          onConfirm={() => handleDelete(profileItem.id)}
+                                          okText="Yes"
+                                          cancelText="No"
+                                        >
+                                          <Button
                                             variant="link"
                                             className="text-danger p-0"
-                                            onClick={() => handleDelete(profileItem.id)}
-                                        >
+                                          >
                                             <Trash size={18} />
-                                        </Button>
+                                          </Button>
+                                        </Popconfirm>
 
 
                                     </td>
@@ -486,7 +514,7 @@ const FormikSwitch = ({ field, form }) => (
                                                 className="btn btn-info my-4"
                                                 disabled={isSubmitting}
                                             >
-                                                {isSubmitting ? "Updating..." : "Update Department"}
+                                                {isSubmitting ? "Updating..." : "Update"}
                                             </button>
                                         </div>
                                     </div>
@@ -502,4 +530,4 @@ const FormikSwitch = ({ field, form }) => (
     );
 };
 
-export default DepartmentIndex;
+export default EmployeeProfile;

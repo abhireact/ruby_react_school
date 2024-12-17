@@ -60,12 +60,18 @@ class OtherGradeController < ApplicationController
   def delete_other_grade
     @grades = MgCbscCoScholasticGrade.find(params[:id])
     boolVal = MgDependancyClass.coScholasticExamsType_dependancy("mg_cbsc_co_scholastic_exam_component_id", params[:id])
-    
+  
     if boolVal[0]
       render_json_response({ error: "Cannot delete this grade as it has dependencies" }, :unprocessable_entity)
     else
+
+   # Check if the ID exists in MgCbscOtherMarksEntry as mg_cbsc_co_scholastic_grade_id
+    if MgCbscOtherMarksEntry.exists?(mg_cbsc_co_scholastic_grade_id: params[:id])
+      render_json_response({ error: "Cannot delete this grade as it is referenced in other marks entries" }, :unprocessable_entity)
+    else
       @grades.update(is_deleted: 1)
       render_json_response({ message: "Deleted Successfully" }, :ok)
+    end
     end
   end
 

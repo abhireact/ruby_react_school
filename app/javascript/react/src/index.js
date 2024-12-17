@@ -34,13 +34,15 @@ import StudentAttendance from "./components/attendance/student_attendance";
 import MgEmployeeLeaveTypeIndex from "./components/attendance/employee_leave_type";
 import UploadSet from "./components/Upload/UploadSet";
 import OtherParticular from "./components/Examination/OtherParticular";
-
 import OtherGrade from "./components/Examination/OtherGrade";
 import ScholasticGrade from "./components/Examination/ScholasticGrade";
 import AbsentReason from "./components/Examination/AbsentReason";
 import SubSubject from "./components/Examination/SubSubject";
 import RemarksEntry from "./components/Examination/RemarksEntry";
-
+import OtherMarksEntry from "./components/Examination/OtherMarksEntry";
+import ExamReportReleases from "./components/Examination/ExamReportReleases";
+import EmployeeDepartment from "./components/EmployeeDepartment";
+import EmployeeProfile from "./components/EmployeeProfile"
 
 
 // Mapping of element IDs to components
@@ -79,7 +81,11 @@ const componentMapping = {
   ScholasticGrade,
   AbsentReason,
   SubSubject,
-  RemarksEntry
+  RemarksEntry,
+  OtherMarksEntry,
+  ExamReportReleases,
+  EmployeeDepartment,
+  EmployeeProfile
 };
 
 // Function to render a component

@@ -16,10 +16,10 @@ class CbscExaminationsController < ApplicationController
                               mg_time_table_id: @current_academic_year_id).order(:id)
     @batches = MgBatch.find_by(mg_school_id: session[:current_user_school_id], is_deleted: 0)
 
-    @exam_types = MgCbscExamType.where(is_deleted: false, mg_school_id: session[:current_user_school_id], mg_time_table_id: @current_academic_year_id)
+    @exam_types = MgCbscExamType.where(is_deleted: false, mg_school_id: session[:current_user_school_id])
     @classSection = view_context.get_class_section
     @academicYearsData= MgTimeTable.where(mg_school_id:session[:current_user_school_id],is_deleted:0)
-    @examtypes_associations = MgCbscExamTypeAssociation.where(is_deleted: false, mg_school_id: session[:current_user_school_id]).order(:mg_course_id)
+    @examtypes_associations = MgCbscExamTypeAssociation.where(is_deleted:0, mg_school_id: session[:current_user_school_id]).order(:mg_course_id)
     @react_data = {
       academic_year_data: @current_academic_year,
       examtype_data: @exam_types,
