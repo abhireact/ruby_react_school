@@ -1,0 +1,2 @@
+module BulkEmployeePhotoUploadHelper
+end

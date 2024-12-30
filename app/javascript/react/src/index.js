@@ -8,7 +8,7 @@ import Home from "./components/Home";
 import SchoolInfo from "./components/school/schoolinfo";
 import AcademicYearManagement from "./components/school/academic";
 import WingManagement from "./components/school/wings";
-import Employees from "./components/Employee/EmployeesIndex";
+
 import Classes from "./components/Classes/ClassesIndex";
 import Dashboard from "./components/Dashboard/index";
 import AddmissionDates from "./components/Addmission/dates";
@@ -42,7 +42,14 @@ import RemarksEntry from "./components/Examination/RemarksEntry";
 import OtherMarksEntry from "./components/Examination/OtherMarksEntry";
 import ExamReportReleases from "./components/Examination/ExamReportReleases";
 import EmployeeDepartment from "./components/EmployeeDepartment";
-import EmployeeProfile from "./components/EmployeeProfile"
+import EmployeeProfile from "./components/EmployeeProfile";
+import BulkEmployeePhotoUpload from "./components/BulkEmployeePhotoUpload";
+import AssignTeacher from "./components/AssignTeacher";
+import ArchiveEmployee from "./components/ArchiveEmployee";
+import ExportArchiveEmployee from "./components/ExportArchiveEmployee";
+import Employee from "./components/Employee";
+import ExperienceCertificate from "./components/Employee/ExperienceCertificate";
+
 
 
 // Mapping of element IDs to components
@@ -51,7 +58,7 @@ const componentMapping = {
   WingsIndex: WingManagement,
   SchoolIndex: SchoolInfo,
   AcademicIndex: AcademicYearManagement,
-  EmployeesIndex: Employees,
+
   DashboardIndex: Dashboard,
   ClassesIndex: Classes,
   AddmissionsIndex: AddmissionDates,
@@ -85,7 +92,14 @@ const componentMapping = {
   OtherMarksEntry,
   ExamReportReleases,
   EmployeeDepartment,
-  EmployeeProfile
+  EmployeeProfile,
+  BulkEmployeePhotoUpload,
+  AssignTeacher,
+  ArchiveEmployee,
+  ExportArchiveEmployee,
+  ExperienceCertificate,
+  Employee
+  
 };
 
 // Function to render a component

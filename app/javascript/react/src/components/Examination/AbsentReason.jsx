@@ -28,6 +28,8 @@ const validationSchema = Yup.object().shape({
     .required("Code is required"),
   
 });
+
+
 const editValidationSchema = Yup.object().shape({
   name: Yup.string().required("Absent Reason Name  is required"),
 

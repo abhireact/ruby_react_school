@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+
  
 
 
@@ -35,7 +37,13 @@ Rails.application.routes.draw do
   draw :absent_reason
   draw :exam_report_releases
   draw :other_marks_entry
- 
+  draw :bulk_employee_photo_upload
+  draw :assign_teacher
+  draw :employee_archive
+  draw :export_archive_employee
+
+  draw :mg_employees
+  draw :experience_certificates
 
   #-------------------------------------#
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

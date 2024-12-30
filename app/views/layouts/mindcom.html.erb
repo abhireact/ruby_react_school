@@ -16,7 +16,6 @@
 
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
 
@@ -83,7 +82,8 @@
             submodules: [
               { name: "Employee Department", link: "/mg_employee_departments" },
               { name: "Employee Profile", link: "/mg_employee_positions"},
-              { name: "Weekdays", link: "/mg_employee_weekdays"},
+             
+           
             ]
           }]},
         {name: "Wings",icon: "image",link: "/wings",
@@ -108,6 +108,18 @@
               { name: "Exam Report Releases", link: "/exam_report_releases" },
       
             ]
+          }]},
+          {name: "Employee",icon: "image",link: "/employee",
+          submodules: [{name: "Manage Employee",
+            submodules: [
+              {name:"Employee Upload",link:"/bulk_employee_photo_upload"},
+              {name:"Assign Class Teacher",link:"/assign_teacher"},
+              {name:"Employee Archive",link:"/employee_archive"},
+              {name:"Export Archive Employee", link:"/export_archive_employee"},
+       
+              {name:"Experience Certificate", link:"/experience_certificates"},
+              {name:"Employee", link:"/mg_employees"}
+           ]
           }]},
           {name: "Classes",icon: "image",link: "/classes",
           submodules: [{name: "Manage Class",

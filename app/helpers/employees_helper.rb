@@ -1,5 +1,4 @@
-module EmployeesHelper
-end
+
 module EmployeesHelper
 	def get_employee_category_employee
 		MgEmployeeCategory.where(:is_deleted=>0)

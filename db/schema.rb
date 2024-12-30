@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_26_072741) do
   create_table "actions", id: :integer, charset: "latin1", force: :cascade do |t|
     t.text "sms_activity", size: :long, collation: "utf8_general_ci"
     t.datetime "created_at", precision: nil
@@ -812,6 +812,34 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["mg_school_id"], name: "mg_school_id"
+  end
+
+  create_table "mg_assessement_syllabuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "mg_time_table_id"
+    t.integer "mg_course_id"
+    t.integer "mg_batch_id"
+    t.integer "mg_subject_id"
+    t.string "syllabus_name"
+    t.string "description"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.boolean "is_deleted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "mg_assessement_topics", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "mg_assessment_syllabus_id"
+    t.integer "mg_assessment_chapter_id"
+    t.string "topic_name"
+    t.text "description"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.boolean "is_deleted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "mg_assessment_scores", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -1745,6 +1773,21 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "mg_employee_id"
+  end
+
+  create_table "mg_chapters", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "mg_batch_id"
+    t.integer "mg_assessment_syllabus_id"
+    t.string "chapter_name"
+    t.date "start_date"
+    t.date "end_date"
+    t.string "description"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.boolean "is_deleted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "mg_character_certficates", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -5478,6 +5521,17 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
     t.datetime "updated_at", precision: nil
   end
 
+  create_table "mg_rbac_news", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "mg_submodule_menu"
+    t.integer "mg_school_id"
+    t.integer "role_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.integer "mg_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "mg_registration_fee_collections", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "student_name"
     t.integer "mg_fee_registration_id"
@@ -5961,6 +6015,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
     t.float "semester_fee_1"
     t.float "semester_fee_2"
     t.float "practical_fee"
+  end
+
+  create_table "mg_school_rbacs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "sub_module_menu"
+    t.integer "mg_school_id"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.boolean "is_deleted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "mg_schools", id: :integer, charset: "latin1", force: :cascade do |t|
@@ -7555,6 +7619,20 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_055849) do
     t.datetime "updated_at", precision: nil
     t.index ["crypted_token"], name: "index_refresh_tokens_on_crypted_token", unique: true
     t.index ["user_id"], name: "index_refresh_tokens_on_user_id"
+  end
+
+  create_table "roles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "role_name", limit: 20
+    t.string "role_display_name", limit: 50
+    t.text "description"
+    t.string "status", limit: 20
+    t.string "seeded", limit: 1
+    t.integer "mg_school_id"
+    t.boolean "is_deleted"
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sessions", id: :integer, charset: "latin1", force: :cascade do |t|

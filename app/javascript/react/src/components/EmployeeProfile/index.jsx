@@ -259,7 +259,7 @@ const FormikSwitch = ({ field, form }) => (
                         <thead>
                             <tr>
                                 <th style={{ width: "20%" }}>Employee Category Name</th>
-                                <th style={{ width: "20%" }}>Position Name</th>
+                                <th style={{ width: "20%" }}>Profile Name</th>
                                 <th style={{ width: "20%" }}>Status</th>
                                 <th style={{ width: "20%" }}>Actions</th>
                             </tr>

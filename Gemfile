@@ -2,6 +2,9 @@ source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.1"
+
+
+
 gem "bootstrap", "~> 5.0"
 gem "mysql2", ">= 0.5.3"  # Use MySQL as the database for Active Record
 gem "sqlite3", ">= 1.4"    # Use SQLite3 for development (comment out if using MySQL)
